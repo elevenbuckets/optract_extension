@@ -1,0 +1,34 @@
+{
+    "name": "Optract",
+    "version": "1.0",
+    "description": "Build an Extension",
+    "permissions": [
+        "storage",
+        "nativeMessaging",
+        "activeTab"
+    ],
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "file://*/*",
+                "http://*/*",
+                "https://*/*"
+              ],
+
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "browser_action": {
+        "default_popup": "hello.html",
+        "default_icon": "erebor.png"
+    },
+    "manifest_version": 2
+}
