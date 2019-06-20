@@ -1,0 +1,38 @@
+{
+  "name": "basics",
+  "version": "1.0.0",
+  "description": "Testing BladeIron in browser via local RPC-WS connections and Infura",
+  "main": "index.js",
+  "scripts": {
+    "watch": "node_modules/.bin/browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --port 7878 --directory",
+    "build": "webpack"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "6.24.1",
+    "babel-core": "6.25.0",
+    "babel-loader": "7.1.1",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.5.2",
+    "babel-preset-react": "6.24.1",
+    "css-loader": "0.28.4",
+    "json-loader": "^0.5.7",
+    "bladeiron_api": "git+https://github.com/elevenbuckets/bladeiron_api.git",
+    "browser-sync": "^2.24.6",
+    "ethereumjs-utils": "^5.2.5",
+    "merkle_tree": "git+https://github.com/elevenbuckets/merkle_tree.git",
+    "react": "15.6.1",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "15.6.1",
+    "react-dropdown": "^1.4.0",
+    "react-modal": "^3.4.4",
+    "react-router-dom": "^4.2.2",
+    "react-toggle": "^4.0.2",
+    "reflux": "^6.4.1",
+    "web3-eth-abi": "^1.0.0-beta.50"
+  },
+  "devDependencies": {
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}
