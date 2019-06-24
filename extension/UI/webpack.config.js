@@ -1,5 +1,4 @@
 const path = require('path');
-
 module.exports = {
   entry: './src/app.js',
   output: {
@@ -18,11 +17,10 @@ module.exports = {
         'css-loader'
       ]
     }]
-  },
-  devtool: 'cheap-module-eval-source-map',
+  }, 
+  devtool: 'eval',
   devServer: {
     contentBase: path.join(__dirname, 'public'),
     historyApiFallback : true
-  },
-  target : 'node'
+  }
 };

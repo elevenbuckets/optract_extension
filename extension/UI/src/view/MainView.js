@@ -1,91 +1,98 @@
-'use strict';
+import Reflux from "reflux";
+import React from "react";
 
-// Major third-party modules
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import Reflux from 'reflux';
+import DlogsStore from "../store/DlogsStore";
+import DlogsActions from "../action/DlogsActions";
+import BlogView from "./BlogView";
+import NewBlog from "./NewBlog";
 
-// Reflux store
-import WalletStates from '../store/WalletStates';
+import renderHTML from 'react-render-html';
+import marked from "marked";
 
-// Reflux actions
-import WalletActions from '../action/WalletActions';
-
-// Views
-import Transfer from './Transfer';
-import Accounts from './Accounts';
 
 class MainView extends Reflux.Component {
-	constructor(props) {
-		super(props);
-		this.store = WalletStates;
-	}
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            view: "List",
+            currentBlog: ""
+        }
 
-	updateState = (key, e) => {
-		this.setState({ [key]: e.target.value });
-	}
+        this.store = DlogsStore;
+    }
 
-	passAccRef = () => {
-		return ReactDOM.findDOMNode(this.refs.Accounts).firstChild;
-	}
+    getBlogList = () => {
+        return this.state.blogs.map((blog, idx) => {
+            let magic = 1;
+            let layout = magic == 0 ? 'rpicDiv' : 'lpicDiv';
+            let prefix = magic == 0 ? 'r' : 'l';
+            return <div className={layout} onClick={this.goToBlog.bind(this, blog)}>
 
-	render() {
-		console.log("In MainView render(); syncInProgress = " + this.state.syncInProgress);
+                <div className={prefix + 'title'} style={{ color: 'rgb(155,155,155,0.85)' }}>
+                    <p style={{ fontSize: "28px", color: '#969698' }}>{blog.title}</p>
+                    {renderHTML(marked(blog.TLDR))}
+                </div>
+                <div className={prefix + 'pic'}
+                style={{width: '85px', height: '85px' }}>
+                <figure class="article_image"
+                style={{backgroundImage: `url('assets/erebor.png')`}}>
+                </figure>
+            </div>
+              
+                   
+            </div>
+        })
+    }
 
-		if (this.state.connected === false) {
-			document.body.style.background = "rgb(17, 31, 47)";
-			return (
-				<div className="container locked" style={{ background: "rgb(17, 31, 47)" }}>
-					<div className="item list" style={{ background: "none" }}>
-						<div style={{ border: "2px solid white", padding: "40px", textAlign: "center" }}>
-							<div className="loader syncpage"></div><br />
-							<p style={{ alignSelf: "flex-end", fontSize: "24px", marginTop: "10px" }}>
-								Lost local Ethereum node connection ...
-				    </p>
-						</div>
-					</div>
-				</div>
-			);
-		} else if (this.state.wait4peers === true) {
-			document.body.style.background = "rgb(17, 31, 47)";
-			return (
-				<div className="container locked" style={{ background: "rgb(17, 31, 47)" }}>
-					<div className="item list" style={{ background: "none" }}>
-						<div style={{ border: "2px solid white", padding: "40px", textAlign: "center" }}>
-							<div className="loader syncpage"></div><br />
-							<p style={{ alignSelf: "flex-end", fontSize: "24px", marginTop: "10px" }}>
-								Awaiting incomming blocks from peers ...
-				    </p>
-						</div>
-					</div>
-				</div>
-			);
-		} else if (this.state.syncInProgress === true) {
-			document.body.style.background = "linear-gradient(-180deg, rgb(17, 31, 47), rgb(24, 156, 195))";
-			return (
-				<div className="container locked" style={{ background: "none" }}>
-					<div className="item list" style={{ background: "none" }}>
-						<div style={{ border: "2px solid white", padding: "40px", textAlign: "center" }}>
-							<div className="loader"></div><br />
-							<p style={{ alignSelf: "flex-end", fontSize: "24px", marginTop: "10px" }}>
-								Block syncing in progress {this.state.blockHeight} / {this.state.highestBlock} ...
-				    </p>
-						</div>
-					</div>
-				</div>
-			);
-		} else {
-			document.body.style.background = "rgb(11, 41, 57)";
-			return (
-				<div className="item container unlocked">
-					<Accounts ref="Accounts" />
-					<Transfer />
-				</div>
-			)
-		}
-	}
+    goToBlog = (blog) => {
+        DlogsActions.fetchBlogContent(blog.ipfsHash);
+        this.setState({ view: "Content", currentBlog: blog });
+    }
+
+    goToNewBlog = () => {
+        this.setState({ view: "New", currentBlog: "" })
+    }
+
+    goToEditBlog = () => {
+        this.setState({ view: "Edit" })
+    }
+
+    goBackToList = () => {
+        this.setState({ view: "List", currentBlog: "" })
+    }
+
+    saveNewBlog = (blogTitle, blogTLDR, blogContent) => {
+    
+        this.state.view == "New"? DlogsActions.saveNewBlog(blogTitle, blogTLDR, blogContent):
+        DlogsActions.editBlog(blogTitle, blogTLDR, blogContent,this.state.currentBlog.ipfsHash);
+        this.goBackToList()
+    }
+
+    unlock = (event) => {
+        if (event.keyCode == 13) {
+            let variable = this.refs.ps.value;
+            this.refs.ps.value = "";
+            DlogsActions.unlock(variable);
+        }
+    }
+
+    refresh = () =>{
+        DlogsActions.refresh();
+    }
+
+    render() {
+        return ( <div className="item contentxt">
+            {this.state.view === "List" ? this.state.blogs.length == 0 ? <div className="item" style={{width: '100vw', height: '80vh'}}><div className='item loader'></div></div>: <div className="articles"> {this.getBlogList()} </div> :
+                this.state.view === "Content" ? <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} />
+                    : <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
+                    currentBlogContent={this.state.currentBlogContent} goBack={this.goBackToList} />}
+            {this.state.view === "List" ? <div className="item mainctr"><input type="button" className="button" defaultValue="New" onClick={this.goToNewBlog} />
+                <input type="button" className="button" defaultValue="Refresh" onClick={this.refresh} /></div> : ""}
+        </div> );
+
+    }
+
 }
 
 export default MainView;
-

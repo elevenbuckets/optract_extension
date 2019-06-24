@@ -1,38 +1,57 @@
 {
-  "name": "basics",
+  "name": "dlogs",
   "version": "1.0.0",
-  "description": "Testing BladeIron in browser via local RPC-WS connections and Infura",
-  "main": "index.js",
+  "description": "",
+  "main": "main.js",
   "scripts": {
-    "watch": "node_modules/.bin/browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --port 7878 --directory",
-    "build": "webpack"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildWithoutWebpack": "./node_modules/.bin/babel  src --out-dir public",
+    "buildasar": "rm -fr ./dist && ./node_modules/.bin/electron-builder --linux --x64 --dir ./dist",
+    "distRelease": "npm run build && npm run buildasar",
+    "serve": "live-server public/",
+    "build": "webpack",
+    "dev-server": "webpack-dev-server"
   },
-  "license": "ISC",
+  "babel": {
+    "plugins": [
+      "transform-class-properties",
+      "transform-object-rest-spread"
+    ],
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
+  "keywords": [],
+  "author": "Jason Lin & Leon Zhang",
+  "license": "GPLv3",
   "dependencies": {
-    "babel-cli": "6.24.1",
-    "babel-core": "6.25.0",
+    "LimeCasks": "git+https://github.com/elevenbuckets/LimeCasks.git",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-loader": "7.1.1",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-preset-env": "1.5.2",
-    "babel-preset-react": "6.24.1",
-    "css-loader": "0.28.4",
-    "json-loader": "^0.5.7",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "bladeiron_api": "git+https://github.com/elevenbuckets/bladeiron_api.git",
-    "browser-sync": "^2.24.6",
-    "ethereumjs-utils": "^5.2.5",
-    "merkle_tree": "git+https://github.com/elevenbuckets/merkle_tree.git",
-    "react": "15.6.1",
-    "react-bootstrap": "^0.32.1",
-    "react-dom": "15.6.1",
-    "react-dropdown": "^1.4.0",
-    "react-modal": "^3.4.4",
-    "react-router-dom": "^4.2.2",
-    "react-toggle": "^4.0.2",
+    "figlet": "^1.2.0",
+    "ipfs": "^0.35.0",
+    "ipfs-http-client": "^30.1.4",
+    "ipfs_base": "git+ssh://git@github.com/elevenbuckets/Ipfs_go.git",
+    "jayson": "^2.1.0",
+    "live-server": "^1.2.0",
+    "marked": "^0.5.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-dropdown": "^1.6.2",
+    "react-quill": "^1.3.1",
+    "react-render-html": "^0.6.0",
     "reflux": "^6.4.1",
-    "web3-eth-abi": "^1.0.0-beta.50"
+    "webpack": "4.3.0",
+    "webpack-cli": "2.0.13",
+    "webpack-dev-server": "3.1.1"
   },
   "devDependencies": {
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "babel-plugin-transform-object-rest-spread": "^6.26.0"
   }
 }

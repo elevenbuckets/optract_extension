@@ -5,7 +5,8 @@
     "permissions": [
         "storage",
         "nativeMessaging",
-        "activeTab"
+        "activeTab",
+        "tabs"
     ],
     "background": {
         "scripts": [
@@ -27,8 +28,9 @@
         }
     ],
     "browser_action": {
-        "default_popup": "hello.html",
+        "default_popup": "popup.html",
         "default_icon": "erebor.png"
     },
-    "manifest_version": 2
+    "manifest_version": 2,
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
