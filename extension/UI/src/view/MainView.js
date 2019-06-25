@@ -46,7 +46,7 @@ class MainView extends Reflux.Component {
     }
 
     goToBlog = (blog) => {
-        DlogsActions.fetchBlogContent(blog.ipfsHash);
+        DlogsActions.fetchBlogContent(blog.url);
         this.setState({ view: "Content", currentBlog: blog });
     }
 
@@ -87,8 +87,6 @@ class MainView extends Reflux.Component {
                 this.state.view === "Content" ? <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} />
                     : <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
                     currentBlogContent={this.state.currentBlogContent} goBack={this.goBackToList} />}
-            {this.state.view === "List" ? <div className="item mainctr"><input type="button" className="button" defaultValue="New" onClick={this.goToNewBlog} />
-                <input type="button" className="button" defaultValue="Refresh" onClick={this.refresh} /></div> : ""}
         </div> );
 
     }

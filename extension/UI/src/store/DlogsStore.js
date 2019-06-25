@@ -2,6 +2,8 @@ import Reflux from "reflux";
 import DlogsActions from "../action/DlogsActions";
 import DLogsAPI from "../client/DLogsAPI"
 import FileService from "../service/FileService";
+import Mercury from '@postlight/mercury-parser';
+
 
 const fs = null
 
@@ -33,8 +35,8 @@ class DlogsStore extends Reflux.Store {
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
             blogs: [
-                {title: "test", TLDR: "<p>This is TLDR</p>"},
-                {title: "Blog2", TLDR: "<p>This is Blog 2 TLDR</p>"}
+                {title: "test", TLDR: "<p>This is TLDR</p>", url: "https://medium.com/front-end-weekly/react-without-webpack-a-dream-come-true-6cf24a1ff766"},
+                {title: "Blog2", TLDR: "<p>This is Blog 2 TLDR</p>", url: "https://www.blog.google/products/maps/helping-businesses-capture-their-identity-google-my-business/"}
             ],
             following: [],
             displayBlogs: [],
@@ -95,10 +97,16 @@ class DlogsStore extends Reflux.Store {
     }
 
 
-    onFetchBlogContent = (ipfsHash) => {
+    onFetchBlogContent = (url) => {
         this.setState({ currentBlogContent: "" });
-        this.dlogs.ipfsRead(ipfsHash).then(r => {
-            this.setState({ currentBlogContent: r });
+        Mercury.parse(url, {
+            headers: {
+              Cookie: 'name=value; name2=value2; name3=value3',
+              'User-Agent':
+                'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1',
+            },
+          }).then(r => {
+            this.setState({ currentBlogContent: r.content });
         })
     }
 

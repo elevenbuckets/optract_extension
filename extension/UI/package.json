@@ -26,6 +26,7 @@
   "author": "Jason Lin & Leon Zhang",
   "license": "GPLv3",
   "dependencies": {
+    "@postlight/mercury-parser": "^2.1.0",
     "LimeCasks": "git+https://github.com/elevenbuckets/LimeCasks.git",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",

@@ -25,7 +25,7 @@ class BlogView extends Reflux.Component {
     render() {
         return (
         <div className="item readloader" style={{margin: '20px 20px 0px 20px'}}>
-        <div style={{overflow: 'scroll', maxHeight: "85vh", color: 'white', padding: "10px"}}>
+        <div style={{overflow: 'scroll', maxHeight: "85vh", color: '#6d6d6d', padding: "10px"}}>
             <div style={{textAlign: 'center', fontSize: '25px', padding: "35px", textDecoration: 'underline'}}>{this.props.blog.title}</div>
             {renderHTML(marked(this.state.currentBlogContent))}
         </div>

@@ -53,7 +53,7 @@ html {
 }
 
 body {
-   /* background: linear-gradient(11deg, #060606, #0558d4); */
+   background: linear-gradient(11deg, #060606, #0558d4);
    background-repeat: repeat-y;
    display: grid;
    overflow: hidden;
