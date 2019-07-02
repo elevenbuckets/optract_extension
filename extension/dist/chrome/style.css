@@ -88,12 +88,12 @@ body {
     align-items: center;
     margin: 20px 50px 10px 50px;
     font-size: 16px;
-    color: white;
+    color: rgb(150, 150, 152);
     border-radius: 0px;
     /*background: rgba(255, 255, 255, 0.21);*/
-    grid-template-columns: 9% 1fr 9%;
+    grid-template-columns: 1fr 5fr 9%;
     grid-template-rows: 1fr;
-    grid-template-areas: ". centercontent .";
+    grid-template-areas: "sidebar centercontent .";
 }
 
 .content h2 {
@@ -105,6 +105,18 @@ body {
 .content #marker {
     color: #6ff5ff;
     display: inline;
+}
+
+.sidebar {
+  height: 100%;
+  /* width: 100%; */
+  font-size: 20px;
+  grid-area: sidebar;
+  text-align: justify;
+  justify-self: center;
+  align-items: center;
+  margin: 20px;
+  /* overflow: hidden; */
 }
 
 .contentxt {
@@ -188,10 +200,10 @@ body {
     text-align: center;
     justify-self: center;
     background-color: rgba(0,0,0,0);
-    border: 2px solid rgb(22, 21, 21);
-    color: #6d6d6d;
+    border: 2px solid rgb(109, 109, 109);
+    color:rgb(109, 109, 109);
     margin: 30px;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .reader {

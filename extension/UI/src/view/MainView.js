@@ -4,6 +4,7 @@ import React from "react";
 import DlogsStore from "../store/DlogsStore";
 import DlogsActions from "../action/DlogsActions";
 import BlogView from "./BlogView";
+import SideBarView from "./SideBarView";
 import NewBlog from "./NewBlog";
 
 import renderHTML from 'react-render-html';
@@ -38,6 +39,7 @@ class MainView extends Reflux.Component {
                 <figure class="article_image"
                 style={{backgroundImage: `url('assets/erebor.png')`}}>
                 </figure>
+                <input type="button" className="button" defaultValue="Vote"style={{ position : 'relative', right: '25px' }} onClick={this.props.goBack} />
             </div>
               
                    
@@ -82,11 +84,17 @@ class MainView extends Reflux.Component {
     }
 
     render() {
-        return ( <div className="item contentxt">
+        return ( 
+            <div className="content">
+            <div className="sidebar">
+           <SideBarView />
+            </div>
+            <div className="item contentxt">
             {this.state.view === "List" ? this.state.blogs.length == 0 ? <div className="item" style={{width: '100vw', height: '80vh'}}><div className='item loader'></div></div>: <div className="articles"> {this.getBlogList()} </div> :
                 this.state.view === "Content" ? <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} />
                     : <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
                     currentBlogContent={this.state.currentBlogContent} goBack={this.goBackToList} />}
+        </div>
         </div> );
 
     }

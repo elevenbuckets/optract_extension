@@ -10,7 +10,8 @@
     "distRelease": "npm run build && npm run buildasar",
     "serve": "live-server public/",
     "build": "webpack",
-    "dev-server": "webpack-dev-server"
+    "dev-server": "webpack-dev-server",
+    "mvUItoDist": " cp public/style.css ../dist/chrome/style.css && cp public/bundle.js ../dist/chrome/bundle.js "
   },
   "babel": {
     "plugins": [

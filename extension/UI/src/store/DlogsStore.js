@@ -43,7 +43,10 @@ class DlogsStore extends Reflux.Store {
             onlyShowForBlogger: "",
             currentBlogContent: "",
             login: false,
-            account: ""
+            account: "",
+            memberShipStatus: "active",
+            address: "0xaf7400787c54422be8b44154b1273661f1259ccd",
+            passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"]
 
         }
 
