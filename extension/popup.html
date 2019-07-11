@@ -1,19 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-      }
-    </style>
-    <script src="popup.js"></script>
-  </head>
-  <body>
-    <div style="width: 180px; height: 60px">
-        <button id="curate" style="width: 60px; height: 30px; margin: 5px;">Curate</button>
-        <button id="optract" style="width: 60px; height: 30px; margin: 5px;">Optract</button>
+
+<head>
+  <style>
+    button {
+      outline: none;
+    }
+  </style>
+  <script src="popup.js"></script>
+</head>
+
+<body>
+  <div style="width: 180px; height: 260px">
+    <div>
+      <label>
+        Tag:
+        <input size={52} type='text' style="
+              border: 1px solid burlywood;
+              font-family: monospace;
+        text-align: center" placeholder="Category" />
+      </label>
+      <div style="margin-top: 10px; width: 150px;">
+          <button id="tech" style=" margin: 2px; text-align: center; display: inline-block;">Tech</button>
+          <button id="blockChain" style="margin: 2px;text-align: center; display: inline-block;">BlockChain</button>
+          <button id="finance" style=" margin: 2px; text-align: center; display: inline-block;">Finance</button>
+          <button id="history" style="margin: 2px;text-align: center; display: inline-block;">History</button>
+        </div>
     </div>
-  </body>
+    <div style="margin-top: 50px; width: 150px;">
+      <button id="curate" style="width: 60px; height: 30px; margin: 2px;  margin-left: 20px; ">Curate</button>
+      <button id="optract" style="width: 60px; height: 30px; margin: 2px; margin-left: 3px">Optract</button>
+    </div>
+  </div>
+</body>
+
 </html>

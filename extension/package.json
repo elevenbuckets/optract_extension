@@ -4,7 +4,8 @@
   "description": "",
   "main": "background.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "mvPopUptoDist": " cp popup.html dist/chrome/popup.html && cp scripts/popup.js dist/chrome/popup.js "
   },
   "author": "",
   "license": "ISC",
