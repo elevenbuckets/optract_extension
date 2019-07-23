@@ -35,8 +35,15 @@ class DlogsStore extends Reflux.Store {
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
             blogs: [
-                {title: "test", TLDR: "<p>This is TLDR</p>", url: "https://medium.com/front-end-weekly/react-without-webpack-a-dream-come-true-6cf24a1ff766"},
-                {title: "Blog2", TLDR: "<p>This is Blog 2 TLDR</p>", url: "https://www.blog.google/products/maps/helping-businesses-capture-their-identity-google-my-business/"}
+                {title: "test", tag:"tech", TLDR: "<p>This is TLDR</p>", url: "https://medium.com/front-end-weekly/react-without-webpack-a-dream-come-true-6cf24a1ff766"},
+                {title: "Blog2", tag:"tech", TLDR: "<p>This is Blog 2 TLDR</p>", url: "https://www.blog.google/products/maps/helping-businesses-capture-their-identity-google-my-business/"},
+                {title: "Bakkt Is Scheduled to Start Testing Its Bitcoin Futures Contracts Today",
+                 tag:"blockchain", TLDR: "<p>Bakkt is scheduled to begin testing its bitcoin futures contracts Monday, more than six months after its originally planned launch date. </p>",
+                 url: "https://www.coindesk.com/bakkt-is-supposed-to-start-testing-its-bitcoin-futures-contracts-today"},
+                 {title: "Tech stocks lead US indexes higher on earnings optimism",
+                 tag:"finance", TLDR: "<p>Major US indexes closed higher on Monday, led by tech stocks that climbed ahead of highly anticipated earnings reports later this week. </p>",
+                 url: "https://markets.businessinsider.com/news/stocks/stock-market-news-tech-stocks-climb-ahead-of-earnings-2019-7-1028373243"},
+
             ],
             following: [],
             displayBlogs: [],
@@ -46,7 +53,8 @@ class DlogsStore extends Reflux.Store {
             account: "",
             memberShipStatus: "active",
             address: "0xaf7400787c54422be8b44154b1273661f1259ccd",
-            passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"]
+            passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"],
+            activeTabKey : "finalList"
 
         }
 
@@ -103,11 +111,6 @@ class DlogsStore extends Reflux.Store {
     onFetchBlogContent = (url) => {
         this.setState({ currentBlogContent: "" });
         Mercury.parse(url, {
-            headers: {
-              Cookie: 'name=value; name2=value2; name3=value3',
-              'User-Agent':
-                'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1',
-            },
           }).then(r => {
             this.setState({ currentBlogContent: r.content });
         })
@@ -214,6 +217,10 @@ class DlogsStore extends Reflux.Store {
         this.setState({ blogs: [] });
         this.initializeState();
     }
+
+    onUpdateTab = activeKey =>{
+        this.setState({activeTabKey: activeKey});
+    } 
 
 
 }
