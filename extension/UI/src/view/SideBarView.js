@@ -21,6 +21,10 @@ class SideBarView extends Reflux.Component {
         createCanvasWithAddress( this.refs.canvas,this.state.address);
     }
 
+    claim = () =>{
+        
+    }
+
 
 
     render() {
@@ -33,6 +37,10 @@ class SideBarView extends Reflux.Component {
                 </div>
                 <div>
                     The status: {this.state.memberShipStatus}
+                </div>
+                <div>
+                <input type="button" className="button" defaultValue="Claim" 
+                onClick={this.claim} />
                 </div>
             </div>);
     }
