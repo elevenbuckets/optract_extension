@@ -2,7 +2,7 @@ import Reflux from "reflux";
 import React from "react";
 
 import DlogsStore from "../store/DlogsStore";
-import DlogsAction from "../action/DlogsActions";
+import {Modal, Button} from "react-bootstrap";
 
 import DlogsActions from "../action/DlogsActions";
 import { createCanvasWithAddress } from "../util/Utils";
@@ -14,17 +14,24 @@ class SideBarView extends Reflux.Component {
     constructor(props) {
         super(props);
         this.store = DlogsStore;
-        
+        this.state = {
+            modalOpen: false
+        }
+
     }
 
-    componentDidMount(){
-        createCanvasWithAddress( this.refs.canvas,this.state.address);
+    componentDidMount() {
+        createCanvasWithAddress(this.refs.canvas, this.state.address);
     }
 
-    claim = () =>{
-        
+    claim = () => {
+        this.setState({modalOpen: true})
     }
 
+
+    handleClose = () => {
+        this.setState({modalOpen: false})
+    }
 
 
     render() {
@@ -39,9 +46,23 @@ class SideBarView extends Reflux.Component {
                     The status: {this.state.memberShipStatus}
                 </div>
                 <div>
-                <input type="button" className="button" defaultValue="Claim" 
-                onClick={this.claim} />
+                    <input type="button" className="button" defaultValue="Claim"
+                        onClick={this.claim} />
                 </div>
+                <Modal show={this.state.modalOpen} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.handleClose}>
+                            Close
+                  </Button>
+                        <Button variant="primary" onClick={this.handleClose}>
+                            Save Changes
+                  </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>);
     }
 
