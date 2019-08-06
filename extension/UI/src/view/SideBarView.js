@@ -51,7 +51,7 @@ class SideBarView extends Reflux.Component {
                 </div>
                 <Modal show={this.state.modalOpen} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>Claim Rewards</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
                     <Modal.Footer>
