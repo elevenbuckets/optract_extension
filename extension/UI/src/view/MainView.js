@@ -6,7 +6,6 @@ import DlogsStore from "../store/DlogsStore";
 import DlogsActions from "../action/DlogsActions";
 import BlogView from "./BlogView";
 import SideBarView from "./SideBarView";
-import NewBlog from "./NewBlog";
 
 import renderHTML from 'react-render-html';
 import marked from "marked";
@@ -53,36 +52,36 @@ class MainView extends Reflux.Component {
         this.setState({ view: "Content", currentBlog: blog });
     }
 
-    goToNewBlog = () => {
-        this.setState({ view: "New", currentBlog: "" })
-    }
+    // goToNewBlog = () => {
+    //     this.setState({ view: "New", currentBlog: "" })
+    // }
 
-    goToEditBlog = () => {
-        this.setState({ view: "Edit" })
-    }
+    // goToEditBlog = () => {
+    //     this.setState({ view: "Edit" })
+    // }
 
     goBackToList = () => {
         this.setState({ view: "List", currentBlog: "" })
     }
 
-    saveNewBlog = (blogTitle, blogTLDR, blogContent) => {
+    // saveNewBlog = (blogTitle, blogTLDR, blogContent) => {
 
-        this.state.view == "New" ? DlogsActions.saveNewBlog(blogTitle, blogTLDR, blogContent) :
-            DlogsActions.editBlog(blogTitle, blogTLDR, blogContent, this.state.currentBlog.ipfsHash);
-        this.goBackToList()
-    }
+    //     this.state.view == "New" ? DlogsActions.saveNewBlog(blogTitle, blogTLDR, blogContent) :
+    //         DlogsActions.editBlog(blogTitle, blogTLDR, blogContent, this.state.currentBlog.ipfsHash);
+    //     this.goBackToList()
+    // }
 
-    unlock = (event) => {
-        if (event.keyCode == 13) {
-            let variable = this.refs.ps.value;
-            this.refs.ps.value = "";
-            DlogsActions.unlock(variable);
-        }
-    }
+    // unlock = (event) => {
+    //     if (event.keyCode == 13) {
+    //         let variable = this.refs.ps.value;
+    //         this.refs.ps.value = "";
+    //         DlogsActions.unlock(variable);
+    //     }
+    // }
 
-    refresh = () => {
-        DlogsActions.refresh();
-    }
+    // refresh = () => {
+    //     DlogsActions.refresh();
+    // }
     updateTab = (activeKey) =>{
         DlogsActions.updateTab(activeKey);
         this.goBackToList();

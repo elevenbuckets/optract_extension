@@ -2,7 +2,6 @@ import Reflux from "reflux";
 import React from "react";
 
 import DlogsStore from "../store/DlogsStore";
-import DlogsAction from "../action/DlogsActions";
 
 import renderHTML from 'react-render-html';
 import marked from "marked";
@@ -16,10 +15,10 @@ class BlogView extends Reflux.Component {
         this.store = DlogsStore;
     }
 
-    delete = () => {
-        DlogsActions.deleteBlog(this.props.blog.ipfsHash);
-        this.props.goBack();
-    }
+    // delete = () => {
+    //     DlogsActions.deleteBlog(this.props.blog.ipfsHash);
+    //     this.props.goBack();
+    // }
 
 
     render() {
