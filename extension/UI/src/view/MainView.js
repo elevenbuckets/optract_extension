@@ -106,7 +106,7 @@ class MainView extends Reflux.Component {
                     </Tab>
                     <Tab eventKey="finance" title="Finance">   
                     </Tab>
-                    <Tab eventKey="history" title="History">   
+                    <Tab eventKey="toVote" title="To Vote" disabled ="true">   
                     </Tab>
                 </Tabs>
                
