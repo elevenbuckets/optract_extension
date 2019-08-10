@@ -1,5 +1,5 @@
 {
-  "name": "google_example",
+  "name": "optract_extension",
   "version": "1.0.0",
   "description": "## How to run",
   "main": "background.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elevenbuckets/chrome_extension_11be.git"
+    "url": "git+https://github.com/elevenbuckets/optract_extension.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/elevenbuckets/chrome_extension_11be/issues"
+    "url": "https://github.com/elevenbuckets/optract_extension/issues"
   },
-  "homepage": "https://github.com/elevenbuckets/chrome_extension_11be#readme",
+  "homepage": "https://github.com/elevenbuckets/optract_extension#readme",
   "dependencies": {
     "chrome-native-messaging": "^0.2.0"
   }

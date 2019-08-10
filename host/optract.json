@@ -1,7 +1,7 @@
 {
-    "name": "spear_iron",
-    "description": "spearIron server",
-    "path": "/home/liang/Liang_Learn/projects/playground/chrome_extension/google_example/host/nativeApp.js",
+    "name": "optract",
+    "description": "optract server",
+    "path": "/home/liang/Liang_Learn/git_hub/optract_extension/host/nativeApp.js",
     "type": "stdio",
     "browser_action": {
         "default_icon": "icons/message.svg"
