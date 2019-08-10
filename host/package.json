@@ -1,0 +1,22 @@
+{
+  "name": "google_example",
+  "version": "1.0.0",
+  "description": "## How to run",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elevenbuckets/chrome_extension_11be.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elevenbuckets/chrome_extension_11be/issues"
+  },
+  "homepage": "https://github.com/elevenbuckets/chrome_extension_11be#readme",
+  "dependencies": {
+    "chrome-native-messaging": "^0.2.0"
+  }
+}
