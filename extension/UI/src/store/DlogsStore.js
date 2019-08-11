@@ -2,6 +2,7 @@ import Reflux from "reflux";
 import DlogsActions from "../action/DlogsActions";
 import DLogsAPI from "../client/DLogsAPI"
 import FileService from "../service/FileService";
+import OptractClient from "../service/OptractClient";
 import Mercury from '@postlight/mercury-parser';
 
 
@@ -13,6 +14,7 @@ class DlogsStore extends Reflux.Store {
         this.listenables = DlogsActions;
         this.ipfs = FileService.ipfs;
         this.ipfsClient = FileService.ipfsClient;
+        this.opt = OptractClient.opt;
         
 
         this.dlogs = new DLogsAPI(null, null,
