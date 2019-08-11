@@ -26,6 +26,10 @@ class SideBarView extends Reflux.Component {
 
     claim = () => {
         this.setState({modalOpen: true})
+
+        var port = chrome.runtime.connect();
+        port.postMessage(JSON.stringify({ type: "Connect_WS-RPC", text: "This is the request for connect RPC", id: "dapp_1" }));
+        window.postMessage({ type: "Connect_WS-RPC", text: "This is the request for connect RPC", id: "dapp_1" }, "*");
     }
 
 

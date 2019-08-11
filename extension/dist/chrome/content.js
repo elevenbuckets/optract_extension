@@ -2,6 +2,7 @@
 var port = chrome.runtime.connect();
 
 window.addEventListener("message", function(event) {
+  alert(event.data.type);
   // We only accept messages from ourselves
   if (event.source != window)
     return;
@@ -21,7 +22,7 @@ window.addEventListener("message", function(event) {
 port.onMessage.addListener(function(msg) {
     console.log(msg);
     alert(msg);
-    window.postMessage({ type: "Connect_WS_RPC_Confirm", text: "Hello from server" }, "*");
+    // window.postMessage({ type: "Connect_WS_RPC_Confirm", text: "Hello from server" }, "*");
 });
 },{}]},{},[1])
 
