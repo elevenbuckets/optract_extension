@@ -2,7 +2,6 @@
 var port = chrome.runtime.connect();
 
 window.addEventListener("message", function(event) {
-  alert(event.data.type);
   // We only accept messages from ourselves
   if (event.source != window)
     return;
