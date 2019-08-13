@@ -20,8 +20,25 @@ class OptractClient {
 
                 return new Promise(__ready);
         }
+        this.unlockRPC = (pw, callback) =>{
+            return connectRPC('ws://127.0.0.1:59437')
+            .then((rc) =>
+            {
+                   if (!rc) throw("failed connection");
+                   console.dir("connectted to rpc!")
+                   opt.call("password", [pw]).then(rc=>{
+                       callback();
+                       opt.call("userWallet").then(rc=>{
+                           console.dir(rc);
+                       })
+                   })
+            })
+            .catch((err) => { console.trace(err); }) 
+         }
+    
 
-        return connectRPC('ws://127.0.0.1:59437')
+
+        connectRPC('ws://127.0.0.1:59437')
          .then((rc) =>
          {
                 if (!rc) throw("failed connection");
@@ -34,8 +51,11 @@ class OptractClient {
          })
          .catch((err) => { console.trace(err); })
 
-    
+        
     }
+
+  
+    
 
 }
 
