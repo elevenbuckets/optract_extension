@@ -54,6 +54,7 @@ class DlogsStore extends Reflux.Store {
             onlyShowForBlogger: "",
             currentBlogContent: "",
             login: false,
+            logining: false,
             account: "",
             memberShipStatus: "active",
             address: "0xaf7400787c54422be8b44154b1273661f1259ccd",
@@ -205,11 +206,12 @@ class DlogsStore extends Reflux.Store {
     // }
 
     onUnlock = (pw) => {
-        this.unlockRPC(pw, this.unlock,0);
+        this.setState({logining : true});
+        this.unlockRPC(pw, this.unlock,0);   
     }
 
     unlock = ()=>{
-        this.setState({ login: true })
+        this.setState({ login: true, logining : false })
     }
 
     // onRefresh = () => {

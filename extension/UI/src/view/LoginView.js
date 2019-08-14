@@ -15,7 +15,7 @@ class LoginView extends Reflux.Component {
         super(props);
         this.store = DlogsStore;
         this.state = {
-            modalOpen: false
+            log: false
         }
 
     }
@@ -47,9 +47,11 @@ class LoginView extends Reflux.Component {
     render() {
         return (
             <div className="item contentxt">
-                <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Password: </label>
-                    <input autoFocus style={{ alignSelf: 'flex-start' }} type="password" ref="ps" onKeyUp={this.unlock} />
-                </div></div>);
+                {this.state.logining ? <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Starting the peer, need about 15 seconds </label>
+                    </div> : <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Password: </label>
+                        <input autoFocus style={{ alignSelf: 'flex-start' }} type="password" ref="ps" onKeyUp={this.unlock} />
+                    </div>}
+            </div>);
     }
 
 }
