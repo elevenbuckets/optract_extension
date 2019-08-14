@@ -7,55 +7,53 @@ import ipfsClient from 'ipfs-http-client';
 
 class OptractClient {
     constructor() {
-        let opt
+        this.opt
         const WSClient = require('rpc-websockets').Client;
         const connectRPC = (url) => {
-                opt = new WSClient(url);
+            this.opt = new WSClient(url);
 
-                const __ready = (resolve, reject) =>
-                {
-                        opt.on('open',  function(event) { resolve(true) });
-                        opt.on('error', function(error) { console.trace(error); reject(false) });
-                }
+            const __ready = (resolve, reject) => {
+                this.opt.on('open', function (event) { resolve(true) });
+                this.opt.on('error', function (error) { console.trace(error); reject(false) });
+            }
 
-                return new Promise(__ready);
+            return new Promise(__ready);
         }
-        this.unlockRPC = (pw, callback) =>{
-            return connectRPC('ws://127.0.0.1:59437')
-            .then((rc) =>
-            {
-                   if (!rc) throw("failed connection");
-                   console.dir("connectted to rpc!")
-                   opt.call("password", [pw]).then(rc=>{
-                       callback();
-                       opt.call("userWallet").then(rc=>{
-                           console.dir(rc);
-                       })
-                   })
-            })
-            .catch((err) => { console.trace(err); }) 
-         }
-    
+        this.unlockRPC = (pw, callback, retry) => {
+            const unlockRPCWithRetry = () => {
+                retry++;
+                return connectRPC('ws://127.0.0.1:59437')
+                    .then((rc) => {
+                        if (!rc && retry < 5) {
+                            setTimeout(unlockRPCWithRetry, 5000);
+                        } else if (!rc && retry >= 5) {
+                            throw ("failed connection");
+                        }
 
-
-        connectRPC('ws://127.0.0.1:59437')
-         .then((rc) =>
-         {
-                if (!rc) throw("failed connection");
-                console.dir("connectted to rpc!")
-                opt.call("password", ["rinkeby"]).then(rc=>{
-                    opt.call("userWallet").then(rc=>{
-                        console.dir(rc);
+                        console.dir("connectted to rpc!")
+                        this.opt.call("password", [pw]).then(rc => {
+                            callback();
+                            this.opt.call("userWallet").then(rc => {
+                                console.dir(rc);
+                            })
+                        })
                     })
-                })
-         })
-         .catch((err) => { console.trace(err); })
+                    .catch((err) => {
+                        if (retry < 5) {
+                            setTimeout(unlockRPCWithRetry, 1000);
+                        } else if (retry >= 5) {
+                            console.trace(err);
+                        }
+                    })
+            }
 
-        
+            unlockRPCWithRetry();
+        }
+
     }
 
-  
-    
+
+
 
 }
 

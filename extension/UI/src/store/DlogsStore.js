@@ -205,7 +205,7 @@ class DlogsStore extends Reflux.Store {
     // }
 
     onUnlock = (pw) => {
-        this.unlockRPC(pw, this.unlock);
+        this.unlockRPC(pw, this.unlock,0);
     }
 
     unlock = ()=>{
