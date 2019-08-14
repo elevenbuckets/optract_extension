@@ -4,6 +4,7 @@ import DLogsAPI from "../client/DLogsAPI"
 import FileService from "../service/FileService";
 import OptractClient from "../service/OptractClient";
 import Mercury from '@postlight/mercury-parser';
+import { toHexString } from "multihashes";
 
 
 const fs = null
@@ -15,6 +16,7 @@ class DlogsStore extends Reflux.Store {
         this.ipfs = FileService.ipfs;
         this.ipfsClient = FileService.ipfsClient;
         this.opt = OptractClient.opt;
+        this.unlockRPC = OptractClient.unlockRPC;
         
 
         this.dlogs = new DLogsAPI(null, null,
@@ -202,18 +204,13 @@ class DlogsStore extends Reflux.Store {
     //     })
     // }
 
-    // onUnlock = (pw) => {
-    //     this.dlogs.client.request('unlock', [pw]).then((rc) => {
-    //         if (!rc.result) return false;
-    //         this.dlogs.allAccounts().then((addr) => {
-    //             this.dlogs.linkAccount(addr[0]).then(r => {
-    //                 if (r) {
-    //                     this.setState({ login: true, account: this.dlogs.getAccount() })
-    //                 }
-    //             })
-    //         })
-    //     })
-    // }
+    onUnlock = (pw) => {
+        this.unlockRPC(pw, this.unlock,0);
+    }
+
+    unlock = ()=>{
+        this.setState({ login: true })
+    }
 
     // onRefresh = () => {
     //     this.setState({ blogs: [] });

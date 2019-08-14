@@ -17,9 +17,7 @@
     "content_scripts": [
         {
             "matches": [
-                "file://*/*",
-                "http://*/*",
-                "https://*/*"
+                "file://njmnodeagineccdkbiahneimijeljakm/*"
               ],
 
             "js": [
