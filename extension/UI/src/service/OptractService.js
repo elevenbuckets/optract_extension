@@ -1,11 +1,11 @@
 'use strict';
 
-import IPFS from 'ipfs';
-import ipfsClient from 'ipfs-http-client';
+// import IPFS from 'ipfs';
+// import ipfsClient from 'ipfs-http-client';
 
+import DlogsActions from "../action/DlogsActions";
 
-
-class OptractClient {
+class OptractService {
     constructor() {
         this.opt
         const WSClient = require('rpc-websockets').Client;
@@ -32,7 +32,8 @@ class OptractClient {
 
                         console.dir("connectted to rpc!")
                         this.opt.call("password", [pw]).then(rc => {
-                            callback();
+                            this.getBkRangeArticles(36,41,true, callback);
+                            this.getClaimArticles(8, true);
                             this.opt.call("userWallet").then(rc => {
                                 console.dir(rc);
                             })
@@ -46,8 +47,21 @@ class OptractClient {
                         }
                     })
             }
-
             unlockRPCWithRetry();
+        }
+
+        this.getBkRangeArticles = (startB, endB, parsing, callback) =>{
+            this.opt.call('getBkRangeArticles', [startB,endB,parsing]).then((data) =>{
+                let articles = {articles : data}
+                DlogsActions.updateState(articles);
+                if(callback){
+                    callback()
+                }
+            })
+    
+        }
+        this.processArticles = (data) =>{
+    
         }
 
         // this.unlockRPC = (pw, callback) =>{
@@ -67,11 +81,31 @@ class OptractClient {
         //  }
 
     }
+  
+    getClaimArticles = (op, parsing, callback) =>{
+        this.opt.call('getClaimArticles', [op,parsing]).then((data) =>{
+            let claimArticles = {claimArticles : data}
+            DlogsActions.updateState(claimArticles);
+            if(callback){
+                callback()
+            }
+        })
 
+    }
 
+    getReports = (startB, endB, parsing, callback) =>{
+        this.opt.call('reports', [startB,endB,parsing]).then((data) =>{
+            let claimArticles = {claimArticles : data}
+            DlogsActions.updateState(claimArticles);
+            if(callback){
+                callback()
+            }
+        })
+
+    }
 
 
 }
 
-const optractClient = new OptractClient();
-export default optractClient;
+const optractService = new OptractService();
+export default optractService;
