@@ -32,8 +32,14 @@ class OptractService {
 
                         console.dir("connectted to rpc!")
                         this.opt.call("password", [pw]).then(rc => {
-                            this.getBkRangeArticles(36,41,true, callback);
-                            this.getClaimArticles(8, true);
+                            this.opt.call('reports').then((data) =>{
+                                let reports = {reports : data}
+
+                                // get the last 5 blocks
+                                this.getBkRangeArticles(data.optract.epoch -5,data.optract.epoch,true, callback);
+                                this.getClaimArticles(data.optract.opround -2, true);
+                            })
+                            
                             this.opt.call("userWallet").then(rc => {
                                 console.dir(rc);
                             })
@@ -93,10 +99,10 @@ class OptractService {
 
     }
 
-    getReports = (startB, endB, parsing, callback) =>{
-        this.opt.call('reports', [startB,endB,parsing]).then((data) =>{
-            let claimArticles = {claimArticles : data}
-            DlogsActions.updateState(claimArticles);
+    getReports = ( callback) =>{
+        this.opt.call('reports').then((data) =>{
+            let reports = {reports : data}
+            DlogsActions.updateState(reports);
             if(callback){
                 callback()
             }
