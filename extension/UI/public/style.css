@@ -1,9 +1,3 @@
-:root {
-    /* --yellow: #f8f8f2; */
-    /* --black: #f8f8f2; */
-    /* --oak: #f8f8f2; */
-}
-  
 html {
     /* border-box box model allows us to add padding and border to our elements without increasing their size */
     box-sizing: border-box;
@@ -27,11 +21,6 @@ html {
 
 ::-webkit-scrollbar:horizontal {
       display: none;
-}
-
-::-webkit-scrollbar-thumb {
-  /* box-shadow: inset 0 0 6px rgba(0,0,0,0.33); */
-  /* border-radius: 2px; */
 }
 
 ::-webkit-scrollbar-track:horizontal {
@@ -82,11 +71,11 @@ body {
 .content {
     display: grid;
     overflow-y: auto;
-    max-height: calc(100vh - 220px);
+    max-height: 100vh;
     grid-area: content;
     justify-content: center;
     align-items: center;
-    margin: 20px 50px 10px 50px;
+    margin: 120px 50px 10px 50px;
     font-size: 16px;
     color: rgb(150, 150, 152);
     border-radius: 0px;
@@ -131,70 +120,6 @@ body {
     overflow: hidden;
 }
 
-.articles {
-    overflow-y: scroll;
-    max-height: calc(100vh - 100px);
-}
-
-.rpicDiv {
-   cursor: pointer;
-   width: 100vw;
-   display: grid;
-   grid-template-columns: 1fr 200px;
-   grid-template-rows: 150px;
-   grid-template-areas: "rtitle rpic";
-   border-top: 1px solid #d7d7d7;
-   display: flex;
-   padding: 30px 0;
-}
-
-.rtitle:hover { background-color: rgba(255,255,255,0.31)}
-
-.rtitle {
-   color: white;
-   text-align: right;
-   grid-area: rtitle;
-   width: calc(100vw - 200px);
-   border-bottom: 2px solid white;
-   align-self: flex-end;
-   padding-right: 7px;
-}
-
-.rpic {
-   grid-area: rpic;
-   justify-self: flex-start;
-   align-self: flex-end;
-}
-
-.lpicDiv {
-   display: grid;
-   cursor: pointer;
-   grid-template-columns: 200px 1fr;
-   grid-template-rows: 150px;
-   border-top: 1px solid #d7d7d7;
-   display: flex;
-   padding: 30px 0;
-   grid-template-areas: "lpic ltitle";
-}
-
-.ltitle:hover { background-color: rgba(255,255,255,0.31)}
-
-.ltitle {
-   color: white;
-   text-align: left;
-   grid-area: ltitle;
-   width: calc(100vw - 200px);
-   border-bottom: 2px solid white;
-   align-self: flex-end;
-   padding-left: 7px;
-}
-
-.lpic {
-   grid-area: lpic;
-   justify-self: flex-end;
-   align-self: flex-end;
-}
-
 .button {
     width: 70px;
     text-align: center;
@@ -222,35 +147,6 @@ body {
 
 .secondmainctr {
     grid-template-columns: 1fr 1fr 1fr;
-}
-
-.newDiv {
-  display: grid;
-  grid-template-columes: 1fr 1fr 1fr;
-  grid-template-rows: 9fr 1fr;
-  grid-template-areas:
-   "newForm newForm newForm"
-   "pbutton sbutton bbutton";
-  overflow: hidden;
-}
-
-.pbutton {
-  grid-area: pbutton;
-}
-
-.sbutton {
-  grid-area: sbutton;
-}
-
-.bbutton {
-  grid-area: bbutton;
-}
-
-.newForm {
-  grid-area: newForm;
-  margin: 20px 20px 0px 20px;
-  max-height: 85vh;
-  overflow: hidden;
 }
 
 .loader {
@@ -566,15 +462,27 @@ body {
   padding: 8px 10px;
 }
 
-.article_image {
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* display: none; */
-  height: 0;
-  margin: 0!important;
-  overflow: hidden;
-  padding-top: 56.25%;
-  position: relative;
-  width: 188px;
+.aidcard {
+	display: grid;
+	max-width: 32vw;
+	grid-template-columns: 1fr;
+  grid-template-rows: 200px 3fr 1fr;
+  grid-column-gap: 6px;
+	grid-template-areas:
+	"aidpic"
+	"aidtitle"
+  "aidclk";
+  border: 1px solid;
+}
+
+.aidtitle { grid-area: aidtitle; text-align: left; }
+.aidpic { grid-area: aidpic; overflow: hidden; }
+.aidclk { grid-area: aidclk; }
+
+.articles {
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  grid-gap: 30px;
 }
