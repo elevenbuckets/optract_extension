@@ -24,21 +24,20 @@ class MainView extends Reflux.Component {
     }
 
     getArticleList = () =>{
-        let articles = this.state.activeTabKey == "toVote"? this.state.claimArticles : this.state.articles;
+        let articles = this.state.articles;
         return Object.keys(articles).filter(aid =>{
-            if(this.state.activeTabKey == "finalList" || this.state.activeTabKey == "toVote"){
+            if(articles[aid].page.lead_image_url !== null && articles[aid].page.excerpt.length >= 100){
                 return true;
             }
-            return articles[aid].tags.tags.includes(this.state.activeTabKey)
-        } ).splice(0,3).map((aid) => {
+        } ).map((aid) => {
             let article = articles[aid];
             return <div className="aidcard" onClick={this.goToArticle.bind(this, article)}>
                 <div className="aidtitle">
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
-                    {renderHTML(marked(article.page.excerpt.substring(0,140) + '...'))}
+                    {renderHTML(marked(article.page.excerpt.substring(0,242) + '...'))}
                 </div>
                 <div className="aidpic">
-                    <img src={article.page.lead_image_url ? article.page.lead_image_url : 'assets/erebor.png'} style={{ maxWidth: '100%' }}></img>
+                    <img src={article.page.lead_image_url ? article.page.lead_image_url : 'assets/golden_blockchain.png'}></img>
                 </div>
                 <div className="aidclk">
                     <input type="button" className="button" defaultValue="Vote" style={{ textAlign: 'center', right: '25px' }} onClick={this.props.goBack} />
@@ -48,8 +47,9 @@ class MainView extends Reflux.Component {
     }
 
     goToArticle = (article) => {
-        DlogsActions.fetchBlogContent(article);
-        this.setState({ view: "Content", currentBlog: article });
+        window.open(article.page.url, '_blank');
+        //DlogsActions.fetchBlogContent(article);
+        //this.setState({ view: "Content", currentBlog: article });
     }
 
     goBackToList = () => {
