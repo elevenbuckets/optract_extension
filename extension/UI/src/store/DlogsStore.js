@@ -314,7 +314,15 @@ class DlogsStore extends Reflux.Store {
     // }
 
     onUpdateTab = activeKey =>{
-        this.setState({activeTabKey: activeKey});
+        let state ={activeTabKey: activeKey};
+        if(this.state.newArticles){
+            state = {...state, articles: this.state.newArticles, newArticles : nulll};
+        }
+        if(this.state.newClaimArticles){
+            state = {...state, claimArticles: this.state.newClaimArticles, newClaimArticles : nulll};
+        }
+        this.setState(state);
+
     } 
 
 

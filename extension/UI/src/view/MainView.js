@@ -60,6 +60,9 @@ class MainView extends Reflux.Component {
             let layout = magic == 0 ? 'rpicDiv' : 'lpicDiv';
             let prefix = magic == 0 ? 'r' : 'l';
             let article = articles[aid];
+            let imageStyle = {
+                backgroundImage: 'url(' + article.page.lead_image_url + ')'
+              };
             return <div className={layout} onClick={this.goToArticle.bind(this, article)}>
 
                 <div className={prefix + 'title'} style={{ color: 'rgb(155,155,155,0.85)' }}>
@@ -69,7 +72,7 @@ class MainView extends Reflux.Component {
                 <div className={prefix + 'pic'}
                     style={{ width: '85px', height: '85px' }}>
                     <figure class="article_image"
-                        style={{ backgroundImage: `url('assets/erebor.png')` }}>
+                        style={imageStyle}>
                     </figure>
                     <input type="button" className="button" defaultValue="Vote" style={{ position: 'relative', right: '25px' }} onClick={this.props.goBack} />
                 </div>
@@ -80,8 +83,9 @@ class MainView extends Reflux.Component {
     }
 
     goToArticle = (article) => {
-        DlogsActions.fetchBlogContent(article);
-        this.setState({ view: "Content", currentBlog: article });
+        window.open(article.url, '_blank');
+        // DlogsActions.fetchBlogContent(article);
+        // this.setState({ view: "Content", currentBlog: article });
     }
 
     // goToNewBlog = () => {
@@ -122,7 +126,7 @@ class MainView extends Reflux.Component {
     render() {
         return (this.state.login ?
             <div className="content">
-                <div className="sidebar">
+                <div className="sidebar" style={{display:"none"}}>
                     <SideBarView />
                 </div>
                 <div className="item contentxt">

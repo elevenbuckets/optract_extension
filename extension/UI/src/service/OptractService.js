@@ -64,11 +64,37 @@ class OptractService {
                     callback()
                 }
             })
+        }
+
+        this.getNewBkRangeArticles = (startB, endB, parsing, callback) =>{
+            this.opt.call('getBkRangeArticles', [startB,endB,parsing]).then((data) =>{
+                let articles = {newArticles : data}
+                DlogsActions.updateState(articles);
+                if(callback){
+                    callback()
+                }
+            })
     
         }
-        this.processArticles = (data) =>{
-    
+
+        this.subscribeBlockData = (handler = null) => {
+			console.log("subcribing the blockData Event...");
+			this.client.subscribe('blockData');
+			this.blockDataHandler = handler;
+			this.client.on('blockData', this.blockDataDispatcher);
+		}
+
+		this.blockDataDispatcher = (obj) => {
+            console.log("Getting blockData events")
+            this.refreshArticles();
+			if (!this.blockDataHandler) {
+				console.log("No valid handler for blockData events")
+			} else {
+				this.blockDataHandler(obj)
+			}
         }
+        
+
 
         // this.unlockRPC = (pw, callback) =>{
         //     return connectRPC('ws://127.0.0.1:59437')
@@ -99,6 +125,17 @@ class OptractService {
 
     }
 
+    getNewClaimArticles = (op, parsing, callback) =>{
+        this.opt.call('getClaimArticles', [op,parsing]).then((data) =>{
+            let newClaimArticles = {newClaimArticles : data}
+            DlogsActions.updateState(newClaimArticles);
+            if(callback){
+                callback()
+            }
+        })
+
+    }
+
     getReports = ( callback) =>{
         this.opt.call('reports').then((data) =>{
             let reports = {reports : data}
@@ -108,6 +145,16 @@ class OptractService {
             }
         })
 
+    }
+
+    refreshArticles = (callback = null) =>{
+        this.opt.call('reports').then((data) =>{
+            let reports = {reports : data}
+
+            // get the last 5 blocks
+            this.getBkRangeArticles(data.optract.epoch -5,data.optract.epoch,true, callback);
+            this.getClaimArticles(data.optract.opround -2, true);
+        })
     }
 
 
