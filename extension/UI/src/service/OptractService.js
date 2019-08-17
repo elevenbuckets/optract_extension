@@ -39,6 +39,8 @@ class OptractService {
                                 this.getBkRangeArticles(data.optract.epoch -5,data.optract.epoch,true, callback);
                                 this.getClaimArticles(data.optract.opround -2, true);
                             })
+
+                            this.subscribeBlockData();
                             
                             this.opt.call("userWallet").then(rc => {
                                 console.dir(rc);

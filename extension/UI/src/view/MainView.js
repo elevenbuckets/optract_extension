@@ -67,7 +67,7 @@ class MainView extends Reflux.Component {
 
                 <div className={prefix + 'title'} style={{ color: 'rgb(155,155,155,0.85)' }}>
                     <p style={{ fontSize: "28px", color: '#969698' }}>{article.page.title}</p>
-                    {renderHTML(marked(article.page.excerpt))}
+                    {renderHTML(marked(article.page.excerpt != null? article.page.excerpt : ""))}
                 </div>
                 <div className={prefix + 'pic'}
                     style={{ width: '85px', height: '85px' }}>
