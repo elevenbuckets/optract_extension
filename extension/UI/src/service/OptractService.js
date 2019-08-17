@@ -79,9 +79,9 @@ class OptractService {
 
         this.subscribeBlockData = (handler = null) => {
 			console.log("subcribing the blockData Event...");
-			this.client.subscribe('blockData');
+			this.opt.subscribe('blockData');
 			this.blockDataHandler = handler;
-			this.client.on('blockData', this.blockDataDispatcher);
+			this.opt.on('blockData', this.blockDataDispatcher);
 		}
 
 		this.blockDataDispatcher = (obj) => {
