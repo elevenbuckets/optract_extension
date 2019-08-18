@@ -1,6 +1,6 @@
 import Reflux from "reflux";
 import React from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Toast } from "react-bootstrap";
 
 import DlogsStore from "../store/DlogsStore";
 import DlogsActions from "../action/DlogsActions";
@@ -47,34 +47,34 @@ class MainView extends Reflux.Component {
     //     })
     // }
 
-    getArticleList = () =>{
+    getArticleList = () => {
 
-        let articles = this.state.activeTabKey == "toVote"? this.state.claimArticles : this.state.articles;
-        return Object.keys(articles).filter(aid =>{
-            if(this.state.activeTabKey == "finalList" || this.state.activeTabKey == "toVote"){
+        let articles = this.state.activeTabKey == "toVote" ? this.state.claimArticles : this.state.articles;
+        return Object.keys(articles).filter(aid => {
+            if (this.state.activeTabKey == "finalList" || this.state.activeTabKey == "toVote") {
                 return true;
             }
             return articles[aid].tags.tags.includes(this.state.activeTabKey)
-        } ).map((aid) => {
+        }).map((aid) => {
             let magic = 1;
             let layout = magic == 0 ? 'rpicDiv' : 'lpicDiv';
             let prefix = magic == 0 ? 'r' : 'l';
             let article = articles[aid];
             let imageStyle = {
                 backgroundImage: 'url(' + article.page.lead_image_url + ')'
-              };
+            };
             return <div className={layout} onClick={this.goToArticle.bind(this, article)}>
 
                 <div className={prefix + 'title'} style={{ color: 'rgb(155,155,155,0.85)' }}>
                     <p style={{ fontSize: "28px", color: '#969698' }}>{article.page.title}</p>
-                    {renderHTML(marked(article.page.excerpt != null? article.page.excerpt : ""))}
+                    {renderHTML(marked(article.page.excerpt != null ? article.page.excerpt : ""))}
                 </div>
                 <div className={prefix + 'pic'}
                     style={{ width: '85px', height: '85px' }}>
                     <figure class="article_image"
                         style={imageStyle}>
                     </figure>
-                    <input type="button" className="button" defaultValue="Vote" style={{ position: 'relative', right: '25px' }} onClick={this.props.goBack} />
+                    <input type="button" className="button" defaultValue="Vote" style={{ position: 'relative', right: '25px' }} onClick={this.vote.bind(this, article)} />
                 </div>
 
 
@@ -123,10 +123,20 @@ class MainView extends Reflux.Component {
         this.goBackToList();
     }
 
+    vote = (article) =>{
+        let l = article.txs.length;
+        let i = Math.floor(Math.random() * l);
+        DlogsActions.vote(article.blk[i], article.txs[i]);
+    }
+
+    closeToast = () =>{
+        DlogsActions.closeToast();
+    }
+
     render() {
         return (this.state.login ?
             <div className="content">
-                <div className="sidebar" style={{display:"none"}}>
+                <div className="sidebar" style={{ display: "none" }}>
                     <SideBarView />
                 </div>
                 <div className="item contentxt">
@@ -150,6 +160,18 @@ class MainView extends Reflux.Component {
                             : <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
                                 currentBlogContent={this.state.currentBlogContent} goBack={this.goBackToList} />}
                 </div>
+                <Toast show={this.state.showVoteToaster} style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    minHeight: '100px',
+                    minWidth: '300px',
+                    fontSize:  "25px" 
+                  }}  onClose={this.closeToast} delay={3000} autohide>
+                    <Toast.Header>
+                    </Toast.Header>
+                    <Toast.Body>Vote Success! </Toast.Body>
+                </Toast>
             </div> : <LoginView />);
 
     }

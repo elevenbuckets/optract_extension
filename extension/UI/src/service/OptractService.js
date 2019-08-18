@@ -8,6 +8,7 @@ import DlogsActions from "../action/DlogsActions";
 class OptractService {
     constructor() {
         this.opt
+        this.account;
         const WSClient = require('rpc-websockets').Client;
         const connectRPC = (url) => {
 
@@ -44,6 +45,9 @@ class OptractService {
                             
                             this.opt.call("userWallet").then(rc => {
                                 console.dir(rc);
+                                let state = {acccount : rc.OptractMeida};
+                                this.acccount = rc.OptractMeida;
+                                DlogsActions.updateState(state);
                             })
                         })
                     })
@@ -156,7 +160,32 @@ class OptractService {
             // get the last 5 blocks
             this.getBkRangeArticles(data.optract.epoch -5,data.optract.epoch,true, callback);
             this.getClaimArticles(data.optract.opround -2, true);
+            this.getClaimTickets(this.acccount);
         })
+    }
+
+    getClaimTickets(addr){
+        this.opt.call('getClaimTickets', [addr]).then((data) =>{
+            let claimTickets = {claimTickets : data}
+            DlogsActions.updateState(claimTickets);
+        })
+    }
+
+    getFinalList(op){
+        this.opt.call('getOpRangeFinalList', [arguments]).then((data) =>{
+            let finalList = {finalList : data}
+            DlogsActions.updateState(finalList);
+        })
+    }
+
+    newVote(block, leaf){
+        console.log("Now vote with args : " + arguments);
+        console.dir(arguments)
+        return this.opt.call('newVote', {args:arguments});
+    }
+
+    newClaim(v1block, v1leaf, v2block, v2leaf, comment){
+        return this.opt.call('newClaim', arguments);
     }
 
 

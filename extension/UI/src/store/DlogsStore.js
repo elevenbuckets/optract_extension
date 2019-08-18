@@ -147,6 +147,7 @@ class DlogsStore extends Reflux.Store {
             passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"],
             activeTabKey : "finalList",
             curentBlockNO : 41,
+            showVoteToaster: false
 
         }
 
@@ -324,6 +325,17 @@ class DlogsStore extends Reflux.Store {
         this.setState(state);
 
     } 
+
+    onVote(block, leaf){
+        OptractService.newVote(block, leaf).then(data =>{
+            console.dir(data);
+        });
+        this.setState({showVoteToaster: true})
+    }
+
+    onCloseToast(){
+        this.setState({showVoteToaster: false})
+    }
 
 
 }
