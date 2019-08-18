@@ -10,7 +10,7 @@ class OptractService {
         this.opt
         const WSClient = require('rpc-websockets').Client;
         const connectRPC = (url) => {
-
+            this.opt = new WSClient(url,{reconnect_interval: 5000,max_reconnects:5 });
             const __ready = (resolve, reject) => {
                 this.opt.on('open', function (event) { resolve(true) });
                 this.opt.on('error', function (error) { console.trace(error); reject(false) });
@@ -19,7 +19,6 @@ class OptractService {
             return new Promise(__ready);
         }
         this.unlockRPC = (pw, callback, retry) => {
-            this.opt = new WSClient('ws://127.0.0.1:59437',{reconnect_interval: 5000,max_reconnects:5 });
             const unlockRPCWithRetry = () => {
                 retry++;
                 return connectRPC('ws://127.0.0.1:59437')
