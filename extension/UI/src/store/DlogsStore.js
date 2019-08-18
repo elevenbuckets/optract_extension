@@ -85,10 +85,10 @@ class DlogsStore extends Reflux.Store {
     
     onUnlock = (pw) => {
         this.setState({logining : true});
-        this.unlockRPC(pw, this.unlock,0);   
+        this.unlockRPC(pw, this.unlocked);   
     }
 
-    unlock = ()=>{
+    unlocked = ()=>{
         this.setState({ login: true, logining : false })
     }
 

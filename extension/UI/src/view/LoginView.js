@@ -25,15 +25,11 @@ class LoginView extends Reflux.Component {
 
     unlock = (event) => {
         if (event.keyCode == 13) {
-            var port = chrome.runtime.connect();
+            // var port = chrome.runtime.connect();
             let variable = this.refs.ps.value;
             this.refs.ps.value = "";
-            port.postMessage(JSON.stringify({ type: "Connect_WS-RPC", text: "This is the request for connect RPC", id: "dapp_1" }));
-            port.onMessage.addListener(function (msg) {
-                console.log(msg);
-                DlogsActions.unlock(variable);
-            });
 
+            DlogsActions.unlock(variable);
         }
     }
 
@@ -47,7 +43,7 @@ class LoginView extends Reflux.Component {
     render() {
         return (
             <div className="item contentxt">
-                {this.state.logining ? <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Starting the peer, need about 15 seconds </label>
+                {this.state.logining ? <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Starting the peer, need less than 15 seconds </label>
                     </div> : <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Password: </label>
                         <input autoFocus style={{ alignSelf: 'flex-start' }} type="password" ref="ps" onKeyUp={this.unlock} />
                     </div>}
