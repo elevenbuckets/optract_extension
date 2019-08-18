@@ -11,6 +11,7 @@ class OptractService {
         this.account;
         const WSClient = require('rpc-websockets').Client;
         const connectRPC = () => {
+            this.opt = new WSClient('ws://127.0.0.1:59437', { reconnect_interval: 2000, max_reconnects: 5 });
             const __ready = (resolve, reject) => {
                 this.opt.on('open', function (event) { resolve(true) });
                 this.opt.on('error', function (error) { console.trace(error); reject(false) });
@@ -34,7 +35,7 @@ class OptractService {
                     .then((rc) => {
                        
                         if (!rc && retry < 5) {
-                            setTimeout(unlockRPCWithRetry, 5000);
+                            setTimeout(unlockRPCWithRetry, 12000);
                         } else if (!rc && retry >= 5) {
                             throw ("failed connection");
                         }
@@ -61,14 +62,14 @@ class OptractService {
                     })
                     .catch((err) => {
                         if (retry < 5) {
-                            setTimeout(unlockRPCWithRetry, 1000);
+                            setTimeout(unlockRPCWithRetry, 12000);
                         } else if (retry >= 5) {
                             console.trace(err);
                         }
                     })
             }
             unlockRPCWithRetry();
-            this.opt = new WSClient('ws://127.0.0.1:59437', { reconnect_interval: 5000, max_reconnects: 5 });
+           
         }
 
         this.getBkRangeArticles = (startB, endB, parsing, callback) => {
