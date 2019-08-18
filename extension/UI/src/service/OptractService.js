@@ -10,8 +10,7 @@ class OptractService {
         this.opt
         this.account;
         const WSClient = require('rpc-websockets').Client;
-        const connectRPC = (url) => {
-
+        const connectRPC = () => {
             const __ready = (resolve, reject) => {
                 this.opt.on('open', function (event) { resolve(true) });
                 this.opt.on('error', function (error) { console.trace(error); reject(false) });
@@ -23,7 +22,7 @@ class OptractService {
             this.opt = new WSClient('ws://127.0.0.1:59437',{reconnect_interval: 5000,max_reconnects:5 });
             const unlockRPCWithRetry = () => {
                 retry++;
-                return connectRPC('ws://127.0.0.1:59437')
+                return connectRPC()
                     .then((rc) => {
                         if (!rc && retry < 5) {
                             setTimeout(unlockRPCWithRetry, 5000);
@@ -101,22 +100,6 @@ class OptractService {
         }
         
 
-
-        // this.unlockRPC = (pw, callback) =>{
-        //     return connectRPC('ws://127.0.0.1:59437')
-        //     .then((rc) =>
-        //     {
-        //            if (!rc) throw("failed connection");
-        //            console.dir("connectted to rpc!")
-        //            opt.call("password", [pw]).then(rc=>{
-        //                callback();
-        //                opt.call("userWallet").then(rc=>{
-        //                    console.dir(rc);
-        //                })
-        //            })
-        //     })
-        //     .catch((err) => { console.trace(err); }) 
-        //  }
 
     }
   

@@ -4,9 +4,6 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "buildWithoutWebpack": "./node_modules/.bin/babel  src --out-dir public",
-    "buildasar": "rm -fr ./dist && ./node_modules/.bin/electron-builder --linux --x64 --dir ./dist",
     "distRelease": "npm run build && npm run mvUItoDist",
     "serve": "live-server public/",
     "build": "webpack",
