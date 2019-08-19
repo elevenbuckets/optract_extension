@@ -116,8 +116,8 @@ class DlogsStore extends Reflux.Store {
     onVote(block, leaf){
         OptractService.newVote(block, leaf).then(data =>{
             console.dir(data);
+            this.setState({showVoteToaster: true})
         });
-        this.setState({showVoteToaster: true})
     }
 
     onCloseToast(){

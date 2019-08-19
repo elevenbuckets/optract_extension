@@ -72,14 +72,14 @@ body {
     display: grid;
     justify-content: center;
     align-items: center;
-    margin: 50px 50px 0 50px;
+    margin: 50px 50px 50px 50px;
     font-size: 16px;
     color: rgb(150, 150, 152);
     border-radius: 0px;
     /*background: rgba(255, 255, 255, 0.21);*/
-    grid-template-columns: 1fr 5fr 9%;
+    grid-template-columns: 1fr 5fr 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "sidebar centercontent .";
+    grid-template-areas: ". centercontent .";
 }
 
 .content h2 {

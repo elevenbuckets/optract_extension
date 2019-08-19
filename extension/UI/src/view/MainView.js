@@ -108,11 +108,12 @@ class MainView extends Reflux.Component {
                 </div>
                 <Toast show={this.state.showVoteToaster} style={{
                     position: 'absolute',
-                    top: 0,
-                    right: 0,
+                    top: 10,
+                    right: 10,
                     minHeight: '100px',
                     minWidth: '300px',
-                    fontSize: "25px"
+                    fontSize: "25px",
+		    backgroundColor: "#f4fafe"
                 }} onClose={this.closeToast} delay={3000} autohide>
                     <Toast.Header>
                     </Toast.Header>

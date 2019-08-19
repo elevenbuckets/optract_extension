@@ -173,9 +173,8 @@ class OptractService {
     }
 
     newVote(block, leaf) {
-        console.log("Now vote with args : " + arguments);
-        console.dir(arguments)
-        return this.opt.call('newVote', { args: arguments });
+        console.log(`Now vote with args: ${block} ${leaf}`);
+        return this.opt.call('newVote', { args: [block, leaf] });
     }
 
     newClaim(v1block, v1leaf, v2block, v2leaf, comment) {
