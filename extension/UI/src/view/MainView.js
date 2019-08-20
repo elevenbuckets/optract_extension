@@ -107,12 +107,13 @@ class MainView extends Reflux.Component {
                                 currentBlogContent={this.state.currentBlogContent} goBack={this.goBackToList} />}
                 </div>
                 <Toast show={this.state.showVoteToaster} style={{
-                    position: 'absolute',
+                    position: 'fixed',
                     top: 10,
                     right: 10,
-                    minHeight: '100px',
-                    minWidth: '300px',
-                    fontSize: "25px",
+		    zIndex: 2000,
+                    minHeight: '110px',
+                    minWidth: '360px',
+                    fontSize: "28px",
 		    backgroundColor: "#f4fafe"
                 }} onClose={this.closeToast} delay={3000} autohide>
                     <Toast.Header>
