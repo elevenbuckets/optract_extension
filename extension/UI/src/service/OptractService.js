@@ -54,16 +54,32 @@ class OptractService {
 	                        this.opt.call('reports').then((data) => {
         	                        let reports = { reports: data }
 
-					if (!data.dbsync) {
-        	                        	this.getBkRangeArticles(data.optract.synced - 5, data.optract.synced, true, callback);
-                	                	this.getClaimArticles(data.optract.opround - 2, true);
+					if (data.dbsync) {
+						let os = data.optract.synced;
+						if (data.optract.synced > 5) os = data.optract.synced - 5;
+        	                        	this.getBkRangeArticles(os, data.optract.synced, true, callback);
+						if (data.optract.drawed === true) {
+							this.getClaimArticles(data.optract.opround, true);
+							this.getClaimTickets(this.account);
+						}
 				        } else {
-                                		this.getBkRangeArticles(data.optract.epoch - 5, data.optract.epoch, true, callback);
-                                		this.getClaimArticles(data.optract.opround - 2, true);
+						let os = data.optract.epoch;
+						if (data.optract.epoch > 5) os = data.optract.epoch - 5;
+                                		this.getBkRangeArticles(os, data.optract.epoch, true, callback);
 					}
                             	})
 
-	                        this.subscribeBlockData();
+				const __handler = (obj) =>
+				{
+					let articles = this.state.articles;
+					Object.keys(this.state.claimArticles).map((aid) => {
+						articles[aid] = {...articles[aid], claim: true};
+					})
+
+					DlogsActions.updateState({articles})
+				}
+
+	                        this.subscribeBlockData(__handler);
 
         	                this.opt.call("userWallet").then(rc => {
                 	                console.dir(rc);
@@ -123,12 +139,13 @@ class OptractService {
 
         this.blockDataDispatcher = (obj) => {
             console.log("Getting blockData events")
-            this.refreshArticles();
-            if (!this.blockDataHandler) {
-                console.log("No valid handler for blockData events")
-            } else {
-                this.blockDataHandler(obj)
-            }
+            this.refreshArticles().then(() => {
+            	if (!this.blockDataHandler) {
+                	console.log("No valid handler for blockData events")
+            	} else {
+                	this.blockDataHandler(obj)
+            	}
+	    })
         }
     }
 
@@ -164,14 +181,23 @@ class OptractService {
     }
 
     refreshArticles = (callback = null) => {
-        this.opt.call('reports').then((data) => {
+        return this.opt.call('reports').then((data) => {
             let reports = { reports: data }
 
-            // get the last 5 blocks
-            this.getBkRangeArticles(data.optract.epoch - 5, data.optract.epoch, true, callback);
-            this.getClaimArticles(data.optract.opround - 2, true);
-            this.getClaimTickets(this.acccount);
-        }).catch((err) => { console.trace(err); setTimeout(this.opt.call, 5000, 'reports'); })
+	    if (data.dbsync && this.account) {
+		let os = data.optract.synced;
+		if (data.optract.synced > 5) os = data.optract.synced - 5;
+		this.getNewBkRangeArticles(os, data.optract.synced, true, callback);
+		if (data.optract.drawed === true) {
+			this.getNewClaimArticles(data.optract.opround, true);
+			this.getClaimTickets(this.account);
+		}
+	    } else {
+		let os = data.optract.epoch;
+		if (data.optract.epoch > 5) os = data.optract.epoch - 5;
+		this.getNewBkRangeArticles(os, data.optract.epoch, true, callback);
+	    }
+        }).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000, 'reports'); })
     }
 
     getClaimTickets(addr) {
