@@ -7,7 +7,7 @@ function handler {
 
 trap handler INT;
 trap handler KILL;
-trap handler CHILD;
+trap handler CHLD;
 
 WAIT=true
 if [ -f $PWD/dist/Optract.LOCK ]; then 
