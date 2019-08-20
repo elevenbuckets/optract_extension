@@ -21,6 +21,7 @@ class LoginView extends Reflux.Component {
     }
 
     componentDidMount() {
+	    if (this.state.wsrpc !== 'connected') DlogsActions.connectRPC();
     }
 
     unlock = (event) => {

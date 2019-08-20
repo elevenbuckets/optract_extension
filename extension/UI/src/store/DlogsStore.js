@@ -17,6 +17,7 @@ class DlogsStore extends Reflux.Store {
         this.ipfsClient = FileService.ipfsClient;
         this.opt = OptractService.opt;
         this.unlockRPC = OptractService.unlockRPC;
+        this.connect = OptractService.connect;
         
 
         this.state = {
@@ -63,25 +64,26 @@ class DlogsStore extends Reflux.Store {
             passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"],
             activeTabKey : "finalList",
             curentBlockNO : 41,
-            showVoteToaster: false
-
+            showVoteToaster: false,
+	    wsrpc: 'disconnected'
         }
 
     }
 
-    initializeState = () => {
-
-    }
-
-
     onFetchBlogContent = (article) => {
         this.setState({ currentBlogContent: article.page.content });
-        // Mercury.parse(url, {
-        //   }).then(r => {
-        //     this.setState({ currentBlogContent: r.content });
-        // })
     }
 
+    onConnectRPC = () =>
+    {
+	    if (this.state.wsrpc === 'connected') {
+		    console.log(`connected`)
+		    return
+	    }
+
+	    console.log(`DEBUG: connecting RPC...`)
+	    this.connect();
+    }
     
     onUnlock = (pw) => {
         this.setState({logining : true});
@@ -96,18 +98,13 @@ class DlogsStore extends Reflux.Store {
         this.setState(state);
     }
 
-    // onRefresh = () => {
-    //     this.setState({ blogs: [] });
-    //     this.initializeState();
-    // }
-
     onUpdateTab = activeKey =>{
         let state ={activeTabKey: activeKey};
         if(this.state.newArticles){
-            state = {...state, articles: this.state.newArticles, newArticles : nulll};
+            state = {...state, articles: this.state.newArticles, newArticles : null};
         }
         if(this.state.newClaimArticles){
-            state = {...state, claimArticles: this.state.newClaimArticles, newClaimArticles : nulll};
+            state = {...state, claimArticles: this.state.newClaimArticles, newClaimArticles : null};
         }
         this.setState(state);
 
