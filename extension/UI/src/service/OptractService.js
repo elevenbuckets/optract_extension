@@ -5,7 +5,7 @@
 
 import DlogsActions from "../action/DlogsActions";
 var port = chrome.runtime.connect();
-var stat = 'disconnected';
+var stat = false;
 
 class OptractService {
     constructor() {
@@ -16,11 +16,11 @@ class OptractService {
         const connectRPC = (mn) => {
             this.opt = new WSClient('ws://127.0.0.1:59437', {max_reconnects: mn});
             const __ready = (resolve, reject) => {
-                this.opt.on('open', function (event) { resolve(true) });
-                this.opt.on('error', function (error) { reject(false) });
+                this.opt.on('open', function (event) { console.log(`!!!!!!!!!!!!!!!!!!!!! CONNECTED `); stat = true; resolve(stat) });
+                this.opt.on('error', function (error) { console.trace(error); reject(false) });
             }
 
-            return new Promise(__ready).catch((err) => { setTimeout(connectRPC, 1200) });
+            return new Promise(__ready);
         }
 
 	this.connect = () => 
@@ -28,45 +28,57 @@ class OptractService {
 		console.log(`OptractService connect called`);
 		port.postMessage(JSON.stringify({test: 'wsrpc'}));
 		        connectRPC(1).then((rc) => {
-				stat = 'connected';
-				return;
+				if (!rc) throw "wait for socket";
+                                DlogsActions.updateState({wsrpc: stat});
 			})
 		        .catch((err) => {
-		        	connectRPC(25).then((rc) => {
-					stat = 'connected';
-		   		})
+		        	connectRPC(0).then((rc) => {
+					if (!rc) throw "wait for socket";
+                                	DlogsActions.updateState({wsrpc: stat});
+		   		}).catch((err) => { true })
 			})
 
 	}
 
         this.unlockRPC = (pw, callback) => {
+		console.log(`stat = ${stat}`);
             const unlockRPCWithRetry = () => {
-		   console.log('DEBUG: unlockRPCWithRetry called')
-		   if (stat !== 'connected') return setTimeout(unlockRPCWithRetry, 5000)
-                   this.opt.call("password", [pw]).then(rc => {
-                            this.opt.call('reports').then((data) => {
-                                let reports = { reports: data }
+		   if (!stat) {
+                           DlogsActions.updateState({login: false, logining: false});
+			   return;
+		   }
 
-				if (!data.dbsync) {
-                                	this.getBkRangeArticles(data.optract.synced - 5, data.optract.synced, true, callback);
-                                	this.getClaimArticles(data.optract.opround - 2, true);
-			        } else {
-                                	this.getBkRangeArticles(data.optract.epoch - 5, data.optract.epoch, true, callback);
-                                	this.getClaimArticles(data.optract.opround - 2, true);
-				}
-                            })
+                   this.opt.call("password", [pw]).then(() => {
+			    this.opt.call('validPass').then((rc) => {
+				if (rc === false) throw "wrong password"
+	                        this.opt.call('reports').then((data) => {
+        	                        let reports = { reports: data }
 
-                            this.subscribeBlockData();
+					if (!data.dbsync) {
+        	                        	this.getBkRangeArticles(data.optract.synced - 5, data.optract.synced, true, callback);
+                	                	this.getClaimArticles(data.optract.opround - 2, true);
+				        } else {
+                                		this.getBkRangeArticles(data.optract.epoch - 5, data.optract.epoch, true, callback);
+                                		this.getClaimArticles(data.optract.opround - 2, true);
+					}
+                            	})
 
-                            this.opt.call("userWallet").then(rc => {
-                                console.dir(rc);
-                                let state = { acccount: rc.OptractMeida, wsrpc: stat };
-                                this.acccount = rc.OptractMeida;
-                                DlogsActions.updateState(state);
-                            })
+	                        this.subscribeBlockData();
+
+        	                this.opt.call("userWallet").then(rc => {
+                	                console.dir(rc);
+					if (typeof(rc.OptractMedia) === 'undefined') throw "wait for linkAccount"; 
+                        	        let state = { acccount: rc.OptractMeida, wsrpc: this.stat };
+	                                this.acccount = rc.OptractMedia;
+        	                        DlogsActions.updateState(state);
+                	        })
+				.catch((err) => { console.trace(err); setTimeout(this.unlockRPC, 5000, pw, callback); })
+			     })
+                    	     .catch((err) => { DlogsActions.updateState({login: false, logining: false}); setTimeout(this.unlockRPC, 5000, pw, callback); })
                     })
                     .catch((err) => {
                             console.trace(err);
+                            DlogsActions.updateState({login: false, logining: false});
                     })
             }
 
@@ -80,7 +92,10 @@ class OptractService {
                 if (callback) {
                     callback()
                 }
-            }).catch((err) => { console.trace(err); })
+            }).catch((err) => { console.trace(err); 
+		    if (endB > startB) endB = endB-1; 
+		    setTimeout(this.opt.call, 5000, 'getBkRangeArticles', [startB, endB, parsing]); 
+	    })
         }
 
         this.getNewBkRangeArticles = (startB, endB, parsing, callback) => {
@@ -96,6 +111,11 @@ class OptractService {
 
         this.subscribeBlockData = (handler = null) => {
             console.log("subcribing the blockData Event...");
+	    //reset
+	    this.opt.off('blockData');
+	    this.opt.unsubscribe('blockData');
+
+            //subscribe
             this.opt.subscribe('blockData');
             this.blockDataHandler = handler;
             this.opt.on('blockData', this.blockDataDispatcher);
