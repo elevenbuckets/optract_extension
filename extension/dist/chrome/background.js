@@ -7,17 +7,13 @@ chrome.browserAction.onClicked.addListener(function(activeTab)
    openTab("index.html")
 });
 
-let tport;
+let tport = chrome.runtime.connectNative('optract');
+tport.onMessage.addListener(function (msgs) {
+ 	true;
+})
 
 chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
-	tport = chrome.runtime.connectNative('optract');
-	tport.onMessage.addListener(function (msgs) {
-       		port.postMessage(msgs)
-	})
-    });
-
-    port.onDisconnect.addListener(function() {
 	tport.disconnect();
     });
 });

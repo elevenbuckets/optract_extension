@@ -95,7 +95,7 @@ class MainView extends Reflux.Component {
                         <Tab eventKey="finance" title="Finance"></Tab>
                     </Tabs>
                     {this.state.view === "List" ?
-                        this.state.articles.length == 0 ?
+                        Object.keys(this.state.articles).length == 0 ?
                             <div className='item'><div className='item loader' style={{position: 'fixed', top: '50%', right: '50%'}}></div>
 			    <label style={{ margin: '10px', alignSelf: "flex-end" }}>Loading ...</label></div> :
                             <div className="articles"> {this.getArticleList()} </div> :
