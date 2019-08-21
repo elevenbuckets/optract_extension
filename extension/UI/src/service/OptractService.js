@@ -7,6 +7,7 @@ import DlogsActions from "../action/DlogsActions";
 var port = chrome.runtime.connect();
 var stat = false;
 
+
 class OptractService {
     constructor() {
         this.opt
@@ -16,34 +17,38 @@ class OptractService {
         const connectRPC = (mn) => {
             this.opt = new WSClient('ws://127.0.0.1:59437', {max_reconnects: mn});
             const __ready = (resolve, reject) => {
-                this.opt.on('open', function (event) { console.log(`!!!!!!!!!!!!!!!!!!!!! CONNECTED `); stat = true; resolve(stat) });
-                this.opt.on('error', function (error) { console.trace(error); reject(false) });
+                this.opt.on('open', function (event) { 
+			console.log(`!!!!!!!!!!!!!!! CONNECTED`); 
+			stat = true; 
+			DlogsActions.updateState({wsrpc: stat});
+			resolve(true) 
+		});
+                this.opt.on('error', function (error) { reject(false) });
             }
 
             return new Promise(__ready);
         }
 
+	this.shutdown = () => { this.opt.close(); port.disconnect(); }
 	this.connect = () => 
 	{
+		port.postMessage({test: 'wsrpc'});
 		console.log(`OptractService connect called`);
-		port.postMessage(JSON.stringify({test: 'wsrpc'}));
-		        connectRPC(1).then((rc) => {
+		connectRPC(1).then((rc) => {
+			if (!rc) throw "wait for socket";
+		})
+		.catch((err) => {
+			connectRPC(0).then((rc) => {
 				if (!rc) throw "wait for socket";
-                                DlogsActions.updateState({wsrpc: stat});
-			})
-		        .catch((err) => {
-		        	connectRPC(0).then((rc) => {
-					if (!rc) throw "wait for socket";
-                                	DlogsActions.updateState({wsrpc: stat});
-		   		}).catch((err) => { true })
-			})
+			}).catch((err) => { true })
+		})
 
 	}
 
         this.unlockRPC = (pw, callback) => {
 		console.log(`stat = ${stat}`);
             const unlockRPCWithRetry = () => {
-		   if (!stat) {
+		   if (stat === false) {
                            DlogsActions.updateState({login: false, logining: false});
 			   return;
 		   }
@@ -69,22 +74,12 @@ class OptractService {
 					}
                             	})
 
-				const __handler = (obj) =>
-				{
-					let articles = this.state.articles;
-					Object.keys(this.state.claimArticles).map((aid) => {
-						articles[aid] = {...articles[aid], claim: true};
-					})
-
-					DlogsActions.updateState({articles})
-				}
-
-	                        this.subscribeBlockData(__handler);
+	                        this.subscribeBlockData(DlogsActions.newBlock);
 
         	                this.opt.call("userWallet").then(rc => {
                 	                console.dir(rc);
 					if (typeof(rc.OptractMedia) === 'undefined') throw "wait for linkAccount"; 
-                        	        let state = { acccount: rc.OptractMeida, wsrpc: this.stat };
+                        	        let state = { acccount: rc.OptractMeida, wsrpc: stat };
 	                                this.acccount = rc.OptractMedia;
         	                        DlogsActions.updateState(state);
                 	        })

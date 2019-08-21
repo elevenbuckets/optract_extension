@@ -18,7 +18,7 @@ class DlogsStore extends Reflux.Store {
         this.opt = OptractService.opt;
         this.unlockRPC = OptractService.unlockRPC;
         this.connect = OptractService.connect;
-        
+	this.shutdown = OptractService.shutdown;
 
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
@@ -65,7 +65,7 @@ class DlogsStore extends Reflux.Store {
             activeTabKey : "finalList",
             curentBlockNO : 41,
             showVoteToaster: false,
-	    wsrpc: 'disconnected'
+	    wsrpc: false
         }
 
     }
@@ -74,9 +74,16 @@ class DlogsStore extends Reflux.Store {
         this.setState({ currentBlogContent: article.page.content });
     }
 
+    onNewBlock = (obj) =>
+    { 
+	    let articles = this.state.articles; 
+            Object.keys(this.state.claimArticles).map((aid) => { articles[aid] = {...articles[aid], claim: true}; }); 
+	    this.setState({articles : articles}); 
+    }
+
     onConnectRPC = () =>
     {
-	    if (this.state.wsrpc === 'connected') {
+	    if (this.state.wsrpc === true) {
 		    console.log(`connected`)
 		    return
 	    }
@@ -84,7 +91,12 @@ class DlogsStore extends Reflux.Store {
 	    console.log(`DEBUG: connecting RPC...`)
 	    this.connect();
     }
-    
+
+    onCloseOpt = () =>
+    {
+	    this.shutdown();
+    }
+
     onUnlock = (pw) => {
         this.setState({logining : true});
         this.unlockRPC(pw, this.unlocked);   

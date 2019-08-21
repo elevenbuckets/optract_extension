@@ -1,6 +1,6 @@
 import Reflux from "reflux"
 
 let DlogsActions = Reflux.createActions(["connectRPC", "saveNewBlog", "fetchBlogContent", "unlock", "refresh",
- "deleteBlog", "editBlog", "updateTab", "updateState", "vote","closeToast"]);
+ "deleteBlog", "editBlog", "updateTab", "updateState", "vote","closeToast", "newBlock", "closeOpt"]);
 
 export default DlogsActions

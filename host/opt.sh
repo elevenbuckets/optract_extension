@@ -5,10 +5,6 @@ function handler {
 	pkill -15 optRun
 }
 
-trap handler INT;
-trap handler KILL;
-trap handler CHLD;
-
 WAIT=true
 if [ -f $PWD/dist/Optract.LOCK ]; then 
 	echo -n '\x16\x0\x0\x0{"connection":"false"}'; 
@@ -25,3 +21,7 @@ done
 while true; do
 	sleep 100;
 done
+
+trap handler INT;
+trap handler KILL;
+trap handler CHLD;
