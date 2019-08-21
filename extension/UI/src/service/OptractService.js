@@ -4,6 +4,7 @@
 // import ipfsClient from 'ipfs-http-client';
 
 import DlogsActions from "../action/DlogsActions";
+var port = chrome.runtime.connect();
 var stat = false;
 
 class OptractService {
@@ -28,14 +29,14 @@ class OptractService {
         }
 
 	this.shutdown = () => { 
-		var port = chrome.runtime.connect();
 		this.opt.close(); 
-		port.postMessage({test: 'wsrpc'});
+
 		port.disconnect(); 
 	}
 
 	this.connect = () => 
 	{
+		port.postMessage({test: 'wsrpc'});
 		console.log(`OptractService connect called`);
 		connectRPC(1).then((rc) => {
 			if (!rc) throw "wait for socket";

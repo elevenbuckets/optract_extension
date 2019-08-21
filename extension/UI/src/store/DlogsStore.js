@@ -22,7 +22,7 @@ class DlogsStore extends Reflux.Store {
 
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
-
+	    claimArticles: {},
             articles : {},
             following: [],
             displayBlogs: [],
