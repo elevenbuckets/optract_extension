@@ -28,7 +28,7 @@ class MainView extends Reflux.Component {
 	if (Object.keys(articles).length === 0) return;
 
         return Object.keys(articles).filter(aid => {
-            if (typeof(articles[aid].page) !== 'undefined' && articles[aid].page.lead_image_url !== null && articles[aid].page.excerpt.length >= 100) {
+            if (typeof(articles[aid].page) !== 'undefined' && articles[aid].page.lead_image_url !== null) {
                 if (this.state.activeTabKey == "finalList" || this.state.activeTabKey == "toVote") {
                     return true;
                 }
