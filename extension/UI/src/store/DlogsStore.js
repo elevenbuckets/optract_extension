@@ -23,6 +23,7 @@ class DlogsStore extends Reflux.Store {
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
 	    claimArticles: {},
+	    newArticles: {},
             articles : {},
             following: [],
             displayBlogs: [],
@@ -49,8 +50,17 @@ class DlogsStore extends Reflux.Store {
     onNewBlock = (obj) =>
     { 
 	    let articles = this.state.articles; 
-            Object.keys(this.state.claimArticles).map((aid) => { articles[aid] = {...articles[aid], claim: true}; }); 
-	    this.setState({articles : articles}); 
+	    let newArticles = this.state.newArticles; 
+	    let out = { ...articles, ...newArticles };
+
+	    if (Object.keys(this.state.claimArticles).length > 0) {
+            	Object.keys(this.state.claimArticles).map((aid) => { 
+		    	if (typrof(out[aid]) === 'undefined') return;
+		    	out[aid] = {...out[aid], claim: true}; 
+	    	}); 
+	    }
+		
+	    this.setState({newArticles : out})
     }
 
     onConnectRPC = () =>
@@ -84,24 +94,21 @@ class DlogsStore extends Reflux.Store {
 
     onUpdateTab = activeKey =>{
         let state ={activeTabKey: activeKey};
-        if(this.state.newArticles){
-            state = {...state, articles: this.state.newArticles, newArticles : null};
-        }
-        if(this.state.newClaimArticles){
-            state = {...state, claimArticles: this.state.newClaimArticles, newClaimArticles : null};
+        if(Object.keys(this.state.newArticles) > 0) {
+            state = {...state, articles: this.state.newArticles, newArticles : {} };
         }
         this.setState(state);
 
     } 
 
-    onVote(block, leaf){
+    onVote(block, leaf) {
         OptractService.newVote(block, leaf).then(data =>{
             console.dir(data);
             this.setState({showVoteToaster: true})
         });
     }
 
-    onCloseToast(){
+    onCloseToast() {
         this.setState({showVoteToaster: false})
     }
 

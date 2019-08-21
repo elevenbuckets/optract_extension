@@ -24,9 +24,11 @@ class MainView extends Reflux.Component {
     }
 
     getArticleList = () => {
-        let articles = this.state.activeTabKey == "toVote" ? this.state.claimArticles : this.state.articles;
+        let articles = this.state.articles; 
+	if (Object.keys(articles).length === 0) return;
+
         return Object.keys(articles).filter(aid => {
-            if (articles[aid].page.lead_image_url !== null && articles[aid].page.excerpt.length >= 100) {
+            if (typeof(articles[aid].page) !== 'undefined' && articles[aid].page.lead_image_url !== null && articles[aid].page.excerpt.length >= 100) {
                 if (this.state.activeTabKey == "finalList" || this.state.activeTabKey == "toVote") {
                     return true;
                 }
@@ -34,7 +36,7 @@ class MainView extends Reflux.Component {
             }
         }).map((aid) => {
             let article = articles[aid];
-            return <div className="aidcard" onClick={this.goToArticle.bind(this, article)}>
+            return <div title={'Source: ' + article.page.domain} className="aidcard" onClick={this.goToArticle.bind(this, article)}>
                 <div className="aidtitle">
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
                     {renderHTML(marked(article.page.excerpt.substring(0, 242) + '...'))}
@@ -45,6 +47,10 @@ class MainView extends Reflux.Component {
                 <div className="aidclk">
                     <input type="button" className="button" defaultValue="Vote" style={{ textAlign: 'center', right: '25px' }}
                     onClick={this.vote.bind(this, article)} />
+		    {
+			typeof(article.claim) !== 'undefined' && article.claim === true ?
+                    	<input type="button" className="button" defaultValue="Claim" style={{ textAlign: 'center', right: '25px' }} /> : ''
+		    }
                 </div>
             </div>
         })
@@ -81,6 +87,7 @@ class MainView extends Reflux.Component {
     }
 
     render() {
+	    console.dir(this.state.articles)
         return (this.state.login ?
             <div className="content">
 		<div className="sidebar" style={{ display: "none" }}>
@@ -95,7 +102,7 @@ class MainView extends Reflux.Component {
                         <Tab eventKey="finance" title="Finance"></Tab>
                     </Tabs>
                     {this.state.view === "List" ?
-                        Object.keys(this.state.articles).length == 0 ?
+                        Object.keys(this.state.articles).length === 0 ?
                             <div className='item'><div className='item loader' style={{position: 'fixed', top: '50%', right: '50%'}}></div>
 			    <label style={{ margin: '10px', alignSelf: "flex-end" }}>Loading ...</label></div> :
                             <div className="articles"> {this.getArticleList()} </div> :
