@@ -17,7 +17,7 @@ class MainView extends Reflux.Component {
         super(props);
         this.state = {
             view: "List",
-            currentBlog: ""
+            currentBlog: "",
         }
 
         this.store = DlogsStore;
@@ -36,17 +36,20 @@ class MainView extends Reflux.Component {
             }
         }).map((aid) => {
             let article = articles[aid];
-            return <div title={'Source: ' + article.page.domain} className="aidcard" onClick={this.goToArticle.bind(this, article)}>
-                <div className="aidtitle">
+            return <div title={'Source: ' + article.page.domain} className="aidcard">
+                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
                     {renderHTML(marked(article.page.excerpt.substring(0, 242) + '...'))}
                 </div>
-                <div className="aidpic">
+                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     <img src={article.page.lead_image_url ? article.page.lead_image_url : 'assets/golden_blockchain.png'}></img>
                 </div>
-                <div className="aidclk">
-                    <input type="button" className="button" defaultValue="Vote" style={{ textAlign: 'center', right: '25px' }}
-                    onClick={this.vote.bind(this, article)} />
+                <div className="aidclk" onClick={()=>{}}>
+			<div className="button" 
+			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer' }} 
+			     onClick={typeof(this.state.voted) === 'undefined' ? this.vote.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
+			{this.state.voted === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Vote'}
+			</div>
 		    {
 			typeof(article.claim) !== 'undefined' && article.claim === true ?
                     	<input type="button" className="button" defaultValue="Claim" style={{ textAlign: 'center', right: '25px' }} /> : ''
@@ -71,10 +74,11 @@ class MainView extends Reflux.Component {
         this.goBackToList();
     }
 
-    vote = (article, e) => {
+    vote = (article, aid, e) => {
+	this.setState({voted: aid});
         let l = article.txs.length;
         let i = Math.floor(Math.random() * l);
-        DlogsActions.vote(article.blk[i], article.txs[i]);
+        DlogsActions.vote(article.blk[i], article.txs[i], aid);
         e.stopPropagation();
     }
 
@@ -87,7 +91,7 @@ class MainView extends Reflux.Component {
     }
 
     render() {
-	    console.dir(this.state.articles)
+	    console.dir(this.state.voted)
         return (this.state.login ?
             <div className="content">
 		<div className="sidebar" style={{ display: "none" }}>
@@ -113,17 +117,18 @@ class MainView extends Reflux.Component {
                 </div>
                 <Toast show={this.state.showVoteToaster} style={{
                     position: 'fixed',
-                    top: 10,
+                    bottom: 15,
                     right: 10,
 		    zIndex: 2000,
-                    minHeight: '110px',
+                    minHeight: '101px',
                     minWidth: '360px',
                     fontSize: "28px",
-		    backgroundColor: "#f4fafe"
-                }} onClose={this.closeToast} delay={3000} autohide>
-                    <Toast.Header style={{backgroundColor: "#f4fafe", border: '0px'}}>
-                    </Toast.Header>
-                    <Toast.Body>Vote Success! </Toast.Body>
+		    backgroundColor: "#ff4200",
+		    color: "white", 
+		    fontWeight: "bold"
+                }} onClose={this.closeToast} autoHide>
+                    <Toast.Header style={{color: '#ff4200', closeBmaxHeight: '30px', backgroundColor: '#ff4200', border: '0px'}}></Toast.Header>
+		    <Toast.Body style={{justifyContent: 'center', textAlign: 'center', height: '71px', width: '360px'}}>Vote Success!</Toast.Body>
                 </Toast>
             </div> : <LoginView />);
 

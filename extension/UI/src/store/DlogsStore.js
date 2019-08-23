@@ -38,7 +38,8 @@ class DlogsStore extends Reflux.Store {
             activeTabKey : "finalList",
             curentBlockNO : 41,
             showVoteToaster: false,
-	    wsrpc: false
+	    wsrpc: false,
+	    voted: undefined
         }
 
     }
@@ -48,7 +49,8 @@ class DlogsStore extends Reflux.Store {
     }
 
     onNewBlock = (obj) =>
-    { 
+    {
+	    console.log(`DEBUG: newBlock action is called...`);
 	    let articles = this.state.articles; 
 	    let newArticles = this.state.newArticles; 
 	    let out = { ...articles, ...newArticles };
@@ -56,8 +58,11 @@ class DlogsStore extends Reflux.Store {
 	    if (Object.keys(this.state.claimArticles).length > 0) {
             	Object.keys(this.state.claimArticles).map((aid) => { 
 		    	if (typrof(out[aid]) === 'undefined') return;
-		    	out[aid] = {...out[aid], claim: true}; 
+		    	out[aid] = {...out[aid], claim: true};
+			console.log(`article ${aid} is tagged`)
 	    	}); 
+	    } else {
+		console.log(`newArticle store is empty ... skipped`)
 	    }
 		
 	    this.setState({newArticles : out})
@@ -92,19 +97,21 @@ class DlogsStore extends Reflux.Store {
         this.setState(state);
     }
 
-    onUpdateTab = activeKey =>{
+    onUpdateTab = activeKey => {
+	console.log(`DEBUG: updateTab action is called..`)
         let state ={activeTabKey: activeKey};
         if(Object.keys(this.state.newArticles) > 0) {
+	    console.log(`DEBUG: updateTab action is causing articles update..`)
             state = {...state, articles: this.state.newArticles, newArticles : {} };
         }
         this.setState(state);
 
     } 
 
-    onVote(block, leaf) {
+    onVote(block, leaf, aid) {
         OptractService.newVote(block, leaf).then(data =>{
             console.dir(data);
-            this.setState({showVoteToaster: true})
+            this.setState({voted: undefined, showVoteToaster: true})
         });
     }
 

@@ -63,19 +63,18 @@ class OptractService {
 					this.opt.call('reports').then((data) => {
 						let reports = { reports: data }
 
-						if (data.dbsync) {
-							let os = data.optract.synced;
-							if (data.optract.synced > 5) os = data.optract.synced - 5;
-							this.getBkRangeArticles(os, data.optract.synced, true, callback);
-							if (data.optract.drawed === true) {
-								this.getClaimArticles(data.optract.opround, true);
-								this.getClaimTickets(this.account);
-							}
-						} else {
-							let os = data.optract.epoch;
-							if (data.optract.epoch > 5) os = data.optract.epoch - 5;
-							this.getBkRangeArticles(os, data.optract.epoch, true, callback);
+						let os = data.optract.synced;
+						if (data.optract.synced > 5) {
+							os = data.optract.synced - 5;
+							if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
 						}
+						this.getBkRangeArticles(os, data.optract.synced, true, callback);
+						if (data.optract.drawed === true) {
+							this.getClaimArticles(data.optract.opround, true);
+							this.getClaimTickets(this.account);
+						}
+
+						DlogsActions.updateState(reports);
 					})
 					 .catch((err) => { console.trace(err); })
 
@@ -174,20 +173,23 @@ class OptractService {
 		return this.opt.call('reports').then((data) => {
 		    let reports = { reports: data }
 
-		    if (data.dbsync && this.account) {
+		    if (this.account) {
 			let os = data.optract.synced;
-			if (data.optract.synced > 5) os = data.optract.synced - 5;
-			this.getNewBkRangeArticles(os, data.optract.synced, true, callback);
+			if (data.optract.synced > 5) {
+				os = data.optract.synced - 5;
+				if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
+			}
+			this.getBkRangeArticles(os, data.optract.synced, true, callback);
 			if (data.optract.drawed === true) {
-				this.getNewClaimArticles(data.optract.opround, true);
+				this.getClaimArticles(data.optract.opround, true);
 				this.getClaimTickets(this.account);
 			}
+
+			DlogsActions.updateState(reports);
 		    } else {
-			let os = data.optract.epoch;
-			if (data.optract.epoch > 5) os = data.optract.epoch - 5;
-			this.getNewBkRangeArticles(os, data.optract.epoch, true, callback);
+			return setTimeout(this.refreshArticles, 10000);    
 		    }
-		}).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000, 'reports'); })
+		}).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); })
 	    }
 
 	    this.getClaimTickets = (addr) => {
