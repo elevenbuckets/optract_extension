@@ -94,12 +94,10 @@ class MainView extends Reflux.Component {
 	    console.dir(this.state.voted)
         return (this.state.login ?
             <div className="content">
-		<div className="sidebar" style={{ display: "none" }}>
-		        <input type="button" className="button" defaultValue="Close" style={{ justifySelf: 'right', textAlign: 'center', right: '25px' }}
+		        <input type="button" className="button" defaultValue="Close" style={{ display: 'none', justifySelf: 'right', textAlign: 'center', right: '25px' }}
                     onClick={this.closeOpt} />
-                </div>
                 <div className="item contentxt">
-                    <Tabs defaultActiveKey="finalList" onSelect={this.updateTab}>
+                    <Tabs defaultActiveKey="finalList" onSelect={this.updateTab} style={{display: Object.keys(this.state.articles).length === 0 ? 'none' : 'true'}}>
                         <Tab eventKey="finalList" title="Final List"></Tab>
                         <Tab eventKey="tech" title="Tech"></Tab>
                         <Tab eventKey="blockchain" title="BlockChain"></Tab>
@@ -107,7 +105,7 @@ class MainView extends Reflux.Component {
                     </Tabs>
                     {this.state.view === "List" ?
                         Object.keys(this.state.articles).length === 0 ?
-                            <div className='item'><div className='item loader' style={{position: 'fixed', top: '50%', right: '50%'}}></div>
+                            <div className='item' style={{height: 'calc(100vh - 100px)'}}><div className='item loader' style={{position: 'fixed', top: '50%', right: '50%'}}></div>
 			    <label style={{ margin: '10px', alignSelf: "flex-end" }}>Loading ...</label></div> :
                             <div className="articles"> {this.getArticleList()} </div> :
                         this.state.view === "Content" ?

@@ -462,7 +462,7 @@ body {
 }
 
 .aidcard {
-	box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.42);
+	/*box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.42);*/
 	cursor: alias;
 	display: grid;
 	max-width: 32vw;
@@ -472,7 +472,7 @@ body {
 	grid-template-areas:
 	"aidpic"
 	"aidtitle"
-  "aidclk";
+        "aidclk";
   border: 1px solid;
 }
 
@@ -480,7 +480,7 @@ body {
 	box-shadow: 5px 5px 4px 3px rgba(0,0,0,0.52);
 }
 
-.aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; }
+.aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; padding: 5px 5px 5px 1px rgba(0,0,0,0.42)}
 .aidpic { grid-area: aidpic; overflow: hidden; }
 .aidpic img {
   max-width: 100%;
