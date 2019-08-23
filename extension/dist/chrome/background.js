@@ -15,4 +15,6 @@ chrome.runtime.onConnect.addListener(function(port) {
  		true;
 	})
     });
+
+    port.onDisconnect.addListener(function(){ tport.disconnect(); })
 });

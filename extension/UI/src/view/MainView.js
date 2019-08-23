@@ -87,26 +87,30 @@ class MainView extends Reflux.Component {
     }
 
     closeOpt = () =>{
-	DlogActions.closeOpt();
+	DlogsActions.closeOpt();
     }
 
     render() {
-	    console.dir(this.state.voted)
-        return (this.state.login ?
+        return (
+	    this.state.login ?
             <div className="content">
-		        <input type="button" className="button" defaultValue="Close" style={{ display: 'none', justifySelf: 'right', textAlign: 'center', right: '25px' }}
-                    onClick={this.closeOpt} />
+		        <input type="button" className="button" defaultValue="Close" 
+		               style={Object.keys(this.state.articles).length === 0 ? 
+			       {display: 'none', justifySelf: 'right', textAlign: 'center', right: '25px', top: '26px', position: 'absolute'} : 
+			       {justifySelf: 'right', textAlign: 'center', right: '25px', top: '26px', position: 'absolute' }} onClick={this.closeOpt} />
                 <div className="item contentxt">
-                    <Tabs defaultActiveKey="finalList" onSelect={this.updateTab} style={{display: Object.keys(this.state.articles).length === 0 ? 'none' : 'true'}}>
+		    {
+		      Object.keys(this.state.articles).length > 0 ? 
+		     <Tabs defaultActiveKey="finalList" onSelect={this.updateTab}>
                         <Tab eventKey="finalList" title="Final List"></Tab>
                         <Tab eventKey="tech" title="Tech"></Tab>
                         <Tab eventKey="blockchain" title="BlockChain"></Tab>
                         <Tab eventKey="finance" title="Finance"></Tab>
-                    </Tabs>
-                    {this.state.view === "List" ?
+                     </Tabs> : ''}
+		    {this.state.view === "List" ?
                         Object.keys(this.state.articles).length === 0 ?
-                            <div className='item' style={{height: 'calc(100vh - 100px)'}}><div className='item loader' style={{position: 'fixed', top: '50%', right: '50%'}}></div>
-			    <label style={{ margin: '10px', alignSelf: "flex-end" }}>Loading ...</label></div> :
+                            <div className='item' style={{height: 'calc(100vh - 50px)', width: "100vw"}}><div className='item loader'></div>
+			    <label className='loaderlabel'>Loading ...</label></div> :
                             <div className="articles"> {this.getArticleList()} </div> :
                         this.state.view === "Content" ?
                             <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
@@ -124,7 +128,7 @@ class MainView extends Reflux.Component {
 		    backgroundColor: "#ff4200",
 		    color: "white", 
 		    fontWeight: "bold"
-                }} onClose={this.closeToast} autoHide>
+                }} onClose={this.closeToast} onClick={this.closeToast} delay={1} autoHide>
                     <Toast.Header style={{color: '#ff4200', closeBmaxHeight: '30px', backgroundColor: '#ff4200', border: '0px'}}></Toast.Header>
 		    <Toast.Body style={{justifyContent: 'center', textAlign: 'center', height: '71px', width: '360px'}}>Vote Success!</Toast.Body>
                 </Toast>

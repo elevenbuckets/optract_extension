@@ -82,6 +82,7 @@ class DlogsStore extends Reflux.Store {
     onCloseOpt = () =>
     {
 	    this.shutdown();
+	    window.close();
     }
 
     onUnlock = (pw) => {
