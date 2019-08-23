@@ -60,34 +60,38 @@ class OptractService {
 			   this.opt.call("password", [pw]).then(() => {
 				    this.opt.call('validPass').then((rc) => {
 					if (rc === false) throw "wrong password"
-					this.opt.call('reports').then((data) => {
-						let reports = { reports: data }
-
-						let os = data.optract.synced;
-						if (data.optract.synced > 5) {
-							os = data.optract.synced - 5;
-							if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
-						}
-						this.getBkRangeArticles(os, data.optract.synced, true, callback);
-						if (data.optract.drawed === true) {
-							this.getClaimArticles(data.optract.opround, true);
-							this.getClaimTickets(this.account);
-						}
-
-						DlogsActions.updateState(reports);
-					})
-					 .catch((err) => { console.trace(err); })
-
-					this.subscribeBlockData(DlogsActions.newBlock);
-
 					this.opt.call("userWallet").then(rc => {
 						console.dir(rc);
 						if (typeof(rc.OptractMedia) === 'undefined') throw "wait for linkAccount"; 
-						let state = { acccount: rc.OptractMeida, wsrpc: stat };
-						this.acccount = rc.OptractMedia;
+						let state = { account: rc.OptractMedia, wsrpc: stat };
+						this.account = rc.OptractMedia;
 						DlogsActions.updateState(state);
+						if (callback) callback();
+/*
+						this.opt.call('reports').then((data) => {
+							let reports = { reports: data }
+
+							let os = data.optract.synced;
+							if (data.optract.synced > 5) {
+								os = data.optract.synced - 5;
+								if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
+							}
+							this.getBkRangeArticles(os, data.optract.synced, true, callback);
+							if (data.optract.lottery.drawed === true) {
+								this.getClaimArticles(data.optract.opround, true);
+								this.getClaimTickets(this.account);
+								DlogsActions.newBlock({});
+							}
+
+							DlogsActions.updateState(reports);
+						})
+						 .catch((err) => { console.trace(err); })
+*/
+						this.subscribeBlockData(DlogsActions.newBlock);
+						this.blockDataDispatcher({});
 					})
 					.catch((err) => { console.trace(err); setTimeout(this.unlockRPC, 5000, pw, callback); })
+
 				     })
 				     .catch((err) => { console.trace(err); DlogsActions.updateState({login: false, logining: false}); setTimeout(this.unlockRPC, 5000, pw, callback); })
 			    })
@@ -102,12 +106,10 @@ class OptractService {
 
 		this.getBkRangeArticles = (startB, endB, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
-		    this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
-			let articles = { articles: data }
-			DlogsActions.updateState(articles);
-			if (callback) {
-			    callback()
-			}
+		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
+			DlogsActions.updateState({articles: data});
+			if (callback) callback()
+			return {articles: data} 
 		    }).catch((err) => { console.trace(err); 
 			    if (endB > startB) endB = endB-1; 
 			    setTimeout(this.opt.call, 5000, 'getBkRangeArticles', [startB, endB, parsing]); 
@@ -116,12 +118,10 @@ class OptractService {
 
 		this.getNewBkRangeArticles = (startB, endB, parsing, callback) => {
 		    console.log(`DEBUG: newBkRangeArticle called`)
-		    this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
-			let articles = { newArticles: data }
-			DlogsActions.updateState(articles);
-			if (callback) {
-			    callback()
-			}
+		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
+			DlogsActions.updateState({articles: data});
+			if (callback) callback()
+			return {articles: data} 
 		    }).catch((err) => { console.trace(err); })
 
 		}
@@ -139,23 +139,23 @@ class OptractService {
 		}
 
 		this.blockDataDispatcher = (obj) => {
-		    console.log("Getting blockData events")
-		    this.refreshArticles().then(() => {
+		    this.refreshArticles().then((rc) => {
+			console.log(`DEBUG: refresh output:`); console.log(rc);
+			if (!rc) return;
 			if (!this.blockDataHandler) {
 				console.log("No valid handler for blockData events")
 			} else {
-				this.blockDataHandler(obj)
+		    		console.log("Getting blockData events")
+				this.blockDataHandler({...rc[0], ...rc[1]})
 			}
 		    })
 		}
 
 	    this.getNewClaimArticles = (op, parsing, callback) => {
-		this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-		    let newClaimArticles = { claimArticles: data }
-		    DlogsActions.updateState(newClaimArticles);
-		    if (callback) {
-			callback()
-		    }
+		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
+		    DlogsActions.updateState({claimArticles: data});
+		    if (callback) callback() 
+		    return {claimArticles: data}
 		}).catch((err) => { console.trace(err); })
 	    }
 
@@ -171,7 +171,7 @@ class OptractService {
 
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
-		    let reports = { reports: data }
+		    let p = [];
 
 		    if (this.account) {
 			let os = data.optract.synced;
@@ -179,17 +179,19 @@ class OptractService {
 				os = data.optract.synced - 5;
 				if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
 			}
-			this.getBkRangeArticles(os, data.optract.synced, true, callback);
-			if (data.optract.drawed === true) {
-				this.getClaimArticles(data.optract.opround, true);
-				this.getClaimTickets(this.account);
+			p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
+			if (data.optract.lottery.drawed === true) {
+				p.push(this.getClaimArticles(data.optract.opround, true));
+				p.push(this.getClaimTickets(this.account));
 			}
 
-			DlogsActions.updateState(reports);
+			return Promise.all(p)
+			              .catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); })
 		    } else {
-			return setTimeout(this.refreshArticles, 10000);    
+			console.log(`DEBUG: account not set`);
+			setTimeout(this.refreshArticles, 10000);
 		    }
-		}).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); })
+		}).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); return false; })
 	    }
 
 	    this.getClaimTickets = (addr) => {
@@ -200,12 +202,11 @@ class OptractService {
 	    }
 
 	    this.getClaimArticles = (op, parsing, callback) => {
-		this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-		    let claimArticles = { claimArticles: data }
-		    DlogsActions.updateState(claimArticles);
-		    if (callback) {
-			callback()
-		    }
+		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
+		    console.log(`DEBUG: in OptractService getClaimArticles:`); console.dir(data);
+		    DlogsActions.updateState({claimArticles: data});
+		    if (callback) callback()
+		    return {claimArticles: data}
 		}).catch((err) => { console.trace(err); })
 
 	    }

@@ -46,13 +46,17 @@ class MainView extends Reflux.Component {
                 </div>
                 <div className="aidclk" onClick={()=>{}}>
 			<div className="button" 
-			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer' }} 
+			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }} 
 			     onClick={typeof(this.state.voted) === 'undefined' ? this.vote.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
 			{this.state.voted === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Vote'}
 			</div>
 		    {
 			typeof(article.claim) !== 'undefined' && article.claim === true ?
-                    	<input type="button" className="button" defaultValue="Claim" style={{ textAlign: 'center', right: '25px' }} /> : ''
+			<div className="button" 
+			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }} 
+			     onClick={typeof(this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
+			{this.state.voted === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
+			</div> : ''
 		    }
                 </div>
             </div>
@@ -82,6 +86,14 @@ class MainView extends Reflux.Component {
         e.stopPropagation();
     }
 
+    claim = (article, aid, e) => {
+	this.setState({claimed: aid});
+        let l = article.txs.length;
+        let i = Math.floor(Math.random() * l);
+        DlogsActions.claim(article.blk[i], article.txs[i], aid);
+        e.stopPropagation();
+    }
+
     closeToast = () => {
         DlogsActions.closeToast();
     }
@@ -91,6 +103,7 @@ class MainView extends Reflux.Component {
     }
 
     render() {
+	console.dir(this.state.articles);
         return (
 	    this.state.login ?
             <div className="content">

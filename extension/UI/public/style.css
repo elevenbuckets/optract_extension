@@ -150,7 +150,7 @@ body {
 
 .loaderlabel {
    min-width: 100vw;
-   margin: 0px;
+   margin: 0px 50px 0px 50px;
    align-self: flex-end;
    font-size: 33px;
    color: #34475c;
@@ -503,6 +503,8 @@ body {
   cursor: default;	
   grid-area: aidclk;
   z-index: 1000;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
  }
 
 .articles {

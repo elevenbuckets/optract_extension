@@ -22,7 +22,9 @@ class DlogsStore extends Reflux.Store {
 
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
+	    claimTickets: {},
 	    claimArticles: {},
+	    newClaimArticles: {},
 	    newArticles: {},
             articles : {},
             following: [],
@@ -51,21 +53,20 @@ class DlogsStore extends Reflux.Store {
     onNewBlock = (obj) =>
     {
 	    console.log(`DEBUG: newBlock action is called...`);
-	    let articles = this.state.articles; 
-	    let newArticles = this.state.newArticles; 
-	    let out = { ...articles, ...newArticles };
+	    let out = obj.articles;
+	    let wow = obj.claimArticles;
 
-	    if (Object.keys(this.state.claimArticles).length > 0) {
-            	Object.keys(this.state.claimArticles).map((aid) => { 
-		    	if (typrof(out[aid]) === 'undefined') return;
+	    if (Object.keys(wow).length > 0) {
+            	Object.keys(wow).map((aid) => { 
+		    	if (typeof(out[aid]) === 'undefined') return;
 		    	out[aid] = {...out[aid], claim: true};
 			console.log(`article ${aid} is tagged`)
 	    	}); 
 	    } else {
-		console.log(`newArticle store is empty ... skipped`)
+		console.log(`claimArticle store is empty ... skipped`)
 	    }
 		
-	    this.setState({newArticles : out})
+	    this.setState({articles : out, claimArticles: wow})
     }
 
     onConnectRPC = () =>
@@ -114,6 +115,15 @@ class DlogsStore extends Reflux.Store {
             console.dir(data);
             this.setState({voted: undefined, showVoteToaster: true})
         });
+    }
+
+    onClaim(block, leaf, aid) {
+	// TODO: calculate available winning tickets for claims
+	// stop accepting claim when all tickets used.
+        //OptractService.newClaim(block, leaf).then(data =>{
+        //    console.dir(data);
+            this.setState({claimed: undefined, showVoteToaster: true})
+        //});
     }
 
     onCloseToast() {
