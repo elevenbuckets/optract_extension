@@ -141,7 +141,7 @@ class MainView extends Reflux.Component {
 		    backgroundColor: "#ff4200",
 		    color: "white", 
 		    fontWeight: "bold"
-                }} onClose={this.closeToast} onClick={this.closeToast} delay={1} autoHide>
+                }} onClose={this.closeToast} onClick={this.closeToast} delay={1000} autohide>
                     <Toast.Header style={{color: '#ff4200', closeBmaxHeight: '30px', backgroundColor: '#ff4200', border: '0px'}}></Toast.Header>
 		    <Toast.Body style={{justifyContent: 'center', textAlign: 'center', height: '71px', width: '360px'}}>Vote Success!</Toast.Body>
                 </Toast>
