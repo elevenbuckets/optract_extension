@@ -21,6 +21,7 @@ class LoginView extends Reflux.Component {
     }
 
     componentDidMount() {
+	    if (this.state.wsrpc !== true) DlogsActions.connectRPC();
     }
 
     unlock = (event) => {
@@ -41,9 +42,13 @@ class LoginView extends Reflux.Component {
 
 
     render() {
+	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
         return (
             <div className="item contentxt">
-                {this.state.logining ? <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Starting the peer, need less than 15 seconds </label>
+                { this.state.wsrpc === false ? <div className="item login"><div className="item loader"></div>
+                    <label className="loaderlabel">Starting local node, should takes about 15 secs or so...</label></div> :
+		  this.state.logining ? <div className="item login"><div className="item loader"></div>
+		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
                     </div> : <div className="item login"> <label style={{ margin: '10px', alignSelf: "flex-end" }}>Password: </label>
                         <input autoFocus style={{ alignSelf: 'flex-start' }} type="password" ref="ps" onKeyUp={this.unlock} />
                     </div>}

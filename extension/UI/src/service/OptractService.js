@@ -4,178 +4,224 @@
 // import ipfsClient from 'ipfs-http-client';
 
 import DlogsActions from "../action/DlogsActions";
+var port = chrome.runtime.connect();
+var stat = false;
 
 class OptractService {
     constructor() {
-        this.opt
-        this.account;
-        const WSClient = require('rpc-websockets').Client;
-        const connectRPC = () => {
-            this.opt = new WSClient('ws://127.0.0.1:59437', { reconnect_interval: 2000, max_reconnects: 5 });
-            const __ready = (resolve, reject) => {
-                this.opt.on('open', function (event) { resolve(true) });
-                this.opt.on('error', function (error) { console.trace(error); reject(false) });
-            }
+		this.opt
+		this.account;
 
-            return new Promise(__ready);
-        }
-        this.unlockRPC = (pw, callback) => {
-            let retry = -1
-            const unlockRPCWithRetry = () => {
-                retry++;
-                if (retry == 1) {
-                    console.log("connecting rpc with retry=1, so send message to background to start native app server")
-                    var port = chrome.runtime.connect();
-                    port.postMessage(JSON.stringify({ type: "Connect_WS-RPC", text: "This is the request for connect RPC", id: "dapp_1" }));
-                    port.onMessage.addListener(function (msg) {
-                        console.log("received message from backgournd.js : " + msg);
-                    });
-                }
-                return connectRPC()
-                    .then((rc) => {
-                       
-                        if (!rc && retry < 5) {
-                            setTimeout(unlockRPCWithRetry, 12000);
-                        } else if (!rc && retry >= 5) {
-                            throw ("failed connection");
-                        }
+		const WSClient = require('rpc-websockets').Client;
+		const connectRPC = (mn) => {
+		    this.opt = new WSClient('ws://127.0.0.1:59437', {max_reconnects: mn});
+		    const __ready = (resolve, reject) => {
+			this.opt.on('open', function (event) { 
+				console.log(`!!!!!!!!!!!!!!! CONNECTED`); 
+				stat = true; 
+				DlogsActions.updateState({wsrpc: stat});
+				resolve(true) 
+			});
+			this.opt.on('error', function (error) { reject(false) });
+		    }
 
-                        console.dir("connectted to rpc!")
-                        this.opt.call("password", [pw]).then(rc => {
-                            this.opt.call('reports').then((data) => {
-                                let reports = { reports: data }
+		    return new Promise(__ready);
+		}
 
-                                // get the last 5 blocks
-                                this.getBkRangeArticles(data.optract.epoch - 5, data.optract.epoch, true, callback);
-                                this.getClaimArticles(data.optract.opround - 2, true);
-                            })
+		this.shutdown = () => { 
+			this.opt.close(); 
 
-                            this.subscribeBlockData();
+			port.disconnect(); 
+		}
 
-                            this.opt.call("userWallet").then(rc => {
-                                console.dir(rc);
-                                let state = { acccount: rc.OptractMeida };
-                                this.acccount = rc.OptractMeida;
-                                DlogsActions.updateState(state);
-                            })
-                        })
-                    })
-                    .catch((err) => {
-                        if (retry < 5) {
-                            setTimeout(unlockRPCWithRetry, 12000);
-                        } else if (retry >= 5) {
-                            console.trace(err);
-                        }
-                    })
-            }
-            unlockRPCWithRetry();
-           
-        }
+		this.connect = () => 
+		{
+			port.postMessage({test: 'wsrpc'});
+			console.log(`OptractService connect called`);
+			connectRPC(1).then((rc) => {
+				if (!rc) throw "wait for socket";
+			})
+			.catch((err) => {
+				connectRPC(0).then((rc) => {
+					if (!rc) throw "wait for socket";
+				}).catch((err) => { true })
+			})
 
-        this.getBkRangeArticles = (startB, endB, parsing, callback) => {
-            this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
-                let articles = { articles: data }
-                DlogsActions.updateState(articles);
-                if (callback) {
-                    callback()
-                }
-            })
-        }
+		}
 
-        this.getNewBkRangeArticles = (startB, endB, parsing, callback) => {
-            this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
-                let articles = { newArticles: data }
-                DlogsActions.updateState(articles);
-                if (callback) {
-                    callback()
-                }
-            })
+		this.unlockRPC = (pw, callback) => {
+			console.log(`stat = ${stat}`);
+		    const unlockRPCWithRetry = () => {
+			   if (stat === false) {
+				   DlogsActions.updateState({login: false, logining: false});
+				   return;
+			   }
 
-        }
+			   this.opt.call("password", [pw]).then(() => {
+				    this.opt.call('validPass').then((rc) => {
+					if (rc === false) throw "wrong password"
+					this.opt.call("userWallet").then(rc => {
+						console.dir(rc);
+						if (typeof(rc.OptractMedia) === 'undefined') throw "wait for linkAccount"; 
+						let state = { account: rc.OptractMedia, wsrpc: stat };
+						this.account = rc.OptractMedia;
+						DlogsActions.updateState(state);
+						if (callback) callback();
+/*
+						this.opt.call('reports').then((data) => {
+							let reports = { reports: data }
 
-        this.subscribeBlockData = (handler = null) => {
-            console.log("subcribing the blockData Event...");
-            this.opt.subscribe('blockData');
-            this.blockDataHandler = handler;
-            this.opt.on('blockData', this.blockDataDispatcher);
-        }
+							let os = data.optract.synced;
+							if (data.optract.synced > 5) {
+								os = data.optract.synced - 5;
+								if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
+							}
+							this.getBkRangeArticles(os, data.optract.synced, true, callback);
+							if (data.optract.lottery.drawed === true) {
+								this.getClaimArticles(data.optract.opround, true);
+								this.getClaimTickets(this.account);
+								DlogsActions.newBlock({});
+							}
 
-        this.blockDataDispatcher = (obj) => {
-            console.log("Getting blockData events")
-            this.refreshArticles();
-            if (!this.blockDataHandler) {
-                console.log("No valid handler for blockData events")
-            } else {
-                this.blockDataHandler(obj)
-            }
-        }
+							DlogsActions.updateState(reports);
+						})
+						 .catch((err) => { console.trace(err); })
+*/
+						this.subscribeBlockData(DlogsActions.newBlock);
+						this.blockDataDispatcher({});
+					})
+					.catch((err) => { console.trace(err); setTimeout(this.unlockRPC, 5000, pw, callback); })
 
+				     })
+				     .catch((err) => { console.trace(err); DlogsActions.updateState({login: false, logining: false}); setTimeout(this.unlockRPC, 5000, pw, callback); })
+			    })
+			    .catch((err) => {
+				    console.trace(err);
+				    DlogsActions.updateState({login: false, logining: false});
+			    })
+		    }
 
+		    unlockRPCWithRetry();
+		}
 
-    }
+		this.getBkRangeArticles = (startB, endB, parsing, callback) => {
+		    console.log(`DEBUG: getBkRangeArticle called`)
+		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
+			DlogsActions.updateState({articles: data});
+			if (callback) callback()
+			return {articles: data} 
+		    }).catch((err) => { console.trace(err); 
+			    if (endB > startB) endB = endB-1; 
+			    setTimeout(this.opt.call, 5000, 'getBkRangeArticles', [startB, endB, parsing]); 
+		    })
+		}
 
-    getClaimArticles = (op, parsing, callback) => {
-        this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-            let claimArticles = { claimArticles: data }
-            DlogsActions.updateState(claimArticles);
-            if (callback) {
-                callback()
-            }
-        })
+		this.getNewBkRangeArticles = (startB, endB, parsing, callback) => {
+		    console.log(`DEBUG: newBkRangeArticle called`)
+		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
+			DlogsActions.updateState({articles: data});
+			if (callback) callback()
+			return {articles: data} 
+		    }).catch((err) => { console.trace(err); })
 
-    }
+		}
 
-    getNewClaimArticles = (op, parsing, callback) => {
-        this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-            let newClaimArticles = { newClaimArticles: data }
-            DlogsActions.updateState(newClaimArticles);
-            if (callback) {
-                callback()
-            }
-        })
+		this.subscribeBlockData = (handler = null) => {
+		    console.log("subcribing the blockData Event...");
+		    //reset
+		    this.opt.off('blockData');
+		    this.opt.unsubscribe('blockData');
 
-    }
+		    //subscribe
+		    this.opt.subscribe('blockData');
+		    this.blockDataHandler = handler;
+		    this.opt.on('blockData', this.blockDataDispatcher);
+		}
 
-    getReports = (callback) => {
-        this.opt.call('reports').then((data) => {
-            let reports = { reports: data }
-            DlogsActions.updateState(reports);
-            if (callback) {
-                callback()
-            }
-        })
+		this.blockDataDispatcher = (obj) => {
+		    this.refreshArticles().then((rc) => {
+			console.log(`DEBUG: refresh output:`); console.log(rc);
+			if (!rc) return;
+			if (!this.blockDataHandler) {
+				console.log("No valid handler for blockData events")
+			} else {
+		    		console.log("Getting blockData events")
+				this.blockDataHandler({...rc[0], ...rc[1]})
+			}
+		    })
+		}
 
-    }
+	    this.getNewClaimArticles = (op, parsing, callback) => {
+		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
+		    DlogsActions.updateState({claimArticles: data});
+		    if (callback) callback() 
+		    return {claimArticles: data}
+		}).catch((err) => { console.trace(err); })
+	    }
 
-    refreshArticles = (callback = null) => {
-        this.opt.call('reports').then((data) => {
-            let reports = { reports: data }
+	    this.getReports = (callback) => {
+		this.opt.call('reports').then((data) => {
+		    let reports = { reports: data }
+		    DlogsActions.updateState(reports);
+		    if (callback) {
+			callback()
+		    }
+		}).catch((err) => { console.trace(err); setTimeout(this.opt.call, 5000, 'reports'); })
+	    }
 
-            // get the last 5 blocks
-            this.getBkRangeArticles(data.optract.epoch - 5, data.optract.epoch, true, callback);
-            this.getClaimArticles(data.optract.opround - 2, true);
-            this.getClaimTickets(this.acccount);
-        })
-    }
+	    this.refreshArticles = (callback = null) => {
+		return this.opt.call('reports').then((data) => {
+		    let p = [];
 
-    getClaimTickets(addr) {
-        this.opt.call('getClaimTickets', [addr]).then((data) => {
-            let claimTickets = { claimTickets: data }
-            DlogsActions.updateState(claimTickets);
-        })
+		    if (this.account) {
+			let os = data.optract.synced;
+			if (data.optract.synced > 5) {
+				os = data.optract.synced - 5;
+				if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
+			}
+			p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
+			if (data.optract.lottery.drawed === true) {
+				p.push(this.getClaimArticles(data.optract.opround, true));
+				p.push(this.getClaimTickets(this.account));
+			}
+
+			return Promise.all(p)
+			              .catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); })
+		    } else {
+			console.log(`DEBUG: account not set`);
+			setTimeout(this.refreshArticles, 10000);
+		    }
+		}).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); return false; })
+	    }
+
+	    this.getClaimTickets = (addr) => {
+		this.opt.call('getClaimTickets', [addr]).then((data) => {
+		    let claimTickets = { claimTickets: data }
+		    DlogsActions.updateState(claimTickets);
+		}).catch((err) => { console.trace(err); })
+	    }
+
+	    this.getClaimArticles = (op, parsing, callback) => {
+		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
+		    console.log(`DEBUG: in OptractService getClaimArticles:`); console.dir(data);
+		    DlogsActions.updateState({claimArticles: data});
+		    if (callback) callback()
+		    return {claimArticles: data}
+		}).catch((err) => { console.trace(err); })
+
+	    }
     }
 
     getFinalList(op) {
         this.opt.call('getOpRangeFinalList', [arguments]).then((data) => {
             let finalList = { finalList: data }
             DlogsActions.updateState(finalList);
-        })
+        }).catch((err) => { console.log(`DEBUG: getFinalList:`); console.trace(err); })
     }
 
     newVote(block, leaf) {
-        console.log("Now vote with args : " + arguments);
-        console.dir(arguments)
-        return this.opt.call('newVote', { args: arguments });
+        console.log(`Now vote with args: ${block} ${leaf}`);
+        return this.opt.call('newVote', { args: [block, leaf] });
     }
 
     newClaim(v1block, v1leaf, v2block, v2leaf, comment) {

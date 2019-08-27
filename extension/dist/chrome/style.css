@@ -72,14 +72,14 @@ body {
     display: grid;
     justify-content: center;
     align-items: center;
-    margin: 50px 50px 0 50px;
+    margin: 50px 50px 50px 50px;
     font-size: 16px;
     color: rgb(150, 150, 152);
     border-radius: 0px;
     /*background: rgba(255, 255, 255, 0.21);*/
-    grid-template-columns: 1fr 5fr 9%;
+    grid-template-columns: 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "sidebar centercontent .";
+    grid-template-areas: "centercontent";
 }
 
 .content h2 {
@@ -148,12 +148,25 @@ body {
     grid-template-columns: 1fr 1fr;
 }
 
+.loaderlabel {
+   min-width: 100vw;
+   margin: 0px 50px 0px 50px;
+   align-self: flex-end;
+   font-size: 33px;
+   color: #34475c;
+   background-color: #eeee11;
+   text-align: center;
+}
+
 .loader {
-  border-left: 13px solid rgba(255,125,0,0.9);
-  border-right: 13px solid yellow;
+  position: fixed;
+  top: 30%;
+  right: 44%;
+  border-left: 13px solid #34475c;
+  border-right: 13px solid #34475c;
   border-radius: 70%;
-  width: 50px;
-  height: 50px;
+  width: 250px;
+  height: 250px;
   margin: 0px;
   padding: 0px;
   animation: spin 2s infinite linear;
@@ -462,6 +475,8 @@ body {
 }
 
 .aidcard {
+	/*box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.42);*/
+	cursor: alias;
 	display: grid;
 	max-width: 32vw;
 	grid-template-columns: 1fr;
@@ -470,25 +485,71 @@ body {
 	grid-template-areas:
 	"aidpic"
 	"aidtitle"
-  "aidclk";
+        "aidclk";
   border: 1px solid;
 }
 
-.aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; }
+.aidcard:hover {
+	box-shadow: 5px 5px 4px 3px rgba(0,0,0,0.52);
+}
+
+.aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; padding: 5px 5px 5px 1px rgba(0,0,0,0.42)}
 .aidpic { grid-area: aidpic; overflow: hidden; }
 .aidpic img {
   max-width: 100%;
   object-fit: cover;
 }
-.aidclk { 
+.aidclk {
+  cursor: default;	
   grid-area: aidclk;
   z-index: 1000;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
  }
 
 .articles {
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: auto;
   grid-gap: 30px;
+  padding: 10px;
+}
+
+/* les delay loading animation */
+.dot {
+  opacity: 0;
+  -webkit-animation: dot 1.3s infinite;
+  animation: dot 1.3s infinite;
+}
+
+.dotOne {
+  -webkit-animation-delay: 0.0s;
+  animation-delay: 0.0s;
+}
+
+.dottwo {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+.dotThree {
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+
+@-webkit-keyframes dot {
+    0% { opacity: 0; }
+   50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes dot {
+    0% { opacity: 0; }
+   50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.nav-tabs {
+   background-color: aliceblue;
 }

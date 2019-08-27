@@ -9,21 +9,12 @@ chrome.browserAction.onClicked.addListener(function(activeTab)
 
 chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
-       handleMessageFromContent(msg, port);
+	//tport.disconnect();
+	let tport = chrome.runtime.connectNative('optract');
+	tport.onMessage.addListener(function (msgs) {
+ 		true;
+	})
     });
-  });
 
-
-  handleMessageFromContent = (msg, port) =>{
-    let tport = chrome.runtime.connectNative('optract'); 
-      try{
-          let data = JSON.parse(msg);
-          if(data.type == "Connect_WS-RPC"){
-            console.log(msg);
-            port.postMessage("Response from extension for : " + msg);
-          }
-      }catch(e){
-        console.log(msg);
-        port.postMessage("Response from extension for : " + msg);
-      }
-  }
+    port.onDisconnect.addListener(function(){ tport.disconnect(); })
+});
