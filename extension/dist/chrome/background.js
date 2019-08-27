@@ -2,9 +2,18 @@ function openTab(filename) { var myid = chrome.i18n.getMessage("@@extension_id")
  chrome.tabs.update(tabArray[i].id, {active: true}); return; } } chrome.tabs.create({url:chrome.extension.getURL(filename)}); }); }); }
 
 openTab("index.html")
-chrome.browserAction.onClicked.addListener(function(activeTab)
+
+function isNewTab(tab, url) {
+	return (
+	  typeof url === 'undefined' && tab.active && tab.url === 'chrome://newtab/'
+	)
+  }
+chrome.browserAction.onClicked.addListener(function(activeTab, url)
 {
-   openTab("index.html")
+	if(isNewTab(activeTab, url) ){
+		openTab("index.html")
+	}
+   
 });
 
 chrome.runtime.onConnect.addListener(function(port) {
