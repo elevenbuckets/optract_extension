@@ -34,22 +34,32 @@ class OptractService {
 			port.disconnect(); 
 		}
 
+	        this.allAccounts = () => 
+	        {
+			console.log(`DEBUG: OptractService: allAccounts called ...`)
+			this.opt.call('allAccounts').then((rc) => {
+				   DlogsActions.updateState({allAccounts: rc});
+			})
+		}
+
 		this.connect = () => 
 		{
 			port.postMessage({test: 'wsrpc'});
 			console.log(`OptractService connect called`);
 			connectRPC(1).then((rc) => {
 				if (!rc) throw "wait for socket";
+				this.allAccounts();
 			})
 			.catch((err) => {
 				connectRPC(0).then((rc) => {
 					if (!rc) throw "wait for socket";
+					this.allAccounts();
 				}).catch((err) => { true })
 			})
 
 		}
 
-		this.unlockRPC = (pw, callback) => {
+		this.unlockRPC = (pw, account, callback) => {
 			console.log(`stat = ${stat}`);
 		    const unlockRPCWithRetry = () => {
 			   if (stat === false) {
@@ -57,14 +67,16 @@ class OptractService {
 				   return;
 			   }
 
-			   this.opt.call("password", [pw]).then(() => {
+			   let args = account === null ? [pw] : [pw, account];
+
+			   this.opt.call("password", args).then(() => {
 				    this.opt.call('validPass').then((rc) => {
 					if (rc === false) throw "wrong password"
 					this.opt.call("userWallet").then(rc => {
+						if (account === null) account = rc.OptractMedia;
 						console.dir(rc);
-						if (typeof(rc.OptractMedia) === 'undefined') throw "wait for linkAccount"; 
-						let state = { account: rc.OptractMedia, wsrpc: stat };
-						this.account = rc.OptractMedia;
+						let state = { account, wsrpc: stat };
+						this.account = account;
 						DlogsActions.updateState(state);
 						if (callback) callback();
 /*

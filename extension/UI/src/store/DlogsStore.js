@@ -19,6 +19,7 @@ class DlogsStore extends Reflux.Store {
         this.unlockRPC = OptractService.unlockRPC;
         this.connect = OptractService.connect;
 	this.shutdown = OptractService.shutdown;
+	this.allAccounts = OptractService.allAccounts;
 
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
@@ -33,7 +34,8 @@ class DlogsStore extends Reflux.Store {
             currentBlogContent: "",
             login: false,
             logining: false,
-            account: "",
+	    allAccounts: [],
+            account: null,
             memberShipStatus: "active",
             address: "0xaf7400787c54422be8b44154b1273661f1259ccd",
             passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"],
@@ -86,9 +88,16 @@ class DlogsStore extends Reflux.Store {
 	    window.close();
     }
 
-    onUnlock = (pw) => {
+    onUnlock = (pw) => 
+    {
         this.setState({logining : true});
-        this.unlockRPC(pw, this.unlocked);   
+	let acc = this.state.account || null;
+        this.unlockRPC(pw, acc, this.unlocked);   
+    }
+
+    onAllAccounts = () => 
+    {
+	this.allAccounts();
     }
 
     unlocked = ()=>{

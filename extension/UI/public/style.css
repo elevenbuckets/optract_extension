@@ -16,7 +16,7 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
 }
 
 ::-webkit-scrollbar:horizontal {
@@ -138,6 +138,12 @@ body {
    height: 100vh;
 }
 
+.login div {
+   padding: 30px;
+   color: white;
+   background-color: rgba(0,0,0,0.34);
+}
+
 .mainctr {
   grid-template-columns: 1fr 1fr;
 }
@@ -149,9 +155,11 @@ body {
 }
 
 .loaderlabel {
-   min-width: 100vw;
+   min-width: 90vw;
+   max-width: 90vw;
    margin: 0px 50px 0px 50px;
    align-self: flex-end;
+   justify-self: center;
    font-size: 33px;
    color: #34475c;
    background-color: #eeee11;
