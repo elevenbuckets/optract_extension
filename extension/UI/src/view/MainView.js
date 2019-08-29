@@ -104,11 +104,12 @@ class MainView extends Reflux.Component {
 
     render() {
 	console.dir(this.state.account);
-	Object.keys(this.state.articles).length === 0 
-		    ? document.getElementById('app').style.backgroundImage = 'assets/loginbg.jpg' 
-		    : document.getElementById('app').style.backgroundImage = '';
-
-	document.getElementById('app').style.backgroundColor = '#ffffff';
+	if (Object.keys(this.state.articles).length === 0) {
+		document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
+	} else {
+		document.getElementById('app').style.backgroundImage = 'none';
+		document.getElementById('app').style.backgroundColor = 'aliceblue';
+	}
 
         return (
 	    this.state.login ?
