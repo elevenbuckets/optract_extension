@@ -23,7 +23,8 @@ class DlogsStore extends Reflux.Store {
 
         this.state = {
             originalHashes:["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
-	    claimTickets: {},
+	    claimTickets: [],
+	    ticketCounts: 0,
 	    claimArticles: {},
 	    newClaimArticles: {},
 	    newArticles: {},
@@ -39,7 +40,7 @@ class DlogsStore extends Reflux.Store {
             memberShipStatus: "active",
             address: "0xaf7400787c54422be8b44154b1273661f1259ccd",
             passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"],
-            activeTabKey : "finalList",
+            activeTabKey : "totalList",
             curentBlockNO : 41,
             showVoteToaster: false,
 	    wsrpc: false,
@@ -57,6 +58,7 @@ class DlogsStore extends Reflux.Store {
 	    console.log(`DEBUG: newBlock action is called...`);
 	    let out = obj.articles;
 	    let wow = obj.claimArticles;
+	    let tic = obj.claimTickets;
 
 	    if (typeof(wow) === 'object' && Object.keys(wow).length > 0) {
             	Object.keys(wow).map((aid) => { 
@@ -67,8 +69,20 @@ class DlogsStore extends Reflux.Store {
 	    } else {
 		console.log(`claimArticle store is empty ... skipped`)
 	    }
-		
+
 	    this.setState({articles : out, claimArticles: wow})
+
+	    if (typeof(tic) === 'object' && Object.keys(tic).length > 0) {
+		let outics = [];
+		Object.keys(tic).map((bn) => {
+			tic[bn].map((t) => { outics.push({block: bn, txhash: t})})
+		})
+
+		this.setState({claimTickets: outics, ticketCounts: outics.length});
+	    } else {
+		this.setState({claimTickets: [], ticketCounts: 0});
+	    	console.log(`claimTickets for ${this.state.account} is empty ... skipped`)
+	    }
     }
 
     onConnectRPC = () =>

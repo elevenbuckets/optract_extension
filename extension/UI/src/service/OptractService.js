@@ -160,7 +160,8 @@ class OptractService {
 				console.log("No valid handler for blockData events")
 			} else {
 		    		console.log("Getting blockData events")
-				this.blockDataHandler({...rc[0], ...rc[1]})
+				let outobj = rc.reduce((r,i) => { r = { ...r, ...i}; return r; }, {});
+				this.blockDataHandler(outobj);
 			}
 		    })
 		}
@@ -209,8 +210,8 @@ class OptractService {
 	    }
 
 	    this.getClaimTickets = (addr) => {
-		this.opt.call('getClaimTickets', [addr]).then((data) => {
-		    DlogsActions.updateState({ claimTickets: data });
+		return this.opt.call('getClaimTickets', [addr]).then((data) => {
+		    //DlogsActions.updateState({ claimTickets: data });
 		    return {claimTickets: data};
 		}).catch((err) => { console.trace(err); })
 	    }
@@ -239,7 +240,7 @@ class OptractService {
     }
 
     newClaim(v1block, v1leaf, v2block, v2leaf, comment) {
-        return this.opt.call('newClaim', arguments);
+        return this.opt.call('newClaim', {args: [v1block, v1leaf, v2block, v2leaf]});
     }
 
 

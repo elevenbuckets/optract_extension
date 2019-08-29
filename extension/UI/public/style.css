@@ -570,3 +570,13 @@ body {
 .nav-tabs {
    background-color: aliceblue;
 }
+
+.ticketNote {
+   justify-self: right;
+   text-align: center;
+   font-size: 22px;
+   color: red;
+   right: 56px;
+   top: 56px;
+   position: absolute;
+}

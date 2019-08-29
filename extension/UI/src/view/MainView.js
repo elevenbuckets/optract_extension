@@ -29,9 +29,7 @@ class MainView extends Reflux.Component {
 
         return Object.keys(articles).filter(aid => {
             if (typeof(articles[aid].page) !== 'undefined' && articles[aid].page.lead_image_url !== null) {
-                if (this.state.activeTabKey == "finalList" || this.state.activeTabKey == "toVote") {
-                    return true;
-                }
+                if (this.state.activeTabKey == "totalList") return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
         }).map((aid) => {
@@ -114,15 +112,13 @@ class MainView extends Reflux.Component {
         return (
 	    this.state.login ?
             <div className="content">
-		        <input type="button" className="button" defaultValue="Close" 
-		               style={Object.keys(this.state.articles).length === 0 ? 
-			       {display: 'none', justifySelf: 'right', textAlign: 'center', right: '25px', top: '26px', position: 'absolute'} : 
-			       {justifySelf: 'right', textAlign: 'center', right: '25px', top: '26px', position: 'absolute' }} onClick={this.closeOpt} />
+		        <div className="ticketNote" style={Object.keys(this.state.articles).length === 0 ? {display: 'none'} : {display: "inline-block"}}>
+		               {this.state.ticketCounts === 0 ? '' : `You have ${this.state.ticketCounts} ticket(s)`}</div>
                 <div className="item contentxt">
 		    {
 		      Object.keys(this.state.articles).length > 0 ? 
-		     <Tabs defaultActiveKey="finalList" onSelect={this.updateTab}>
-                        <Tab eventKey="finalList" title="Final List"></Tab>
+		     <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
+                        <Tab eventKey="totalList" title="ALL"></Tab>
                         <Tab eventKey="tech" title="Tech"></Tab>
                         <Tab eventKey="blockchain" title="BlockChain"></Tab>
                         <Tab eventKey="finance" title="Finance"></Tab>
