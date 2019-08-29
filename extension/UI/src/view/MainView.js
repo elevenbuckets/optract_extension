@@ -108,9 +108,8 @@ class MainView extends Reflux.Component {
 		    ? document.getElementById('app').style.backgroundImage = 'assets/loginbg.jpg' 
 		    : document.getElementById('app').style.backgroundImage = '';
 
-	Object.keys(this.state.articles).length === 0 
-		    ? document.getElementById('app').style.backgroundColor = 'rgba(0,0,0,0.34)'
-		    : document.getElementById('app').style.backgroundColor = '#ffffff';
+	document.getElementById('app').style.backgroundColor = '#ffffff';
+
         return (
 	    this.state.login ?
             <div className="content">
