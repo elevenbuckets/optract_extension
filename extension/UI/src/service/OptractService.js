@@ -67,7 +67,9 @@ class OptractService {
 				   return;
 			   }
 
+			   console.log(`DEBUG: in Optract service unlockRPC:`)
 			   let args = account === null ? [pw] : [pw, account];
+			   console.dir(args)
 
 			   this.opt.call("password", args).then(() => {
 				    this.opt.call('validPass').then((rc) => {

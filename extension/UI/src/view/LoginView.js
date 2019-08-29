@@ -30,16 +30,17 @@ class LoginView extends Reflux.Component {
     }
 
     handleSelect = (eventkey, event) => {
+	console.log(`account: ${eventkey}`)
 	this.setState({account: eventkey});
     }
 
     unlock = (event) => {
         if (event.keyCode == 13) {
-            // var port = chrome.runtime.connect();
             let variable = this.refs.ps.value;
+	    let account = this.state.account || null;
             this.refs.ps.value = "";
 
-            DlogsActions.unlock(variable);
+            DlogsActions.unlock(variable, account);
         }
     }
 
@@ -63,7 +64,7 @@ class LoginView extends Reflux.Component {
 
     render() {
 	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
-	    console.dir(this.state.allAccounts)
+	    console.log(this.state.account)
 	    document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
         return (
             <div className="item contentxt">
@@ -72,7 +73,7 @@ class LoginView extends Reflux.Component {
 		  this.state.logining ? <div className="item login"><div className="item loader"></div>
 		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
                     </div> : <div className="item login"><div>
-			<Dropdown onSelect={this.handleSelect}>
+			<Dropdown drop="left" onSelect={this.handleSelect}>
 			  <Dropdown.Toggle style={{fontSize: '20px'}} variant="success" id="dropdown-basic">
 				{this.state.account === null ? "Please select an account" : this.state.account}
 			  </Dropdown.Toggle>
