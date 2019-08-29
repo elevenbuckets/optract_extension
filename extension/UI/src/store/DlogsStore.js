@@ -58,7 +58,7 @@ class DlogsStore extends Reflux.Store {
 	    let out = obj.articles;
 	    let wow = obj.claimArticles;
 
-	    if (Object.keys(wow).length > 0) {
+	    if (typeof(wow) === 'Object' && Object.keys(wow).length > 0) {
             	Object.keys(wow).map((aid) => { 
 		    	if (typeof(out[aid]) === 'undefined') return;
 		    	out[aid] = {...out[aid], claim: true};

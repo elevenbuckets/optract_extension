@@ -22,11 +22,12 @@ class LoginView extends Reflux.Component {
     }
 
     componentDidMount() {
-	    if (this.state.wsrpc !== true) {
-		    DlogsActions.connectRPC();
-	    } else {
-		    DlogsActions.allAccounts();
-	    }
+	    if (this.state.wsrpc !== true) DlogsActions.connectRPC();
+    }
+
+    componentDidUpdate() {
+	    console.log(`DEBUG: did update...`)
+	    if (this.state.wsrpc === true && this.state.allAccounts.length === 0) DlogsActions.allAccounts();
     }
 
     handleSelect = (eventkey, event) => {
@@ -64,7 +65,8 @@ class LoginView extends Reflux.Component {
 
     render() {
 	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
-	    console.log(this.state.account)
+	    console.log(`DEBUG: account = ${this.state.account}`)
+	    console.dir(this.state.allAccounts);
 	    document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
         return (
             <div className="item contentxt">
@@ -72,16 +74,23 @@ class LoginView extends Reflux.Component {
                     <label className="loaderlabel">Starting local node, should takes about 15 secs or so...</label></div> :
 		  this.state.logining ? <div className="item login"><div className="item loader"></div>
 		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
-                    </div> : <div className="item login"><div>
-			<Dropdown drop="left" onSelect={this.handleSelect}>
-			  <Dropdown.Toggle style={{fontSize: '20px'}} variant="success" id="dropdown-basic">
-				{this.state.account === null ? "Please select an account" : this.state.account}
+                    </div> : <div className="item login">
+			<div style={{display: 'inline-block', margin: '30px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>
+			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', margin: '24px', borderBottom: '1px solid white'}}>Welcome to Optract</div>
+			<Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+			  <Dropdown.Toggle style={{fontSize: '20px', minWidth: '100%'}} variant="success" id="dropdown-basic">
+				{this.state.account === null ? "Please select an account to login: " : this.state.account}
 			  </Dropdown.Toggle>
 			  {this.listAccounts()}
 			</Dropdown>
-			<label style={{ margin: '10px', alignSelf: "flex-end" }}>Password: </label>
-                        <input autoFocus style={{ alignSelf: 'flex-start' }} type="password" ref="ps" onKeyUp={this.unlock} />
-			</div></div>}
+			</div>
+			<div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+			<label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Password: </label>
+                        <input autoFocus 
+			       style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', border: '0px'}} 
+			       type="password" ref="ps" onKeyUp={this.unlock} />
+			</div>
+		    </div>}
             </div>);
     }
 
