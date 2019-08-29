@@ -208,8 +208,8 @@ class OptractService {
 
 	    this.getClaimTickets = (addr) => {
 		this.opt.call('getClaimTickets', [addr]).then((data) => {
-		    let claimTickets = { claimTickets: data }
-		    DlogsActions.updateState(claimTickets);
+		    DlogsActions.updateState({ claimTickets: data });
+		    return {claimTickets: data};
 		}).catch((err) => { console.trace(err); })
 	    }
 
