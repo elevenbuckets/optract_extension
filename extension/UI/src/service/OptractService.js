@@ -240,6 +240,8 @@ class OptractService {
     }
 
     newClaim(v1block, v1leaf, v2block, v2leaf, comment) {
+	console.log(`DEBUG: newClaim called:`)
+	console.dir({v1block, v1leaf, v2block, v2leaf, comment});
         return this.opt.call('newClaim', {args: [v1block, v1leaf, v2block, v2leaf]});
     }
 

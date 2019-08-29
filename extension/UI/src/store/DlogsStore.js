@@ -140,12 +140,16 @@ class DlogsStore extends Reflux.Store {
     }
 
     onClaim(block, leaf, aid) {
-	// TODO: calculate available winning tickets for claims
-	// stop accepting claim when all tickets used.
-        //OptractService.newClaim(block, leaf).then(data =>{
-        //    console.dir(data);
-            this.setState({claimed: undefined, showVoteToaster: true})
-        //});
+	if (this.state.claimTickets.length <= 0) return
+	
+	let tickets = [...this.state.claimTickets];
+	let ticket  = tickets.shift(0);
+	
+
+        OptractService.newClaim(ticket.block, ticket.txhash, block, leaf, 'sent from optract client').then( data => {
+            console.dir(data);
+            this.setState({claimTickets: tickets, ticketCounts: tickets.length, claimed: undefined, showVoteToaster: true})
+        });
     }
 
     onCloseToast() {
