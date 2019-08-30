@@ -153,9 +153,10 @@ class OptractService {
 		}
 
 		this.blockDataDispatcher = (obj) => {
+		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
-			console.log(`DEBUG: refresh output:`); console.log(rc);
-			if (!rc) return;
+			console.log(`refresh rc:`); console.dir(rc);
+			if (!rc) return setTimeout(this.blockDataDispatcher, 10000, {});
 			if (!this.blockDataHandler) {
 				console.log("No valid handler for blockData events")
 			} else {
@@ -188,11 +189,11 @@ class OptractService {
 		return this.opt.call('reports').then((data) => {
 		    let p = [];
 
-		    if (this.account) {
+		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
 			if (data.optract.synced > 5) {
 				os = data.optract.synced - 5;
-				if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
+				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 			p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
 			if (data.optract.lottery.drawed === true) {
@@ -203,10 +204,10 @@ class OptractService {
 			return Promise.all(p)
 			              .catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); })
 		    } else {
-			console.log(`DEBUG: account not set`);
-			setTimeout(this.refreshArticles, 10000);
+			console.log(`DEBUG: account not set or block not yet synced, wait a bit ...`);
+			return false;
 		    }
-		}).catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); return false; })
+		}).catch((err) => { console.trace(err); return false; })
 	    }
 
 	    this.getClaimTickets = (addr) => {
