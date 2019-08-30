@@ -489,22 +489,22 @@ body {
 }
 
 .aidcard {
-	/*box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.42);*/
-	cursor: alias;
-	display: grid;
-	max-width: 32vw;
-	grid-template-columns: 1fr;
+  box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.12);
+  cursor: alias;
+  display: grid;
+  max-width: 32vw;
+  grid-template-columns: 1fr;
   grid-template-rows: 200px 3fr 1fr;
   grid-column-gap: 6px;
-	grid-template-areas:
-	"aidpic"
-	"aidtitle"
-        "aidclk";
+  grid-template-areas:
+   "aidpic"
+   "aidtitle"
+   "aidclk";
   border: 1px solid;
 }
 
 .aidcard:hover {
-	box-shadow: 5px 5px 4px 3px rgba(0,0,0,0.52);
+  box-shadow: 5px 5px 3px 3px rgba(0,0,0,0.52);
 }
 
 .aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; padding: 5px 5px 5px 1px rgba(0,0,0,0.42)}
