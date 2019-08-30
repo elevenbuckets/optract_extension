@@ -75,10 +75,12 @@ class LoginView extends Reflux.Component {
 		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
                     </div> : <div className="item login">
 			<div style={{display: 'inline-block', margin: '30px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>
-			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', margin: '24px', borderBottom: '1px solid white'}}>Welcome to Optract</div>
+			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', minWidth: '30vw', margin: '24px', borderBottom: '1px solid white'}}>
+			     Welcome to Optract
+			</div>
 			<Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
-			  <Dropdown.Toggle style={{fontSize: '20px', minWidth: '100%'}} variant="success" id="dropdown-basic">
-				{this.state.account === null ? "Please select an account to login: " : this.state.account}
+			  <Dropdown.Toggle style={{fontSize: '20px', fontFamily: 'monospace'}} variant="success" id="dropdown-basic">
+				{this.state.account === null ? " Please select your login account... " : this.state.account}
 			  </Dropdown.Toggle>
 			  {this.listAccounts()}
 			</Dropdown>
