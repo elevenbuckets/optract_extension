@@ -124,10 +124,7 @@ class OptractService {
 			DlogsActions.updateState({articles: data});
 			if (callback) callback()
 			return {articles: data} 
-		    }).catch((err) => { console.trace(err); 
-			    if (endB > startB) endB = endB-1; 
-			    setTimeout(this.opt.call, 5000, 'getBkRangeArticles', [startB, endB, parsing]); 
-		    })
+		    }).catch((err) => { console.trace(err); })
 		}
 
 		this.getNewBkRangeArticles = (startB, endB, parsing, callback) => {

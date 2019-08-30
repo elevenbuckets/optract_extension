@@ -38,13 +38,11 @@ class DlogsStore extends Reflux.Store {
 	    allAccounts: [],
             account: null,
             memberShipStatus: "active",
-            address: "0xaf7400787c54422be8b44154b1273661f1259ccd",
-            passManaged : ["0xaf7400787c54422be8b44154b1273661f1259ccd"],
             activeTabKey : "totalList",
-            curentBlockNO : 41,
             showVoteToaster: false,
 	    wsrpc: false,
-	    voted: undefined
+	    voted: undefined,
+	    claimed: undefined
         }
 
     }
