@@ -197,7 +197,7 @@ class OptractService {
 			}
 			p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
 			if (data.optract.lottery.drawed === true) {
-				p.push(this.getClaimArticles(data.optract.opround, true));
+				p.push(this.getClaimArticles(data.optract.opround, false));
 				p.push(this.getClaimTickets(this.account));
 			}
 
