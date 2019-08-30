@@ -23,12 +23,25 @@ class MainView extends Reflux.Component {
         this.store = DlogsStore;
     }
 
+    pickLeadImage = (article) =>
+    {
+	// special cases
+	if (article.page.domain.match('slashdot.org')) return 'assets/slashdot_optract_logo.png';
+	
+	// normal cases
+	if (article.page.lead_image_url) {
+		return article.page.lead_image_url;
+	} else {
+		return 'assets/optract_logo.png'
+	}
+    }
+
     getArticleList = () => {
         let articles = this.state.articles; 
 	if (Object.keys(articles).length === 0) return;
 
         return Object.keys(articles).filter(aid => {
-            if (typeof(articles[aid].page) !== 'undefined' && articles[aid].page.lead_image_url !== null) {
+            if (typeof(articles[aid].page) !== 'undefined') {
                 if (this.state.activeTabKey == "totalList") return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
@@ -40,7 +53,7 @@ class MainView extends Reflux.Component {
                     {renderHTML(marked(article.page.excerpt.substring(0, 242) + '...'))}
                 </div>
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
-                    <img src={article.page.lead_image_url ? article.page.lead_image_url : 'assets/golden_blockchain.png'}></img>
+                    <img src={this.pickLeadImage.apply(this, [article])}></img>
                 </div>
                 <div className="aidclk" onClick={()=>{}}>
 			<div className="button" 
