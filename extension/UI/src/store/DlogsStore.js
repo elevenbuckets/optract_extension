@@ -29,6 +29,7 @@ class DlogsStore extends Reflux.Store {
 	    newClaimArticles: {},
 	    newArticles: {},
             articles : {},
+	    articleTotal: 0,
             following: [],
             displayBlogs: [],
             onlyShowForBlogger: "",
@@ -57,6 +58,8 @@ class DlogsStore extends Reflux.Store {
 	    let out = obj.articles;
 	    let wow = obj.claimArticles;
 	    let tic = obj.claimTickets;
+
+	    if (typeof(out) !== 'object' || Object.keys(out).length === 0) return;
 
 	    if (typeof(wow) === 'object' && Object.keys(wow).length > 0) {
             	Object.keys(wow).map((aid) => { 
@@ -106,6 +109,13 @@ class DlogsStore extends Reflux.Store {
         this.unlockRPC(pw, acc, this.unlocked);   
     }
 
+    onServerCheck = () =>
+    {
+	OptractService.serverCheck().then((rc) => {
+		if (rc) this.unlocked();
+	})	
+    }
+
     onAllAccounts = () => 
     {
 	this.allAccounts();
@@ -113,6 +123,8 @@ class DlogsStore extends Reflux.Store {
 
     unlocked = ()=>{
         this.setState({ login: true, logining : false })
+	OptractService.subscribeBlockData(DlogsActions.newBlock);
+        OptractService.blockDataDispatcher({});
     }
 
     onUpdateState = (state) =>{

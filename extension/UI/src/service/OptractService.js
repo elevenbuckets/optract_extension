@@ -59,6 +59,23 @@ class OptractService {
 
 		}
 
+	        this.serverCheck = () => {
+			let p = [
+				this.opt.call('validPass'),
+				this.opt.call('userWallet')
+			]
+
+			return Promise.all(p).then((rc) => {
+				if (!rc[0]) return false;
+				if (typeof(rc[1].OptractMedia) === 'undefined') return false;
+				//FIXME: address binded might still don't have password in bcup archive!
+
+				this.account = rc[1].OptractMedia;
+				DlogsActions.updateState({account: rc[1].OptractMedia});
+				return true;
+			})
+		}
+
 		this.unlockRPC = (pw, account, callback) => {
 			console.log(`stat = ${stat}`);
 		    const unlockRPCWithRetry = () => {
@@ -71,8 +88,7 @@ class OptractService {
 			   let args = account === null ? [pw] : [pw, account];
 			   console.dir(args)
 
-			   this.opt.call("password", args).then(() => {
-				    this.opt.call('validPass').then((rc) => {
+			   this.opt.call("password", args).then((rc) => {
 					if (rc === false) throw "wrong password"
 					this.opt.call("userWallet").then(rc => {
 						if (account === null) account = rc.OptractMedia;
@@ -101,13 +117,10 @@ class OptractService {
 						})
 						 .catch((err) => { console.trace(err); })
 */
-						this.subscribeBlockData(DlogsActions.newBlock);
-						this.blockDataDispatcher({});
+						//this.subscribeBlockData(DlogsActions.newBlock);
+						//this.blockDataDispatcher({});
 					})
 					.catch((err) => { console.trace(err); setTimeout(this.unlockRPC, 5000, pw, callback); })
-
-				     })
-				     .catch((err) => { console.trace(err); DlogsActions.updateState({login: false, logining: false}); setTimeout(this.unlockRPC, 5000, pw, callback); })
 			    })
 			    .catch((err) => {
 				    console.trace(err);
@@ -153,7 +166,7 @@ class OptractService {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
 			console.log(`refresh rc:`); console.dir(rc);
-			if (!rc) return setTimeout(this.blockDataDispatcher, 10000, {});
+			if (!rc) return setTimeout(this.blockDataDispatcher, 2000, {});
 			if (!this.blockDataHandler) {
 				console.log("No valid handler for blockData events")
 			} else {
@@ -182,6 +195,22 @@ class OptractService {
 		}).catch((err) => { console.trace(err); setTimeout(this.opt.call, 5000, 'reports'); })
 	    }
 
+	    this.getMultiBkArticles = (startBk, endBk) =>
+	    {
+		    let p = [];
+		    let articles = {};
+		    let articleTotal = 0;
+		    for (let i = startBk; i <= endBk; i++) {
+			    p.push(this.opt.call('getBlockArticles',[i, true]).then((rc) => {
+				articles = {...articles, ...rc};
+				articleTotal = Object.keys(articles).length;
+				DlogsActions.updateState({articles, articleTotal});
+			    }))
+		    }
+
+		    return Promise.all(p).then(() => { return articles; })
+	    }
+
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
 		    let p = [];
@@ -189,10 +218,11 @@ class OptractService {
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
 			if (data.optract.synced > 5) {
-				os = data.optract.synced - 5;
-				if (data.optract.opStart < os) os = data.optract.opStart;
+				os = data.optract.synced - 2;
+				//if (data.optract.opStart < os) os = data.optract.opStart;
 			}
-			p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
+			//p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
+			p.push(this.getMultiBkArticles(os, data.optract.synced));
 			if (data.optract.lottery.drawed === true) {
 				p.push(this.getClaimArticles(data.optract.opround, false));
 				p.push(this.getClaimTickets(this.account));

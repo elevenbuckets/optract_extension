@@ -117,7 +117,7 @@ class MainView extends Reflux.Component {
 
     render() {
 	console.dir(this.state.account);
-	if (Object.keys(this.state.articles).length === 0) {
+	if (this.state.articleTotal === 0) {
 		document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
 	} else {
 		document.getElementById('app').style.backgroundImage = 'none';
@@ -139,7 +139,7 @@ class MainView extends Reflux.Component {
                         <Tab eventKey="finance" title="Finance"></Tab>
                      </Tabs> : ''}
 		    {this.state.view === "List" ?
-                        Object.keys(this.state.articles).length === 0 ?
+                        this.state.articleTotal === 0 ?
                             <div className='item' style={{height: 'calc(100vh - 50px)', width: "100vw"}}><div className='item loader'></div>
 			    <label className='loaderlabel'>Loading ...</label></div> :
                             <div className="articles"> {this.getArticleList()} </div> :

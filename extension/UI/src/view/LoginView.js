@@ -27,7 +27,10 @@ class LoginView extends Reflux.Component {
 
     componentDidUpdate() {
 	    console.log(`DEBUG: did update...`)
-	    if (this.state.wsrpc === true && this.state.allAccounts.length === 0) DlogsActions.allAccounts();
+	    if (this.state.wsrpc === true && this.state.allAccounts.length === 0) {
+		    DlogsActions.allAccounts();
+		    DlogsActions.serverCheck();
+	    }
     }
 
     handleSelect = (eventkey, event) => {
