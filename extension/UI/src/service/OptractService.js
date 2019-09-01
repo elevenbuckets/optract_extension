@@ -97,28 +97,6 @@ class OptractService {
 						this.account = account;
 						DlogsActions.updateState(state);
 						if (callback) callback();
-/*
-						this.opt.call('reports').then((data) => {
-							let reports = { reports: data }
-
-							let os = data.optract.synced;
-							if (data.optract.synced > 5) {
-								os = data.optract.synced - 5;
-								if (data.dbsync && data.optract.opStart < os) os = data.optract.opStart;
-							}
-							this.getBkRangeArticles(os, data.optract.synced, true, callback);
-							if (data.optract.lottery.drawed === true) {
-								this.getClaimArticles(data.optract.opround, true);
-								this.getClaimTickets(this.account);
-								DlogsActions.newBlock({});
-							}
-
-							DlogsActions.updateState(reports);
-						})
-						 .catch((err) => { console.trace(err); })
-*/
-						//this.subscribeBlockData(DlogsActions.newBlock);
-						//this.blockDataDispatcher({});
 					})
 					.catch((err) => { console.trace(err); setTimeout(this.unlockRPC, 5000, pw, callback); })
 			    })
@@ -134,7 +112,7 @@ class OptractService {
 		this.getBkRangeArticles = (startB, endB, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
 		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
-			DlogsActions.updateState({articles: data});
+			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
 			if (callback) callback()
 			return {articles: data} 
 		    }).catch((err) => { console.trace(err); })
@@ -218,8 +196,8 @@ class OptractService {
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
 			if (data.optract.synced > 5) {
-				os = data.optract.synced - 2;
-				//if (data.optract.opStart < os) os = data.optract.opStart;
+				os = data.optract.synced - 5;
+				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 			//p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
 			p.push(this.getMultiBkArticles(os, data.optract.synced));
