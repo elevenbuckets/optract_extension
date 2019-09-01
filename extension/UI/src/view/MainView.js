@@ -36,6 +36,17 @@ class MainView extends Reflux.Component {
 	}
     }
 
+    genExcerpt = (article) =>
+    {
+	try {
+	    if (article.page.excerpt === '') article.page.excerpt = '(no preview texts)';
+	    return renderHTML(marked(article.page.excerpt.substring(0, 140) + '...'))
+	} catch (err) {
+	    articles.page.excerpt = '(no preview texts)';
+	    return renderHTML(marked(article.page.excerpt))
+	}
+    }
+
     getArticleList = () => {
         let articles = this.state.articles; 
 	if (Object.keys(articles).length === 0) return;
@@ -51,7 +62,7 @@ class MainView extends Reflux.Component {
             return <div title={'Source: ' + article.page.domain} className="aidcard">
                 <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
-                    {renderHTML(marked(article.page.excerpt.substring(0, 200) + '...'))}
+                    { this.genExcerpt.apply(this, [article]) }
                 </div>
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     <img src={this.pickLeadImage.apply(this, [article])}></img>
