@@ -28,11 +28,10 @@ class LoginView extends Reflux.Component {
     componentDidUpdate() {
 	    if (this.state.wsrpc === true && this.state.account === null) {
 
-		    //if (this.state.allAccounts.length === 0) DlogsActions.allAccounts();
+		    if (this.state.allAccounts.length === 0) DlogsActions.allAccounts();
 		    if (this.state.login === false && this.state.logining === false) {
 	    	    	    console.log(`DEBUG: did update...`)
 			    DlogsActions.serverCheck();
-			    this.setState({logining: true});
 		    }
 	    }
     }
@@ -87,7 +86,7 @@ class LoginView extends Reflux.Component {
 			</div>
 			<Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
 			  <Dropdown.Toggle style={{fontSize: '20px', fontFamily: 'monospace'}} variant="success" id="dropdown-basic">
-				{this.state.account === null ? " Please select your login account... " : this.state.account}
+				{typeof(this.state.account) === 'undefined' ? " Please select your login account... " : this.state.account}
 			  </Dropdown.Toggle>
 			  {this.listAccounts()}
 			</Dropdown>

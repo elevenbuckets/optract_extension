@@ -114,7 +114,11 @@ class DlogsStore extends Reflux.Store {
 	console.log(`DEBUG: service check called!!`)
 	OptractService.serverCheck().then((rc) => {
         	this.setState({logining : true});
-		if (rc) this.unlocked();
+		if (rc) {
+			this.unlocked();
+		} else {
+        		this.setState({account: undefined, login: false, logining: false })
+		}
 	})	
     }
 
