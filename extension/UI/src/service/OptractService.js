@@ -207,7 +207,7 @@ class OptractService {
 			}
 
 			return Promise.all(p)
-			              .catch((err) => { console.trace(err); setTimeout(this.refreshArticles, 5000); })
+			              .catch((err) => { console.trace(err); return false; })
 		    } else {
 			console.log(`DEBUG: account not set or block not yet synced, wait a bit ...`);
 			return false;

@@ -26,10 +26,14 @@ class LoginView extends Reflux.Component {
     }
 
     componentDidUpdate() {
-	    console.log(`DEBUG: did update...`)
-	    if (this.state.wsrpc === true && this.state.allAccounts.length === 0) {
-		    DlogsActions.allAccounts();
-		    DlogsActions.serverCheck();
+	    if (this.state.wsrpc === true && this.state.account === null) {
+
+		    //if (this.state.allAccounts.length === 0) DlogsActions.allAccounts();
+		    if (this.state.login === false && this.state.logining === false) {
+	    	    	    console.log(`DEBUG: did update...`)
+			    DlogsActions.serverCheck();
+			    this.setState({logining: true});
+		    }
 	    }
     }
 
