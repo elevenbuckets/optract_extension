@@ -143,7 +143,7 @@ class OptractService {
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
-			console.log(`refresh rc:`); console.dir(rc);
+			console.log(`refresh Article output:`); console.dir(rc);
 			if (!rc) return setTimeout(this.blockDataDispatcher, 2000, {});
 			if (!this.blockDataHandler) {
 				console.log("No valid handler for blockData events")
@@ -186,7 +186,7 @@ class OptractService {
 			    }))
 		    }
 
-		    return Promise.all(p).then(() => { return articles; })
+		    return Promise.all(p).then(() => { return {articles}; })
 	    }
 
 	    this.refreshArticles = (callback = null) => {
