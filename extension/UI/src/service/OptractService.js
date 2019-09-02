@@ -143,7 +143,10 @@ class OptractService {
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
-			if (!rc) return setTimeout(this.blockDataDispatcher, 2000, {});
+			if (!rc) {
+		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
+				return setTimeout(this.blockDataDispatcher, 2000, {});
+			}
 		    })
 		}
 
@@ -169,12 +172,16 @@ class OptractService {
 	    {
 		    let articles = {};
 		    let articleTotal = 0;
+		    let _articleTotal = 0;
 		    for (let i = startBk; i <= endBk; i++) {
 			    this.opt.call('getBlockArticles',[i, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
-				console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
-				console.dir({articles, articleTotal});
+				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
+					console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
+					console.dir({articles, articleTotal});
+					_articleTotal = articleTotal;
+				}
 				DlogsActions.updateState({articles, articleTotal});
 			    })
 		    }
@@ -211,7 +218,7 @@ class OptractService {
 
 	    this.getClaimArticles = (op, parsing, callback) => {
 		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-		    console.log(`DEBUG: in OptractService getClaimArticles:`); console.dir(data);
+		    //console.log(`DEBUG: in OptractService getClaimArticles:`); console.dir(data);
 		    DlogsActions.updateState({claimArticles: data});
 		    if (callback) callback()
 		    return {claimArticles: data}

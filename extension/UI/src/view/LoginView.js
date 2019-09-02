@@ -15,10 +15,7 @@ class LoginView extends Reflux.Component {
     constructor(props) {
         super(props);
         this.store = DlogsStore;
-        this.state = {
-            log: false
-        }
-
+	this.log = false;
     }
 
     componentDidMount() {
@@ -29,9 +26,10 @@ class LoginView extends Reflux.Component {
 	    if (this.state.wsrpc === true && this.state.account === null) {
 
 		    if (this.state.allAccounts.length === 0) DlogsActions.allAccounts();
-		    if (this.state.login === false && this.state.logining === false) {
+		    if (this.log === false) {
 	    	    	    console.log(`DEBUG: did update...`)
 			    DlogsActions.serverCheck();
+		            this.log = true;
 		    }
 	    }
     }
