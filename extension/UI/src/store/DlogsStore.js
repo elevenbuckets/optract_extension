@@ -62,16 +62,10 @@ class DlogsStore extends Reflux.Store {
 	    if (typeof(out) !== 'object' || Object.keys(out).length === 0) return;
 
 	    if (typeof(wow) === 'object' && Object.keys(wow).length > 0) {
-            	Object.keys(wow).map((aid) => { 
-		    	if (typeof(out[aid]) === 'undefined') return;
-		    	out[aid] = {...out[aid], claim: true};
-			console.log(`article ${aid} is tagged`)
-	    	}); 
+	    	this.setState({claimArticles: wow})
 	    } else {
 		console.log(`claimArticle store is empty ... skipped`)
 	    }
-
-	    this.setState({articles : out, claimArticles: wow})
 
 	    if (typeof(tic) === 'object' && Object.keys(tic).length > 0) {
 		let outics = [];
@@ -129,7 +123,7 @@ class DlogsStore extends Reflux.Store {
 
     unlocked = ()=>{
         this.setState({ login: true, logining : false })
-	OptractService.subscribeBlockData(DlogsActions.newBlock);
+	OptractService.subscribeBlockData(()=>{});
         OptractService.blockDataDispatcher({});
     }
 

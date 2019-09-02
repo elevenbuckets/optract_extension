@@ -143,15 +143,7 @@ class OptractService {
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
-			console.log(`refresh Article output:`); console.dir(rc);
 			if (!rc) return setTimeout(this.blockDataDispatcher, 2000, {});
-			if (!this.blockDataHandler) {
-				console.log("No valid handler for blockData events")
-			} else {
-		    		console.log("Getting blockData events")
-				let outobj = rc.reduce((r,i) => { r = { ...r, ...i}; return r; }, {});
-				this.blockDataHandler(outobj);
-			}
 		    })
 		}
 
@@ -175,39 +167,34 @@ class OptractService {
 
 	    this.getMultiBkArticles = (startBk, endBk) =>
 	    {
-		    let p = [];
 		    let articles = {};
 		    let articleTotal = 0;
 		    for (let i = startBk; i <= endBk; i++) {
-			    p.push(this.opt.call('getBlockArticles',[i, true]).then((rc) => {
+			    this.opt.call('getBlockArticles',[i, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
+				console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
+				console.dir({articles, articleTotal});
 				DlogsActions.updateState({articles, articleTotal});
-			    }))
+			    })
 		    }
-
-		    return Promise.all(p).then(() => { return {articles}; })
 	    }
 
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
-		    let p = [];
-
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
 			if (data.optract.synced > 5) {
 				os = data.optract.synced - 5;
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
-			//p.push(this.getBkRangeArticles(os, data.optract.synced, true, callback));
-			p.push(this.getMultiBkArticles(os, data.optract.synced));
+			this.getMultiBkArticles(os, data.optract.synced);
 			if (data.optract.lottery.drawed === true) {
-				p.push(this.getClaimArticles(data.optract.opround, false));
-				p.push(this.getClaimTickets(this.account));
+				this.getClaimArticles(data.optract.opround, false);
+				this.getClaimTickets(this.account);
 			}
 
-			return Promise.all(p)
-			              .catch((err) => { console.trace(err); return false; })
+			return true;
 		    } else {
 			console.log(`DEBUG: account not set or block not yet synced, wait a bit ...`);
 			return false;
@@ -217,7 +204,7 @@ class OptractService {
 
 	    this.getClaimTickets = (addr) => {
 		return this.opt.call('getClaimTickets', [addr]).then((data) => {
-		    //DlogsActions.updateState({ claimTickets: data });
+		    DlogsActions.updateState({ claimTickets: data });
 		    return {claimTickets: data};
 		}).catch((err) => { console.trace(err); })
 	    }

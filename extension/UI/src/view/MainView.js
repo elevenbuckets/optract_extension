@@ -51,7 +51,7 @@ class MainView extends Reflux.Component {
         let articles = this.state.articles; 
 	if (Object.keys(articles).length === 0) return;
 
-        return Object.keys(articles).filter(aid => {
+        return Object.keys(articles).sort().filter(aid => {
             if (typeof(articles[aid].page) !== 'undefined') {
                 if (this.state.activeTabKey == "totalList") return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
@@ -74,7 +74,7 @@ class MainView extends Reflux.Component {
 			{this.state.voted === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Vote'}
 			</div>
 		    {
-			typeof(article.claim) !== 'undefined' && article.claim === true ?
+			typeof(this.state.claimArticles) !== 'undefined' && Object.keys(this.state.claimArticles).length > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined'?
 			<div className="button" 
 			     style={ this.state.claimTickets.length > 0 
 				     ? { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' } 
@@ -147,7 +147,7 @@ class MainView extends Reflux.Component {
 		     <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
                         <Tab eventKey="totalList" title="ALL"></Tab>
                         <Tab eventKey="tech" title="Tech"></Tab>
-                        <Tab eventKey="blockchain" title="BlockChain"></Tab>
+                        <Tab eventKey="blockchain" title="Blockchain"></Tab>
                         <Tab eventKey="finance" title="Finance"></Tab>
                      </Tabs> : ''}
 		    {this.state.view === "List" ?
