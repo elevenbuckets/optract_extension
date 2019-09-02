@@ -113,9 +113,9 @@ class MainView extends Reflux.Component {
 
     claim = (article, aid, e) => {
 	this.setState({claimed: aid});
-        let l = article.txs.length;
-        let i = Math.floor(Math.random() * l);
-        DlogsActions.claim(article.blk[i], article.txs[i], aid);
+	let v2blk = this.state.claimArticles[aid].blk[0];
+	let v2txh = this.state.claimArticles[aid].txs[0];
+        DlogsActions.claim(v2blk, v2txh, aid);
         e.stopPropagation();
     }
 
