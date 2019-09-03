@@ -60,25 +60,44 @@ class MainView extends Reflux.Component {
 		? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> 
 		: 'Vote'} 
 		  </div>
-		    { typeof(this.state.claimArticles) !== 'undefined' && Object.keys(this.state.claimArticles).length > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined'?
+		</div>)
+    }
+
+    genClaimButtons = (article) =>
+    {
+	let aid = article.myAID;
+    	if (this.state.ticketCounts > 0) {
+		   return (<div className="aidclk" onClick={()=>{}}>
 			<div className="button" 
-			     style={ this.state.claimTickets.length > 0 
-				     ? { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' } 
-				     : { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'none' }} 
+			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }} 
 			     onClick={typeof(this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
 			{this.state.claim === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
-			</div> : ''
-		    }
+			</div>
+		   </div>)
+	} else {
+		return (<div className="item aidclk" onClick={()=>{}} style={
+			{minHeight: '94px', color: 'darkred', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}} 		       onClick={this.goToArticle.bind(this, article)}>You have 0 ticket left to vote!
 		</div>)
+	}
+    }
+
+    handleNoArticles = (activeTab) =>
+    {
+	    if (activeTab === 'claim') {
+		    return (<div className="item noticeBoard"><p>No articles for reward claiming yet...</p></div>)
+	    } else {
+		    return (<div className="item noticeBoard"><p>No articles for category {activeTab} yet...</p></div>)
+	    }
     }
 
     getArticleList = () => {
         let articles = this.state.articles; 
-	if (Object.keys(articles).length === 0) return;
+	if (this.state.activeTabKey === 'claim') articles = this.state.claimArticles;
+	if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
         return Object.keys(articles).sort().filter(aid => {
             if (typeof(articles[aid].page) !== 'undefined') {
-                if (this.state.activeTabKey == "totalList") return true;
+                if (this.state.activeTabKey == "totalList" || this.state.activeTabKey == "claim") return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
         }).map((aid) => {
@@ -94,7 +113,7 @@ class MainView extends Reflux.Component {
                     <img src={this.pickLeadImage.apply(this, [article])}></img>
                 </div>
 		{ this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1 
-		  ? this.genVoteButtons.apply(this, [article])
+		  ? this.state.activeTabKey === 'claim' ? this.genClaimButtons.apply(this, [article]) : this.genVoteButtons.apply(this, [article])
 		  : <div className="item aidclk" style={
 		     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
 		   } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
@@ -167,8 +186,13 @@ class MainView extends Reflux.Component {
 		     <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
                         <Tab eventKey="totalList" title="ALL"></Tab>
                         <Tab eventKey="tech" title="Tech"></Tab>
+                        <Tab eventKey="emergingTech" title="Emerging"></Tab>
+                        <Tab eventKey="science" title="Science"></Tab>
                         <Tab eventKey="blockchain" title="Blockchain"></Tab>
                         <Tab eventKey="finance" title="Finance"></Tab>
+                        <Tab eventKey="investment" title="Investment"></Tab>
+			<Tab eventKey="__" disabled title="|"></Tab>
+			{ this.state.claimArticleCounts > 0 ? <Tab eventKey="claim" title="Rewards"></Tab> : '' }
                      </Tabs> : ''}
 		    {this.state.view === "List" ?
                         this.state.articleTotal === 0 ?

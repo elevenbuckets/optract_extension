@@ -26,7 +26,7 @@ class DlogsStore extends Reflux.Store {
 	    claimTickets: [],
 	    ticketCounts: 0,
 	    claimArticles: {},
-	    newClaimArticles: {},
+	    claimArticleCounts: 0,
 	    newArticles: {},
             articles : {},
 	    articleTotal: 0,

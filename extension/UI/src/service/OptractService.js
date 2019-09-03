@@ -152,7 +152,7 @@ class OptractService {
 
 	    this.getNewClaimArticles = (op, parsing, callback) => {
 		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-		    DlogsActions.updateState({claimArticles: data});
+		    DlogsActions.updateState({claimArticles: data, claimArticleCounts: Object.keys(data).length});
 		    if (callback) callback() 
 		    return {claimArticles: data}
 		}).catch((err) => { console.trace(err); })
@@ -196,8 +196,9 @@ class OptractService {
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 			this.getMultiBkArticles(os, data.optract.synced);
+			this.getClaimArticles(22, true); // cheated for test UI
 			if (data.optract.lottery.drawed === true) {
-				this.getClaimArticles(data.optract.opround, false);
+				this.getClaimArticles(data.optract.opround, true);
 				this.getClaimTickets(this.account);
 			}
 
@@ -218,8 +219,8 @@ class OptractService {
 
 	    this.getClaimArticles = (op, parsing, callback) => {
 		return this.opt.call('getClaimArticles', [op, parsing]).then((data) => {
-		    //console.log(`DEBUG: in OptractService getClaimArticles:`); console.dir(data);
-		    DlogsActions.updateState({claimArticles: data});
+		    console.log(`DEBUG: in OptractService getClaimArticles:`); console.dir(data);
+		    DlogsActions.updateState({claimArticles: data, claimArticleCounts: Object.keys(data).length});
 		    if (callback) callback()
 		    return {claimArticles: data}
 		}).catch((err) => { console.trace(err); })
