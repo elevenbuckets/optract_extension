@@ -18,6 +18,8 @@ class MainView extends Reflux.Component {
         this.state = {
             view: "List",
             currentBlog: "",
+	    readAID: [],
+	    readCount: 0
         }
 
         this.store = DlogsStore;
@@ -47,6 +49,29 @@ class MainView extends Reflux.Component {
 	}
     }
 
+    genVoteButtons = (article) =>
+    {
+	let aid = article.myAID;
+    	return (<div className="aidclk" onClick={()=>{}}>
+		  <div className="button" 
+		       style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }} 
+		       onClick={typeof(this.state.voted) === 'undefined' ? this.vote.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
+		      { this.state.voted === aid 
+		? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> 
+		: 'Vote'} 
+		  </div>
+		    { typeof(this.state.claimArticles) !== 'undefined' && Object.keys(this.state.claimArticles).length > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined'?
+			<div className="button" 
+			     style={ this.state.claimTickets.length > 0 
+				     ? { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' } 
+				     : { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'none' }} 
+			     onClick={typeof(this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
+			{this.state.claim === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
+			</div> : ''
+		    }
+		</div>)
+    }
+
     getArticleList = () => {
         let articles = this.state.articles; 
 	if (Object.keys(articles).length === 0) return;
@@ -58,6 +83,7 @@ class MainView extends Reflux.Component {
             }
         }).map((aid) => {
             let article = articles[aid];
+	    article['myAID'] = aid;
 	    if (article.page.excerpt === null) articles.page.excerpt = '(no preview texts)';
             return <div title={'Source: ' + article.page.domain} className="aidcard">
                 <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
@@ -67,28 +93,21 @@ class MainView extends Reflux.Component {
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     <img src={this.pickLeadImage.apply(this, [article])}></img>
                 </div>
-                <div className="aidclk" onClick={()=>{}}>
-			<div className="button" 
-			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }} 
-			     onClick={typeof(this.state.voted) === 'undefined' ? this.vote.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
-			{this.state.voted === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Vote'}
-			</div>
-		    {
-			typeof(this.state.claimArticles) !== 'undefined' && Object.keys(this.state.claimArticles).length > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined'?
-			<div className="button" 
-			     style={ this.state.claimTickets.length > 0 
-				     ? { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' } 
-				     : { textAlign: 'center', right: '25px', cursor: 'pointer', display: 'none' }} 
-			     onClick={typeof(this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
-			{this.state.claim === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
-			</div> : ''
-		    }
-                </div>
+		{ this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1 
+		  ? this.genVoteButtons.apply(this, [article])
+		  : <div className="item aidclk" style={
+		     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+		   } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
+
+		}
             </div>
         })
     }
 
     goToArticle = (article) => {
+	let readAID = this.state.readAID;
+	readAID.push(article.myAID);
+	this.setState({readAID, readCount: readAID.length});
         window.open(article.url, '_blank');
         // DlogsActions.fetchBlogContent(article);
         // this.setState({ view: "Content", currentBlog: article });
@@ -128,7 +147,8 @@ class MainView extends Reflux.Component {
     }
 
     render() {
-	console.dir(this.state.account);
+	console.log(this.state.account);
+	console.log(this.state.voted);
 	if (this.state.articleTotal === 0) {
 		document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
 	} else {
