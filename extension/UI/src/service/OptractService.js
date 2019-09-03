@@ -196,7 +196,6 @@ class OptractService {
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 			this.getMultiBkArticles(os, data.optract.synced);
-			this.getClaimArticles(22, true); // cheated for test UI
 			if (data.optract.lottery.drawed === true) {
 				this.getClaimArticles(data.optract.opround, true);
 				this.getClaimTickets(this.account);
