@@ -195,6 +195,7 @@ class OptractService {
 				os = data.optract.synced - 5;
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
+			this.getFinalList(data.optract.opround);
 			this.getMultiBkArticles(os, data.optract.synced);
 			if (data.optract.lottery.drawed === true) {
 				this.getClaimArticles(data.optract.opround, true);
@@ -228,9 +229,16 @@ class OptractService {
     }
 
     getFinalList(op) {
-        this.opt.call('getOpRangeFinalList', [arguments]).then((data) => {
-            let finalList = { finalList: data }
-            DlogsActions.updateState(finalList);
+	//TODO: once we have enough final list, we should limit the query range...
+        this.opt.call('getOpRangeFinalList', [1, op, true]).then((data) => {
+	    let n = 0;
+	    let list = Object.values(data).reduce((o, i) => {
+		    if (Object.keys(i).length === 0) return o;
+		    let ii = Object.values(i)[0];
+		    let j = { page: {...ii}, url: ii.url, tags: {tags: ['finalList'], comment: ''} };
+		    o = { ...o, [n]: j}; n++; return o;
+	    }, {});
+            DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
         }).catch((err) => { console.log(`DEBUG: getFinalList:`); console.trace(err); })
     }
 

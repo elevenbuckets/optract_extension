@@ -44,7 +44,7 @@ class MainView extends Reflux.Component {
 	    if (article.page.excerpt === '') article.page.excerpt = '(no preview texts)';
 	    return renderHTML(marked(article.page.excerpt.substring(0, 140) + '...'))
 	} catch (err) {
-	    articles.page.excerpt = '(no preview texts)';
+	    article.page.excerpt = '(no preview texts)';
 	    return renderHTML(marked(article.page.excerpt))
 	}
     }
@@ -81,29 +81,49 @@ class MainView extends Reflux.Component {
 	}
     }
 
+    handleShowButton = (article) =>
+    {
+	    if (this.state.activeTabKey === 'claim') {
+		    return this.genClaimButtons.apply(this, [article]) 
+	    } else if (this.state.activeTabKey === 'finalList') {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>Read It!!!</div>)
+	    } else {
+		    return this.genVoteButtons.apply(this, [article])
+	    }
+    }
+
     handleNoArticles = (activeTab) =>
     {
 	    if (activeTab === 'claim') {
 		    return (<div className="item noticeBoard"><p>No articles for reward claiming yet...</p></div>)
+	    } else if (activeTab === 'finalList') {
+		    return (<div className="item noticeBoard"><p>No article was elected into final list yet...</p></div>)
 	    } else {
-		    return (<div className="item noticeBoard"><p>No articles for category {activeTab} yet...</p></div>)
+		    return (<div className="item noticeBoard"><p>No articles curated for this category ...</p></div>)
 	    }
     }
 
     getArticleList = () => {
         let articles = this.state.articles; 
 	if (this.state.activeTabKey === 'claim') articles = this.state.claimArticles;
+	if (this.state.activeTabKey === 'finalList') articles = this.state.finalList;
 	if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
-        return Object.keys(articles).sort().filter(aid => {
+        let pagelist = Object.keys(articles).sort().filter(aid => {
             if (typeof(articles[aid].page) !== 'undefined') {
-                if (this.state.activeTabKey == "totalList" || this.state.activeTabKey == "claim") return true;
+                if (this.state.activeTabKey == "totalList" || this.state.activeTabKey == "claim" || this.state.activeTabKey == 'finalList') return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
-        }).map((aid) => {
+        })
+
+	if (pagelist.length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
+
+	return pagelist.map((aid) => {
             let article = articles[aid];
 	    article['myAID'] = aid;
-	    if (article.page.excerpt === null) articles.page.excerpt = '(no preview texts)';
+	    if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
             return <div title={'Source: ' + article.page.domain} className="aidcard">
                 <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
@@ -113,8 +133,8 @@ class MainView extends Reflux.Component {
                     <img src={this.pickLeadImage.apply(this, [article])}></img>
                 </div>
 		{ this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1 
-		  ? this.state.activeTabKey === 'claim' ? this.genClaimButtons.apply(this, [article]) : this.genVoteButtons.apply(this, [article])
-		  : <div className="item aidclk" style={
+		  ? this.handleShowButton.apply(this, [article])
+		  : this.state.activeTabKey === 'finalList'? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
 		     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
 		   } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
 
@@ -167,7 +187,7 @@ class MainView extends Reflux.Component {
 
     render() {
 	console.log(this.state.account);
-	console.log(this.state.voted);
+	console.dir(this.state.finalList);
 	if (this.state.articleTotal === 0) {
 		document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
 	} else {
@@ -192,6 +212,7 @@ class MainView extends Reflux.Component {
                         <Tab eventKey="finance" title="Finance"></Tab>
                         <Tab eventKey="investment" title="Investment"></Tab>
 			<Tab eventKey="__" disabled title="|"></Tab>
+			{ this.state.finalListCounts > 0 ? <Tab eventKey="finalList" title="Final List"></Tab> : '' }
 			{ this.state.claimArticleCounts > 0 ? <Tab eventKey="claim" title="Rewards"></Tab> : '' }
                      </Tabs> : ''}
 		    {this.state.view === "List" ?

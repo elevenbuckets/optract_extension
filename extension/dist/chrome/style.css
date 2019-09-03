@@ -48,6 +48,7 @@ body {
    overflow-y: scroll;
    max-height: 100vh;
    margin: 0px;
+   background-color: aliceblue !important;
 }
 
 /* Each item in our grid will contain numbers */
@@ -486,6 +487,17 @@ body {
   cursor: default;
   display: block;
   padding: 8px 10px;
+}
+
+.noticeBoard {
+  min-width: 90vw;
+  min-height: 77vh;
+  border: 1px solid #dee2e6;
+  margin: 20px;
+  text-align: center;
+  font-size: 30px;
+  padding: 45px;
+  background-color: aliceblue;
 }
 
 .aidcard {

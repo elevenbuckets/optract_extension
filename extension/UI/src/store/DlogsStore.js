@@ -30,6 +30,8 @@ class DlogsStore extends Reflux.Store {
 	    newArticles: {},
             articles : {},
 	    articleTotal: 0,
+	    finalList: {},
+	    finalListCounts: 0,
             following: [],
             displayBlogs: [],
             onlyShowForBlogger: "",
