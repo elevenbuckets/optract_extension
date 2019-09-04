@@ -1,15 +1,25 @@
+'use strict';
+
+// Third-party packages
 import Reflux from "reflux";
 import React from "react";
 import { Tabs, Tab, Toast } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
-
-import DlogsStore from "../store/DlogsStore";
-import DlogsActions from "../action/DlogsActions";
-import BlogView from "./BlogView";
-import SideBarView from "./SideBarView";
-import LoginView from "./LoginView"
 import renderHTML from 'react-render-html';
 import marked from "marked";
+
+// Store
+import DlogsStore from "../store/DlogsStore";
+
+// Actions
+import DlogsActions from "../action/DlogsActions";
+
+// Views
+import BlogView from "./BlogView";
+import LoginView from "./LoginView";
+
+// Misc 
+import { createCanvasWithAddress } from "../util/Utils";
 
 
 class MainView extends Reflux.Component {
@@ -24,6 +34,12 @@ class MainView extends Reflux.Component {
         }
 
         this.store = DlogsStore;
+    }
+
+    componentDidUpdate() {
+	    if (typeof(this.refs.canvas) !== 'undefined') {
+            	createCanvasWithAddress(this.refs.canvas, this.state.account);
+	    }
     }
 
     pickLeadImage = (article) =>
@@ -114,15 +130,34 @@ class MainView extends Reflux.Component {
 		      <div className="item OptNo">OptNo:<br/>{this.state.OproundNo}</div>
 		      <div className="item Peers">Peers:<br/>{this.state.PeerCounts}</div>
 		      <div className="item plist">
-		        <p style={{alignSelf: 'end'}}>Transaction List</p>
-		        <Table striped bordered hover><thead><tr><th>Account</th><th>Transaction Hash</th></tr></thead>
-		        <tbody>
-		          { this.state.pendingSize === 0 
-				  ? <tr><td colSpan="2"><p style={{padding: '0px 240px'}}>No pending for {this.state.account}</p></td></tr> 
-				  : this.state.pending.txhash[this.state.account].map((tx) => {
-					  return <tr><td style={{fontFamily: 'monospace'}}>{this.state.account}</td><td style={{fontFamily: 'monospace'}}>{tx}</td></tr>
-				  }) }
-		        </tbody></Table>
+		        <div style={{alignSelf: 'start'}}>
+		        <hr style={{minWidth: '100%', alignSelf: 'start', borderTop: '1px solid #dee2e6'}}/>
+				<Table className="statTable" style={{marginTop: '50px', minWidth: '77vw', alignSelf: 'start'}} striped bordered hover>
+				  <tbody>
+		    		   <tr>
+		    			<td style={{borderLeft: '1px solid white', borderTop: '1px solid white', borderBottom: '1px solid white', 
+						    backgroundColor: 'white', textAlign: 'center'}} rowSpan="2">
+		    				<canvas className="avatar" ref='canvas' width="190px" height="190px" />
+		    			</td>
+		                       	<td>Account Address</td><td>Member Status</td>
+		    		   </tr>
+		    		   <tr>
+		    			<td style={{fontFamily: 'monospace', padding: '30px'}}>{this.state.account}</td>
+		    			<td style={{fontFamily: 'monospace', padding: '30px'}}>{this.state.MemberStatus}</td>
+		    		   </tr>
+		    		   <tr><td colSpan="3" style={{backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white'}}><br/></td></tr>
+		    		   <tr><td colSpan="3" style={{backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white'}}><br/></td></tr>
+				   <tr><td colSpan="3">Pending Transactions {this.state.pendingSize === 0 ? '' : `(Total: ${this.state.pendingSize})`}</td></tr>
+				  { this.state.pendingSize === 0 
+					  ? <tr>
+						<td colSpan="3" style={{fontFamily: 'monospace'}}><p style={{padding: '0px 240px'}}>No pending Transactions</p></td>
+					    </tr> 
+					  : this.state.pending.txhash[this.state.account].map((tx) => {
+						  return <tr><td colSpan="3" style={{fontFamily: 'monospace'}}>{tx}</td></tr>
+					  }) }
+				  </tbody>
+				</Table>
+		         </div>
 		      </div>
 		   </div>)
     }

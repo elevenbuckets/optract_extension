@@ -69,7 +69,7 @@ const createCanvasWithAddress = (canvas, address) => {
         seedrand(newOpts.seed);
 
         newOpts.size = 11;
-        newOpts.scale = 6;
+        newOpts.scale = 11;
         newOpts.color = createColor();
         newOpts.bgcolor = createColor();
         newOpts.spotcolor = createColor();
