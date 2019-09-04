@@ -140,6 +140,35 @@ class OptractService {
 		    this.opt.on('blockData', this.blockDataDispatcher);
 		}
 
+	        this.statProbe = () =>
+	        {
+			this.opt.call('statProbe');
+		}
+
+		this.subscribeOpStats = () => {
+		    console.log("subcribing the opStats Event...");
+		    //reset
+		    this.opt.off('opStats');
+		    this.opt.unsubscribe('opStats');
+
+		    //subscribe
+		    this.opt.subscribe('opStats');
+
+		    const __handle_opstats = (opObj) =>
+		    {
+			    console.log(`DEBUG: __handle_opstats:`)
+			    console.dir(opObj);
+			    if ( (opObj.pending.constructor === Object && Object.keys(opObj.pending).length > 0)
+			      && typeof(opObj.pending.txhash[this.account]) !== 'undefined'
+			    ) {
+			    	opObj.pendingSize = opObj.pending.txhash[this.account].length;
+			    }
+			    DlogsActions.updateState(opObj);
+		    }
+
+		    this.opt.on('opStats', __handle_opstats);
+		}
+
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {

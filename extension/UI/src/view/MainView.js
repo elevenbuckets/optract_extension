@@ -187,7 +187,9 @@ class MainView extends Reflux.Component {
 
     render() {
 	console.log(this.state.account);
-	console.dir(this.state.finalList);
+	console.dir(this.state.EthBlock);
+	console.dir(this.state.pendingSize);
+
 	if (this.state.articleTotal === 0) {
 		document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
 	} else {

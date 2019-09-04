@@ -45,7 +45,16 @@ class DlogsStore extends Reflux.Store {
             showVoteToaster: false,
 	    wsrpc: false,
 	    voted: undefined,
-	    claimed: undefined
+	    claimed: undefined,
+	// opStats
+	    EthBlock: 0,
+	    OptractBlock: 0,
+            OproundNo: 0,
+	    PeerCounts: 0,
+	    Account: null,
+	    MemberStatus: null,
+	    pending: { txdata: {}, payload: {}, txhash: {}, nonces: {}},
+	    pendingSize: 0
         }
 
     }
@@ -125,8 +134,10 @@ class DlogsStore extends Reflux.Store {
 
     unlocked = ()=>{
         this.setState({ login: true, logining : false })
-	OptractService.subscribeBlockData(()=>{});
+	OptractService.subscribeBlockData();
+	OptractService.subscribeOpStats();
         OptractService.blockDataDispatcher({});
+        OptractService.statProbe();
     }
 
     onUpdateState = (state) =>{
