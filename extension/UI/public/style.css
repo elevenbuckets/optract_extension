@@ -502,7 +502,7 @@ body {
 
 .statusBoard {
   overflow-y: scroll;	
-  min-width: 90vw;
+  min-width: 91.5vw;
   min-height: 77vh;
   border: 1px solid #dee2e6;
   text-align: center;

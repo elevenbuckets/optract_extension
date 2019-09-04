@@ -75,7 +75,7 @@ class LoginView extends Reflux.Component {
             <div className="item contentxt" style={{backgroundImage: 'url(assets/loginbg.jpg)'}}>
                 { this.state.wsrpc === false ? <div className="item login"><div className="item loader"></div>
                     <label className="loaderlabel">Starting local node, should takes about 15 secs or so...</label></div> :
-		  this.state.logining ? <div className="item login"><div className="item loader"></div>
+		  this.state.Account === null ? <div className="item login"><div className="item loader"></div>
 		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
                     </div> : <div className="item login">
 			<div style={{display: 'inline-block', margin: '30px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>

@@ -132,7 +132,7 @@ class MainView extends Reflux.Component {
 		      <div className="item plist">
 		        <div style={{alignSelf: 'start'}}>
 		        <hr style={{minWidth: '100%', alignSelf: 'start', borderTop: '1px solid #dee2e6'}}/>
-				<Table className="statTable" style={{marginTop: '50px', minWidth: '77vw', alignSelf: 'start'}} striped bordered hover>
+				<Table className="statTable" style={{margin: '50px 0 25px 0', minWidth: '77vw', alignSelf: 'start'}} striped bordered hover>
 				  <tbody>
 		    		   <tr>
 		    			<td style={{borderLeft: '1px solid white', borderTop: '1px solid white', borderBottom: '1px solid white', 
