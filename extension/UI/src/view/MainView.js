@@ -1,6 +1,7 @@
 import Reflux from "reflux";
 import React from "react";
 import { Tabs, Tab, Toast } from "react-bootstrap";
+import Table from "react-bootstrap/Table";
 
 import DlogsStore from "../store/DlogsStore";
 import DlogsActions from "../action/DlogsActions";
@@ -105,8 +106,30 @@ class MainView extends Reflux.Component {
 	    }
     }
 
+    genOpStatsPage = () =>
+    {
+	    return (<div className="statusBoard">
+		      <div className="item EthBlk">EthBlock:<br/>{this.state.EthBlock}</div>
+		      <div className="item OptBlk">OptBlock:<br/>{this.state.OptractBlock}</div>
+		      <div className="item OptNo">OptNo:<br/>{this.state.OproundNo}</div>
+		      <div className="item Peers">Peers:<br/>{this.state.PeerCounts}</div>
+		      <div className="item plist">
+		        <p>Transaction List</p>
+		        <Table striped bordered hover><thead><tr><th>Account</th><th>Transaction Hash</th></tr></thead>
+		        <tbody>
+		          { this.state.pendingSize === 0 
+				  ? <tr><td colSpan="2"><p style={{padding: '0px 240px'}}>No pending for {this.state.account}</p></td></tr> 
+				  : this.state.pending.txhash[this.state.account].map((tx) => {
+					  return <tr><td style={{fontFamily: 'monospace'}}>{this.state.account}</td><td style={{fontFamily: 'monospace'}}>{tx}</td></tr>
+				  }) }
+		        </tbody></Table>
+		      </div>
+		   </div>)
+    }
+
     getArticleList = () => {
-        let articles = this.state.articles; 
+        let articles = this.state.articles;
+	if (this.state.activeTabKey === 'opStats') return this.genOpStatsPage.apply(this);
 	if (this.state.activeTabKey === 'claim') articles = this.state.claimArticles;
 	if (this.state.activeTabKey === 'finalList') articles = this.state.finalList;
 	if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
@@ -215,6 +238,7 @@ class MainView extends Reflux.Component {
                         <Tab eventKey="investment" title="Investment"></Tab>
 			<Tab eventKey="__" disabled title="|"></Tab>
 			{ this.state.finalListCounts > 0 ? <Tab eventKey="finalList" title="Final List"></Tab> : '' }
+                        <Tab eventKey="opStats" title="Status"></Tab>
 			{ this.state.claimArticleCounts > 0 ? <Tab eventKey="claim" title="Rewards"></Tab> : '' }
                      </Tabs> : ''}
 		    {this.state.view === "List" ?

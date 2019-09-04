@@ -159,6 +159,7 @@ class DlogsStore extends Reflux.Store {
         OptractService.newVote(block, leaf).then(data =>{
             console.dir(data);
             this.setState({voted: undefined, showVoteToaster: true})
+	    setTimeout(OptractService.statProbe, 30000);
         });
     }
 
@@ -172,6 +173,7 @@ class DlogsStore extends Reflux.Store {
         OptractService.newClaim(ticket.block, ticket.txhash, block, leaf, 'sent from optract client').then( data => {
             console.dir(data);
             this.setState({claimTickets: tickets, ticketCounts: tickets.length, claimed: undefined, showVoteToaster: true})
+	    setTimeout(OptractService.statProbe, 30000);
         });
     }
 
