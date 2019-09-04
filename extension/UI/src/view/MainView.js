@@ -114,7 +114,7 @@ class MainView extends Reflux.Component {
 		      <div className="item OptNo">OptNo:<br/>{this.state.OproundNo}</div>
 		      <div className="item Peers">Peers:<br/>{this.state.PeerCounts}</div>
 		      <div className="item plist">
-		        <p>Transaction List</p>
+		        <p style={{alignSelf: 'end'}}>Transaction List</p>
 		        <Table striped bordered hover><thead><tr><th>Account</th><th>Transaction Hash</th></tr></thead>
 		        <tbody>
 		          { this.state.pendingSize === 0 
