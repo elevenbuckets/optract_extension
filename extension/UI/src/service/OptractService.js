@@ -77,6 +77,8 @@ class OptractService {
 			})
 		}
 
+	        this.unlockTout;
+
 		this.unlockRPC = (pw, account, callback) => {
 			console.log(`stat = ${stat}`);
 		    const unlockRPCWithRetry = () => {
@@ -99,7 +101,10 @@ class OptractService {
 						DlogsActions.updateState(state);
 						if (callback) callback();
 					})
-					.catch((err) => { console.trace(err); setTimeout(this.unlockRPC, 5000, pw, callback); })
+					.catch((err) => { console.trace(err); 
+						clearTimeout(this.unlockTout);
+						this.unlockTout = setTimeout(this.unlockRPC, 5000, pw, callback); 
+					})
 			    })
 			    .catch((err) => {
 				    console.trace(err);
@@ -170,12 +175,15 @@ class OptractService {
 		    this.opt.on('opStats', __handle_opstats);
 		}
 
+	        this.dispatchTout;
+
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
 			if (!rc) {
 		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
-				return setTimeout(this.blockDataDispatcher, 2000, {});
+				clearTimeout(this.dispatchTout);
+				this.dispatchTout = setTimeout(this.blockDataDispatcher, 2000, {});
 			}
 		    })
 		}
@@ -188,6 +196,8 @@ class OptractService {
 		}).catch((err) => { console.trace(err); })
 	    }
 
+	    this.reportTout;
+
 	    this.getReports = (callback) => {
 		this.opt.call('reports').then((data) => {
 		    let reports = { reports: data }
@@ -195,7 +205,11 @@ class OptractService {
 		    if (callback) {
 			callback()
 		    }
-		}).catch((err) => { console.trace(err); setTimeout(this.opt.call, 5000, 'reports'); })
+		}).catch((err) => { 
+			console.trace(err); 
+			clearTimeout(this.reportTout);
+			this.reportTout = setTimeout(this.opt.call, 5000, 'reports'); 
+		})
 	    }
 
 	    this.getMultiBkArticles = (startBk, endBk) =>
@@ -226,12 +240,14 @@ class OptractService {
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 
+/*
 			this.opt.call('getMyVault', [this.account]).then((rc) => {
 				let voteAID = Object.keys(rc);
 				let voteCounts = voteAID.length;
 				DlogsActions.updateState({voteAID, voteCounts});
 				console.log(`DEBUG: voteAID and voteCounts updated`);
 			})
+*/
 
 			if (this.opround > 0 && this.opround !== data.optract.opround) {
 				console.log(`DEBUG: new opround started, reset local states ...`);

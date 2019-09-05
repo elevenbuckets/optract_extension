@@ -60,6 +60,7 @@ class DlogsStore extends Reflux.Store {
             voteCounts: 0
         }
 
+	this.probeTout;
     }
 
     onFetchBlogContent = (article) => {
@@ -165,7 +166,8 @@ class DlogsStore extends Reflux.Store {
 	    voteAID.push(aid);
 	    let voteCounts = voteAID.length;
             this.setState({voted: undefined, showVoteToaster: true, voteAID, voteCounts})
-	    setTimeout(OptractService.statProbe, 30000);
+	    clearTimeout(this.probeTout);
+	    this.probeTout = setTimeout(OptractService.statProbe, 30000);
         });
     }
 
@@ -178,7 +180,8 @@ class DlogsStore extends Reflux.Store {
         OptractService.newClaim(ticket.block, ticket.txhash, block, leaf, 'sent from optract client').then( data => {
             console.dir(data);
             this.setState({claimTickets: tickets, ticketCounts: tickets.length, claimed: undefined, showVoteToaster: true})
-	    setTimeout(OptractService.statProbe, 30000);
+	    clearTimeout(this.probeTout);
+	    this.probeTout = setTimeout(OptractService.statProbe, 30000);
         });
     }
 
