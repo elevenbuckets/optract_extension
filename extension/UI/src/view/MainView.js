@@ -44,7 +44,8 @@ class MainView extends Reflux.Component {
 
     getImgSize = ({target: img}) =>
     {
-	if (img.naturalWidth < 420 || img.naturalHeight < 200) img.style.minWidth = '415px';
+	if (img.naturalWidth < 420 || img.naturalWidth / img.naturalHeight < 2.1) img.style.minWidth = '415px';
+	if (img.naturalHeight < 200 || img.naturalWidth / img.naturalHeight > 2.1) img.style.minHeight = '200px';
     }
 
     pickLeadImage = (article) =>
