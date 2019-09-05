@@ -42,16 +42,21 @@ class MainView extends Reflux.Component {
 	    }
     }
 
+    getImgSize = ({target: img}) =>
+    {
+	if (img.naturalWidth < 420 || img.naturalHeight < 200) img.style.minWidth = '415px';
+    }
+
     pickLeadImage = (article) =>
     {
 	// special cases
-	if (article.page.domain.match('slashdot.org')) return 'assets/slashdot_optract_logo.png';
+	if (article.page.domain.match('slashdot.org')) return (<img src='assets/slashdot_optract_logo.png'></img>)
 	
 	// normal cases
 	if (article.page.lead_image_url) {
-		return article.page.lead_image_url;
+		return (<img onLoad={this.getImgSize.bind(this)} src={article.page.lead_image_url}></img>)
 	} else {
-		return 'assets/optract_logo.png'
+		return <img src='assets/optract_logo.png'></img>
 	}
     }
 
@@ -188,7 +193,7 @@ class MainView extends Reflux.Component {
                     { this.genExcerpt.apply(this, [article]) }
                 </div>
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
-                    <img src={this.pickLeadImage.apply(this, [article])}></img>
+                    {this.pickLeadImage.apply(this, [article])}
                 </div>
 		{ this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1 
 		  ? this.handleShowButton.apply(this, [article])
