@@ -11,6 +11,7 @@ class OptractService {
     constructor() {
 		this.opt
 		this.account;
+	        this.opround = 0;
 
 		const WSClient = require('rpc-websockets').Client;
 		const connectRPC = (mn) => {
@@ -224,6 +225,20 @@ class OptractService {
 				os = data.optract.synced - 5;
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
+
+			this.opt.call('getMyVault', [this.account]).then((rc) => {
+				let voteAID = Object.keys(rc);
+				let voteCounts = voteAID.length;
+				DlogsActions.updateState({voteAID, voteCounts});
+				console.log(`DEBUG: voteAID and voteCounts updated`);
+			})
+
+			if (this.opround > 0 && this.opround !== data.optract.opround) {
+				console.log(`DEBUG: new opround started, reset local states ...`);
+				this.opround = data.optract.opround;
+				DlogsActions.updateState({claimArticles: {}, claimArticleCounts: 0, claimTickets: [], ticketCounts: 0}); // reset
+			}
+
 			this.getFinalList(data.optract.opround);
 			this.getMultiBkArticles(os, data.optract.synced);
 			if (data.optract.lottery.drawed === true) {

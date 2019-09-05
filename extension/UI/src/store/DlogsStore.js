@@ -54,7 +54,10 @@ class DlogsStore extends Reflux.Store {
 	    Account: null,
 	    MemberStatus: null,
 	    pending: { txdata: {}, payload: {}, txhash: {}, nonces: {}},
-	    pendingSize: 0
+	    pendingSize: 0,
+	// vault
+	    voteAID: [],
+            voteCounts: 0
         }
 
     }
@@ -158,7 +161,10 @@ class DlogsStore extends Reflux.Store {
     onVote(block, leaf, aid) {
         OptractService.newVote(block, leaf).then(data =>{
             console.dir(data);
-            this.setState({voted: undefined, showVoteToaster: true})
+	    let voteAID = [ ...this.state.voteAID ];
+	    voteAID.push(aid);
+	    let voteCounts = voteAID.length;
+            this.setState({voted: undefined, showVoteToaster: true, voteAID, voteCounts})
 	    setTimeout(OptractService.statProbe, 30000);
         });
     }
@@ -168,7 +174,6 @@ class DlogsStore extends Reflux.Store {
 	
 	let tickets = [...this.state.claimTickets];
 	let ticket  = tickets.shift(0);
-	
 
         OptractService.newClaim(ticket.block, ticket.txhash, block, leaf, 'sent from optract client').then( data => {
             console.dir(data);

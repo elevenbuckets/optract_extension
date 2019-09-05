@@ -112,6 +112,10 @@ class MainView extends Reflux.Component {
 		    return (<div className="item aidclk" style={
                      {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
                    } onClick={this.goToArticle.bind(this, article)}>Read It!!!</div>)
+	    } else if (this.state.voteCounts > 0 && this.state.voteAID.indexOf(article.myAID) !== -1) {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>You've already voted this.</div>)
 	    } else {
 		    return this.genVoteButtons.apply(this, [article])
 	    }
@@ -251,7 +255,7 @@ class MainView extends Reflux.Component {
 
     render() {
 	console.log(this.state.account);
-	console.dir(this.state.EthBlock);
+	console.dir(this.state.voteAID);
 	console.dir(this.state.pendingSize);
 
 	if (this.state.articleTotal === 0) {
@@ -280,7 +284,7 @@ class MainView extends Reflux.Component {
 			<Tab eventKey="__" disabled title="|"></Tab>
 			{ this.state.finalListCounts > 0 ? <Tab eventKey="finalList" title="Final List"></Tab> : '' }
                         <Tab eventKey="opStats" title="Status"></Tab>
-			{ this.state.claimArticleCounts > 0 ? <Tab eventKey="claim" title="Rewards"></Tab> : '' }
+			{ this.state.claimArticleCounts > 0 ? <Tab eventKey="claim" style={{fontWeight: 'bold', color: 'red'}} title="Rewards"></Tab> : '' }
                      </Tabs> : ''}
 		    {this.state.view === "List" ?
                         this.state.articleTotal === 0 ?
