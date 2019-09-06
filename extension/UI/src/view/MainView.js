@@ -231,7 +231,7 @@ class MainView extends Reflux.Component {
     }
 
     updateTab = (activeKey) => {
-        if(activeKey === "finalList"){
+        if(activeKey === "claim"){
             this.setShowModal(true);
         }
         DlogsActions.updateTab(activeKey);
