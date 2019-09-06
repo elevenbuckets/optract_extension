@@ -337,8 +337,11 @@ class MainView extends Reflux.Component {
                         </Modal.Header>
                         <Modal.Body style={{fontSize:"2rem"}}>
                             <p>
-                                This is the second round of voting. You need to use one ticket for one vote.
-                  </p>
+                                This is the second round of voting, reward tokens will be issued for your participation.<br/> 
+				You need to use one ticket per vote (called "claim"). In each round you will be able to claim
+				as many times as long as you still have "winning" tickets, but you will only be eligible to claim
+				rewards once per round.
+                  	    </p>
                         </Modal.Body>
                     </Modal>
                 </div> : <LoginView />);
