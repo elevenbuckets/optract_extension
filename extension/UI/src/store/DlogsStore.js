@@ -57,7 +57,10 @@ class DlogsStore extends Reflux.Store {
 	    pendingSize: 0,
 	// vault
 	    voteAID: [],
-            voteCounts: 0
+            voteCounts: 0,
+	// double claim prevention
+	    claimAID: [],
+	    claimCounts: 0
         }
 
 	this.probeTout;
@@ -167,7 +170,10 @@ class DlogsStore extends Reflux.Store {
 
         OptractService.newClaim(ticket.block, ticket.txhash, block, leaf, 'sent from optract client').then( data => {
             console.dir(data);
-            this.setState({claimTickets: tickets, ticketCounts: tickets.length, claimed: undefined, showVoteToaster: true})
+	    let claimAID = [ ...this.state.claimAID ];
+	    claimAID.push(aid);
+	    let claimCounts = claimAID.length;
+            this.setState({claimTickets: tickets, ticketCounts: tickets.length, claimed: undefined, showVoteToaster: true, claimAID, claimCounts})
 	    clearTimeout(this.probeTout);
 	    this.probeTout = setTimeout(OptractService.statProbe, 30000);
         });
