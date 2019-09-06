@@ -272,7 +272,7 @@ class MainView extends Reflux.Component {
         console.dir(this.state.pendingSize);
 
         if (this.state.articleTotal === 0) {
-            document.getElementById('app').style.backgroundImage = 'url(assets/loginbg.jpg)';
+            document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';
         } else {
             document.getElementById('app').style.backgroundImage = 'none';
             document.getElementById('app').style.backgroundColor = 'aliceblue';
