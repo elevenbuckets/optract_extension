@@ -658,3 +658,7 @@ body {
 .modal-dialog{
   max-width: 90vw !important;
 }
+
+.modal-content{
+  box-shadow: 2px 2px 22px 1px !important;
+}
