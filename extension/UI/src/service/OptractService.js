@@ -263,6 +263,7 @@ class OptractService {
 				this.getFinalList(data.optract.opround);
 			} else if (this.opround === 0) {
 				this.getFinalList(data.optract.opround);
+				this.opround = data.optract.opround;
 			}
 
 			this.getMultiBkArticles(os, data.optract.synced); 
