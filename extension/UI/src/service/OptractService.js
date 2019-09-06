@@ -120,7 +120,6 @@ class OptractService {
 		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
 			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
 			if (callback) callback()
-			return {articles: data} 
 		    }).catch((err) => { console.trace(err); })
 		}
 
@@ -176,18 +175,22 @@ class OptractService {
 		}
 
 	        this.dispatchTout;
+	        this.DispatchLock = false;
 
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
 		    this.refreshArticles().then((rc) => {
-			if (!rc) {
+			if (!rc && this.DispatchLock === false) {
 		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
 				clearTimeout(this.dispatchTout);
 				this.dispatchTout = setTimeout(this.blockDataDispatcher, 2000, {});
+				this.DispatchLock = true;
+			} else if (rc) {
+				console.log(`DEBUG: refresh lock unset`);
+				this.DispatchLock = false;
 			} else {
-				this.MBALock = false;
-				this.GCTLock = false;
-				this.GCALock = false;
+				console.log(`DEBUG: refresh locked`);
+				return;
 			}
 		    })
 		}
@@ -235,16 +238,12 @@ class OptractService {
 		    }
 	    }
 
-	    this.MBALock = false;
-	    this.GCTLock = false;
-	    this.GCALock = false;
-
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
-			if (data.optract.synced > 5) {
-				os = data.optract.synced - 5;
+			if (data.optract.synced > 3) {
+				os = data.optract.synced - 3;
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 
@@ -261,24 +260,17 @@ class OptractService {
 				console.log(`DEBUG: new opround started, reset local states ...`);
 				this.opround = data.optract.opround;
 				DlogsActions.updateState({claimArticles: {}, claimArticleCounts: 0, claimTickets: [], ticketCounts: 0}); // reset
+				this.getFinalList(data.optract.opround);
+			} else if (this.opround === 0) {
+				this.getFinalList(data.optract.opround);
 			}
 
-			this.getFinalList(data.optract.opround);
-			if (this.MBALock === false) { 
-				this.getMultiBkArticles(os, data.optract.synced); 
-				this.MBALock = true;
-			}
+			this.getMultiBkArticles(os, data.optract.synced); 
+			//this.getBkRangeArticles(os, data.optract.synced, true);
 
 			if (data.optract.lottery.drawed === true) {
-				if (this.GCALock === false) {
-					this.getClaimArticles(data.optract.opround, true); 
-					this.GCALock = true;
-				}
-
-				if (this.GCTLock === false) {
-					this.getClaimTickets(this.account); 
-					this.GCTLock = true;
-				}
+				this.getClaimArticles(data.optract.opround, true); 
+				this.getClaimTickets(this.account); 
 			}
 
 			return true;
