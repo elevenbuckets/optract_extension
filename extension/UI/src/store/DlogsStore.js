@@ -67,21 +67,9 @@ class DlogsStore extends Reflux.Store {
         this.setState({ currentBlogContent: article.page.content });
     }
 
-    onNewBlock = (obj) =>
+    onTicketWon = (tic) =>
     {
-	    console.log(`DEBUG: newBlock action is called...`);
-	    let out = obj.articles;
-	    let wow = obj.claimArticles;
-	    let tic = obj.claimTickets;
-
-	    if (typeof(out) !== 'object' || Object.keys(out).length === 0) return;
-
-	    if (typeof(wow) === 'object' && Object.keys(wow).length > 0) {
-	    	this.setState({claimArticles: wow})
-	    } else {
-		console.log(`claimArticle store is empty ... skipped`)
-	    }
-
+	    console.log(`DEBUG: ticketWon action is called...`);
 	    if (typeof(tic) === 'object' && Object.keys(tic).length > 0) {
 		let outics = [];
 		Object.keys(tic).map((bn) => {
@@ -138,7 +126,7 @@ class DlogsStore extends Reflux.Store {
 
     unlocked = ()=>{
         this.setState({ login: true, logining : false })
-	OptractService.subscribeBlockData();
+	OptractService.subscribeBlockData(DlogsActions.newBlock);
 	OptractService.subscribeOpStats();
         OptractService.blockDataDispatcher({});
         OptractService.statProbe();

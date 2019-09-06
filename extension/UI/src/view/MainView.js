@@ -94,7 +94,7 @@ class MainView extends Reflux.Component {
 			<div className="button" 
 			     style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }} 
 			     onClick={typeof(this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
-			{this.state.claim === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
+			{this.state.claimed === aid ? <p style={{padding: '0px', margin: '0px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
 			</div>
 		   </div>)
 	} else {

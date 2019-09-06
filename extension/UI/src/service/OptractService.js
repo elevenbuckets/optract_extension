@@ -184,6 +184,10 @@ class OptractService {
 		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
 				clearTimeout(this.dispatchTout);
 				this.dispatchTout = setTimeout(this.blockDataDispatcher, 2000, {});
+			} else {
+				this.MBALock = false;
+				this.GCTLock = false;
+				this.GCALock = false;
 			}
 		    })
 		}
@@ -231,6 +235,10 @@ class OptractService {
 		    }
 	    }
 
+	    this.MBALock = false;
+	    this.GCTLock = false;
+	    this.GCALock = false;
+
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
@@ -256,10 +264,21 @@ class OptractService {
 			}
 
 			this.getFinalList(data.optract.opround);
-			this.getMultiBkArticles(os, data.optract.synced);
+			if (this.MBALock === false) { 
+				this.getMultiBkArticles(os, data.optract.synced); 
+				this.MBALock = true;
+			}
+
 			if (data.optract.lottery.drawed === true) {
-				this.getClaimArticles(data.optract.opround, true);
-				this.getClaimTickets(this.account);
+				if (this.GCALock === false) {
+					this.getClaimArticles(data.optract.opround, true); 
+					this.GCALock = true;
+				}
+
+				if (this.GCTLock === false) {
+					this.getClaimTickets(this.account); 
+					this.GCTLock = true;
+				}
 			}
 
 			return true;
@@ -272,8 +291,7 @@ class OptractService {
 
 	    this.getClaimTickets = (addr) => {
 		return this.opt.call('getClaimTickets', [addr]).then((data) => {
-		    DlogsActions.updateState({ claimTickets: data });
-		    return {claimTickets: data};
+		    DlogsActions.ticketWon(data);
 		}).catch((err) => { console.trace(err); })
 	    }
 
