@@ -100,20 +100,27 @@ class MainView extends Reflux.Component {
         }
     }
 
-    handleShowButton = (article) => {
-        if (this.state.activeTabKey === 'claim') {
-            return this.genClaimButtons.apply(this, [article])
-        } else if (this.state.activeTabKey === 'finalList') {
-            return (<div className="item aidclk" style={
-                { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-            } onClick={this.goToArticle.bind(this, article)}>Read It!!!</div>)
-        } else if (this.state.voteCounts > 0 && this.state.voteAID.indexOf(article.myAID) !== -1) {
-            return (<div className="item aidclk" style={
-                { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-            } onClick={this.goToArticle.bind(this, article)}>You've already voted this.</div>)
-        } else {
-            return this.genVoteButtons.apply(this, [article])
-        }
+    handleShowButton = (article) =>
+    {
+	    if (this.state.activeTabKey === 'claim') {
+	    	if (this.state.ticketCounts > 0 && this.state.claimAID.indexOf(article.myAID) !== -1) {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>You still have {this.state.ticketCounts} ticket(s)</div>)
+		} else {
+		    return this.genClaimButtons.apply(this, [article]) 
+		}
+	    } else if (this.state.activeTabKey === 'finalList') {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>Read It!!!</div>)
+	    } else if (this.state.voteCounts > 0 && this.state.voteAID.indexOf(article.myAID) !== -1) {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>You've already voted this.</div>)
+	    } else {
+		    return this.genVoteButtons.apply(this, [article])
+	    }
     }
 
     handleNoArticles = (activeTab) => {
