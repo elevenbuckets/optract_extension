@@ -228,7 +228,7 @@ class OptractService {
 		    if (endBk - startBk <= 2) return setTimeout(this.getBkRangeArticles, 0, startBk, endBk, 15, true);
 
 		    for (let i = startBk; i <= endBk; i++) {
-			    this.opt.call('getBlockArticles',[i, 5, true]).then((rc) => {
+			    this.opt.call('getBlockArticles',[i, 10, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
 				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
