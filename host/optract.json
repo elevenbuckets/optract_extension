@@ -1,7 +1,7 @@
 {
   "name": "optract",
   "description": "optract server",
-  "path": "/home/liang/Liang_Learn/git_hub/OptractClient/opt.sh",
+  "path": "/proj/OptractClient/dist/nativeApp.py",
   "type": "stdio",
   "browser_action": {
     "default_icon": "icons/message.svg"
