@@ -224,8 +224,11 @@ class OptractService {
 		    let articles = {};
 		    let articleTotal = 0;
 		    let _articleTotal = 0;
+
+		    if (endBk - startBk <= 2) return setTimeout(this.getBkRangeArticles, 0, startBk, endBk, 15, true);
+
 		    for (let i = startBk; i <= endBk; i++) {
-			    this.opt.call('getBlockArticles',[i, true]).then((rc) => {
+			    this.opt.call('getBlockArticles',[i, 10, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
 				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
@@ -266,12 +269,12 @@ class OptractService {
 				this.opround = data.optract.opround;
 			}
 
-			this.getMultiBkArticles(os, data.optract.synced); 
-			//this.getBkRangeArticles(os, data.optract.synced, true);
+			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
+			//setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, true);
 
 			if (data.optract.lottery.drawed === true) {
-				this.getClaimArticles(data.optract.opround, true); 
-				this.getClaimTickets(this.account); 
+				setTimeout(this.getClaimArticles, 0, data.optract.opround, true); 
+				setTimeout(this.getClaimTickets, 0, this.account); 
 			}
 
 			return true;
