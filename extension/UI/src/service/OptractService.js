@@ -174,6 +174,29 @@ class OptractService {
 		    this.opt.on('opStats', __handle_opstats);
 		}
 
+		this.subscribeCacheData = () => {
+		    console.log("subcribing the cacheData Event...");
+		    //reset
+		    this.opt.off('cacheData');
+		    this.opt.unsubscribe('cacheData');
+
+		    //subscribe
+		    this.opt.subscribe('cacheData');
+
+		    const __handle_cacheData = (chObj) =>
+		    {
+			    console.log(`DEBUG: __handle_cacheData:`)
+			    console.dir(chObj);
+			    if ( chObj.aidlist.constructor === Object 
+			      && Object.keys(chObj.aidlist).length > 0
+			    ) {
+			    	DlogsActions.updateState(chObj);
+			    }
+		    }
+
+		    this.opt.on('cacheData', __handle_cacheData);
+		}
+
 	        this.dispatchTout;
 	        this.DispatchLock = false;
 

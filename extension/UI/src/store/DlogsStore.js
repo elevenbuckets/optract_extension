@@ -60,7 +60,10 @@ class DlogsStore extends Reflux.Store {
             voteCounts: 0,
 	// double claim prevention
 	    claimAID: [],
-	    claimCounts: 0
+	    claimCounts: 0,
+	// cacheData
+	    aidlist: [],
+	    aidlistSize: 0
         }
 
 	this.probeTout;
@@ -131,6 +134,7 @@ class DlogsStore extends Reflux.Store {
         this.setState({ login: true, logining : false })
 	OptractService.subscribeBlockData(DlogsActions.newBlock);
 	OptractService.subscribeOpStats();
+	OptractService.subscribeCacheData();
         if (dispatch) {
 		OptractService.blockDataDispatcher({});
 	} else {
