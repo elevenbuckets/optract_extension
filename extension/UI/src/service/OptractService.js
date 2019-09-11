@@ -115,9 +115,9 @@ class OptractService {
 		    unlockRPCWithRetry();
 		}
 
-		this.getBkRangeArticles = (startB, endB, parsing, callback) => {
+		this.getBkRangeArticles = (startB, endB, arCap, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
-		    return this.opt.call('getBkRangeArticles', [startB, endB, parsing]).then((data) => {
+		    return this.opt.call('getBkRangeArticles', [startB, endB, arCap, parsing]).then((data) => {
 			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
 			if (callback) callback()
 		    }).catch((err) => { console.trace(err); })
@@ -270,7 +270,7 @@ class OptractService {
 			}
 
 			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
-			//setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, true);
+			//setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, 15, true);
 
 			if (data.optract.lottery.drawed === true) {
 				setTimeout(this.getClaimArticles, 0, data.optract.opround, true); 

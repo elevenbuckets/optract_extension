@@ -40,7 +40,7 @@ FNULL = open(os.devnull, 'w');
 def startServer():   
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
-        os.remove(lockFile)
+        return
 
     ipfsConfigPath = path.join("ipfs_repo", "config")
     ipfsBinPath = path.join("bin", "ipfs")
