@@ -118,6 +118,7 @@ class OptractService {
 		this.getBkRangeArticles = (startB, endB, arCap, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
 		    return this.opt.call('getBkRangeArticles', [startB, endB, arCap, parsing]).then((data) => {
+			this.articles = data;
 			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
 			if (callback) callback()
 		    }).catch((err) => { console.trace(err); })
@@ -190,6 +191,8 @@ class OptractService {
 			    if ( chObj.aidlist.constructor === Object 
 			      && Object.keys(chObj.aidlist).length > 0
 			    ) {
+				this.chObj = chObj;
+				this.updateCacheList(); console.dir(chObj);
 			    	DlogsActions.updateState(chObj);
 			    }
 		    }
@@ -202,6 +205,15 @@ class OptractService {
 
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
+		    let newBlock = false;
+
+		    if (typeof(obj) === Object && typeof(obj.blockNo) !== 'undefined') {
+			    // new block
+			    this.chObj = {};
+			    newBlock = true;
+
+		    }
+
 		    this.refreshArticles().then((rc) => {
 			if (!rc && this.DispatchLock === false) {
 		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
@@ -211,6 +223,7 @@ class OptractService {
 			} else if (rc) {
 				console.log(`DEBUG: refresh lock unset`);
 				this.DispatchLock = false;
+		    		if (newBlock === false) this.updateCacheList();
 			} else {
 				console.log(`DEBUG: refresh locked`);
 				return;
@@ -242,23 +255,40 @@ class OptractService {
 		})
 	    }
 
+	    this.articles = {};
+	    this.chObj = {};
+
+	    this.updateCacheList = () => 
+	    {
+		    if (typeof(this.chObj.aidlist) === 'undefined') return;
+
+		    this.chObj.aidlist = [ ...this.chObj.aidlist ].filter((aid) => { return typeof(this.articles[aid]) === 'undefined' });
+		    this.chObj.aidlistSize = this.chObj.aidlist.length;
+
+		    let output = {aidlist: this.chObj.aidlist, aidlistSize: this.chObj.aidlistSize};
+
+		    DlogsActions.updateState(output);
+	    }
+
 	    this.getMultiBkArticles = (startBk, endBk) =>
 	    {
-		    let articles = {};
+		    let articles = this.articles;
 		    let articleTotal = 0;
 		    let _articleTotal = 0;
-
-		    if (endBk - startBk <= 2) return setTimeout(this.getBkRangeArticles, 0, startBk, endBk, 15, true);
 
 		    for (let i = startBk; i <= endBk; i++) {
 			    this.opt.call('getBlockArticles',[i, 10, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
+
 				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
 					console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
 					console.dir({articles, articleTotal});
 					_articleTotal = articleTotal;
 				}
+
+				this.articles = articles;
+
 				DlogsActions.updateState({articles, articleTotal});
 			    })
 		    }
