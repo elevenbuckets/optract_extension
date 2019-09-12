@@ -186,7 +186,7 @@ class MainView extends Reflux.Component {
         if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
         let pagelist = Object.keys(articles).sort().filter(aid => {
-            if (typeof (articles[aid].page) !== 'undefined') {
+            if (typeof (articles[aid].page) !== 'undefined' && typeof (articles[aid].page.err) === 'undefined') {
                 if (this.state.activeTabKey == "totalList" || this.state.activeTabKey == "claim" || this.state.activeTabKey == 'finalList') return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
@@ -269,7 +269,7 @@ class MainView extends Reflux.Component {
     render() {
         console.log(this.state.account);
         console.dir(this.state.voteAID);
-        console.dir(this.state.pendingSize);
+        console.dir(this.state.aidlistSize);
 
         if (this.state.articleTotal === 0) {
             document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';

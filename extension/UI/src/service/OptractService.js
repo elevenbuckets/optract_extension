@@ -205,13 +205,10 @@ class OptractService {
 
 		this.blockDataDispatcher = (obj) => {
 		    console.log(`DEBUG: Dispatcher called...`)
-		    let newBlock = false;
 
 		    if (typeof(obj) === Object && typeof(obj.blockNo) !== 'undefined') {
 			    // new block
 			    this.chObj = {};
-			    newBlock = true;
-
 		    }
 
 		    this.refreshArticles().then((rc) => {
@@ -223,7 +220,6 @@ class OptractService {
 			} else if (rc) {
 				console.log(`DEBUG: refresh lock unset`);
 				this.DispatchLock = false;
-		    		if (newBlock === false) this.updateCacheList();
 			} else {
 				console.log(`DEBUG: refresh locked`);
 				return;
