@@ -4,6 +4,7 @@
 # in order to ensure that stdin and stdout are opened in binary, rather
 # than text, mode.
 
+import time
 import json
 import sys
 import struct
@@ -34,32 +35,41 @@ def send_message(encoded_message):
     sys.stdout.write(encoded_message['content'])
     sys.stdout.flush()
 
+FNULL = open(os.devnull, 'w');
 
-def isStartMessage(messgae):
-    return True  
 def startServer():   
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
-        os.remove(lockFile)
+        return
 
     ipfsConfigPath = path.join("ipfs_repo", "config")
     ipfsBinPath = path.join("bin", "ipfs")
+    ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo');
     if(not os.path.exists(ipfsConfigPath)):
-        subprocess.check_call([ipfsPath, "init"])
         print "init ipfs"
+        subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
+        return startServer();
+    else:
+        subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
+        print "start ipfs"
 
-    # ipfsPath = path.join("ipfs_repo", "api")
-    # while(not os.path.exists(ipfsPath))
+    ipfsAPI  = path.join(ipfsRepoPath, "api")
+    ipfsLock = path.join(ipfsRepoPath, "repo.lock")
+    while(not os.path.exists(ipfsAPI) or not os.path.exists(ipfsLock)):
+        time.sleep(.01) 
+
     nodeCMD = path.join("bin", "node")
     daemonCMD =  path.join("lib", "daemon.js")
     subprocess.check_call([nodeCMD, daemonCMD])
 
-# startServer()
+#startServer()
+started = False
 
 while True:
     message = get_message()
-    if "ping" in message.values():
-        send_message(encode_message("pong")) 
+    if "ping" in message.values() and started == False:
+        started = True
+        send_message(encode_message('pong')) 
         startServer()
     #if message:
     #    send_message(encode_message("pong")) 
