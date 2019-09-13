@@ -50,7 +50,14 @@ class MainView extends Reflux.Component {
 
     pickLeadImage = (article) => {
         // special cases
-        if (article.page.domain.match('slashdot.org')) return (<img src='assets/slashdot_optract_logo.png'></img>)
+	try {
+        	if (article.page.domain.match('slashdot.org')) return (<img src='assets/slashdot_optract_logo.png'></img>)
+	} catch (err) {
+		console.log(`DEBUG: pickLeadImage:`)
+		console.trace(err);
+		console.dir(article);
+		return <img src='assets/optract_logo.png'></img>
+	}
 
         // normal cases
         if (article.page.lead_image_url) {
@@ -186,7 +193,10 @@ class MainView extends Reflux.Component {
         if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
         let pagelist = Object.keys(articles).sort().filter(aid => {
-            if (typeof (articles[aid].page) !== 'undefined' && typeof (articles[aid].page.err) === 'undefined') {
+            if ( typeof (articles[aid].page) !== 'undefined' 
+	      && typeof (articles[aid].page.err) === 'undefined' 
+	      && typeof (articles[aid].page.error) === 'undefined'
+	    ) {
                 if (this.state.activeTabKey == "totalList" || this.state.activeTabKey == "claim" || this.state.activeTabKey == 'finalList') return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
@@ -268,8 +278,8 @@ class MainView extends Reflux.Component {
 
     render() {
         console.log(this.state.account);
-        console.dir(this.state.voteAID);
-        console.dir(this.state.aidlistSize);
+        console.dir(this.state.aidlist);
+        console.log(this.state.aidlistSize);
 
         if (this.state.articleTotal === 0) {
             document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';

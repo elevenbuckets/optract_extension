@@ -187,14 +187,8 @@ class OptractService {
 		    const __handle_cacheData = (chObj) =>
 		    {
 			    console.log(`DEBUG: __handle_cacheData:`)
-			    console.dir(chObj);
-			    if ( chObj.aidlist.constructor === Object 
-			      && Object.keys(chObj.aidlist).length > 0
-			    ) {
-				this.chObj = chObj;
-				this.updateCacheList(); console.dir(chObj);
-			    	DlogsActions.updateState(chObj);
-			    }
+			    this.chObj = chObj;
+			    this.updateCacheList(); 
 		    }
 
 		    this.opt.on('cacheData', __handle_cacheData);
@@ -262,6 +256,7 @@ class OptractService {
 		    this.chObj.aidlistSize = this.chObj.aidlist.length;
 
 		    let output = {aidlist: this.chObj.aidlist, aidlistSize: this.chObj.aidlistSize};
+		    //console.log(`DEBUG: in updateCacheList:`); console.dir(output);
 
 		    DlogsActions.updateState(output);
 	    }
