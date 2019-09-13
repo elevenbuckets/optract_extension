@@ -125,6 +125,11 @@ class DlogsStore extends Reflux.Store {
 	})	
     }
 
+    onLoadMore = () =>
+    {
+	OptractService.refreshArticles();
+    }
+
     onAllAccounts = () => 
     {
 	this.allAccounts();

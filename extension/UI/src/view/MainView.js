@@ -31,10 +31,12 @@ class MainView extends Reflux.Component {
             currentBlog: "",
             readAID: [],
             readCount: 0,
-            showModal: false
+            showModal: false,
+	    loading: false
         }
 
         this.store = DlogsStore;
+	this.loadTimer;
     }
 
     componentDidUpdate() {
@@ -182,6 +184,12 @@ class MainView extends Reflux.Component {
     }
 
     getArticleList = () => {
+	//timer trick for loader
+	if (this.state.loading === true) {
+		clearTimeout(this.loadTimer);
+		this.loadTimer = setTimeout(() => { this.setState({loading: false}) }, 3500);
+	}
+
         let articles = this.state.articles;
         if (this.state.activeTabKey === 'opStats') return this.genOpStatsPage.apply(this);
         if (this.state.activeTabKey === 'claim') {
@@ -276,10 +284,16 @@ class MainView extends Reflux.Component {
         this.setState({showModal: showModal});
     }
 
+    moreArticles = () =>
+    {
+	if (this.state.loading === false) this.setState({loading: true});
+	DlogsActions.loadMore();
+    }
+
     render() {
         console.log(this.state.account);
         console.dir(this.state.aidlist);
-        console.log(this.state.aidlistSize);
+        console.log(this.state.loading);
 
         if (this.state.articleTotal === 0) {
             document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';
@@ -313,7 +327,7 @@ class MainView extends Reflux.Component {
                             this.state.articleTotal === 0 ?
                                 <div className='item' style={{ height: 'calc(100vh - 50px)', width: "100vw" }}><div className='item loader'></div>
                                     <label className='loaderlabel'>Loading ...</label></div> :
-                                <div className="articles"> {this.getArticleList()} </div> :
+                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="aidcard" style={{height: '594px', gridTemplateRows: '1fr'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '34px', minWidth: '100px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
                                 <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
