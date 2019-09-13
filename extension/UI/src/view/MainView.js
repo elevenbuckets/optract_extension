@@ -200,7 +200,7 @@ class MainView extends Reflux.Component {
         }
         if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
-        let pagelist = Object.keys(articles).sort().filter(aid => {
+        let pagelist = Object.keys(articles).filter(aid => {
             if ( typeof (articles[aid].page) !== 'undefined' 
 	      && typeof (articles[aid].page.err) === 'undefined' 
 	      && typeof (articles[aid].page.error) === 'undefined'
