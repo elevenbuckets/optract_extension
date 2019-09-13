@@ -36,5 +36,8 @@ chrome.runtime.onConnect.addListener(function (port) {
 		tport.postMessage({ text: "ping" });
 	});
 
-	port.onDisconnect.addListener(function () { tport.disconnect(); })
+	port.onDisconnect.addListener(function () { 
+		// tport.disconnect();
+		tport.postMessage({ text: "pong" })
+	})
 });

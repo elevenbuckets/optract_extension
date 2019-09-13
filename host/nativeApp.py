@@ -35,7 +35,10 @@ def send_message(encoded_message):
     sys.stdout.write(encoded_message['content'])
     sys.stdout.flush()
 
-FNULL = open(os.devnull, 'w');
+FNULL = open(os.devnull, 'w')
+
+ipfsP = None
+nodeP = None
 
 def startServer():   
     lockFile = "Optract.LOCK"
@@ -44,32 +47,45 @@ def startServer():
 
     ipfsConfigPath = path.join("ipfs_repo", "config")
     ipfsBinPath = path.join("bin", "ipfs")
-    ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo');
-    if(not os.path.exists(ipfsConfigPath)):
+    ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo')
+    if not os.path.exists(ipfsConfigPath):
         print "init ipfs"
         subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
-        return startServer();
+        return startServer()
     else:
-        subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
+        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
         print "start ipfs"
 
     ipfsAPI  = path.join(ipfsRepoPath, "api")
     ipfsLock = path.join(ipfsRepoPath, "repo.lock")
-    while(not os.path.exists(ipfsAPI) or not os.path.exists(ipfsLock)):
+    while (not os.path.exists(ipfsAPI) or not os.path.exists(ipfsLock)):
         time.sleep(.01) 
 
     nodeCMD = path.join("bin", "node")
     daemonCMD =  path.join("lib", "daemon.js")
-    subprocess.check_call([nodeCMD, daemonCMD])
+    nodeP = subprocess.Popen([nodeCMD, daemonCMD, ], stdout=FNULL, stderr=subprocess.STDOUT)
+    return ipfsP, nodeP
 
-#startServer()
+def stopServer(ipfsP, nodeP):
+    nodeP.kill()
+    ipfsP.kill()
+    lockFile = "Optract.LOCK"
+    if os.path.exists(lockFile):
+       os.remove(lockFile) 
+
+# startServer()
 started = False
 
 while True:
     message = get_message()
     if "ping" in message.values() and started == False:
         started = True
-        send_message(encode_message('pong')) 
-        startServer()
+        send_message(encode_message('ping->pong')) 
+        ipfsP, nodeP = startServer()
+         send_message(encode_message('ping->pong more'))
     #if message:
     #    send_message(encode_message("pong")) 
+    if "pong" in message.values() and started == True:
+        started = False
+        send_message(encode_message('pong->ping')) 
+        stopServer(ipfsP, nodeP)
