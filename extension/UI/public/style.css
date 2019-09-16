@@ -573,7 +573,12 @@ body {
   -webkit-transition: box-shadow 300ms;
 }
 
-.aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; padding: 5px 5px 5px 1px rgba(0,0,0,0.42)}
+.aidtitle { 
+  grid-area: aidtitle; 
+  text-align: left; 
+  padding: 15px 5px 0px 5px; 
+}
+
 .aidpic { grid-area: aidpic; overflow: hidden; }
 .aidpic img {
   max-width: 100%;
