@@ -219,7 +219,7 @@ class MainView extends Reflux.Component {
             return <div title={'Source: ' + article.page.domain} className="aidcard">
                 <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
-                    {this.genExcerpt.apply(this, [article])}
+                    <p style={{ padding: '5px'}}>{this.genExcerpt.apply(this, [article])}</p>
                 </div>
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     {this.pickLeadImage.apply(this, [article])}
