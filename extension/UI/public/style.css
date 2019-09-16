@@ -125,7 +125,7 @@ body {
     background-color: rgba(0,0,0,0);
     border: 2px solid rgb(109, 109, 109);
     color:rgb(109, 109, 109);
-    margin: 30px;
+    margin: 35px;
     cursor: pointer;
 }
 
@@ -602,6 +602,38 @@ body {
   border: 1px solid #dee2e6;
   border-top: none;
   background-color: white;
+}
+
+.aidsvy {
+  padding: 0px;
+  margin: 0px;
+  z-index:  20;
+  display: grid;
+  grid-area: 1 / 1 / 4 / 1;
+  background-color: #1e1216;
+  grid-template-columns: 1fr;
+  grid-template-rows: 3fr 2fr 1fr;
+  grid-template-areas:
+     "svyQ"
+     "svyS"
+     "svyB";
+  color: white;
+  font-size: 20px;
+  cursor: default;
+}
+
+.svyQ {
+  grid-area: svyQ;
+  color: white;
+  font-weight: bold;
+  font-size: 26px;
+  padding: 42px;
+}
+
+.svyS {
+  grid-area: svyS;
+  color: white;
+  font-size: 22px;
 }
 
 /* les delay loading animation */

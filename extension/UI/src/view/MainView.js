@@ -7,6 +7,7 @@ import { Tabs, Tab, Toast, Modal } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import renderHTML from 'react-render-html';
 import marked from "marked";
+import Form from "react-bootstrap/Form";
 
 // Store
 import DlogsStore from "../store/DlogsStore";
@@ -32,7 +33,8 @@ class MainView extends Reflux.Component {
             readAID: [],
             readCount: 0,
             showModal: false,
-	    loading: false
+	    loading: false,
+	    opSurveyAID: null
         }
 
         this.store = DlogsStore;
@@ -92,11 +94,57 @@ class MainView extends Reflux.Component {
         </div>)
     }
 
+    // need to prepare questions more or equal to user ticket counts
+    // this function should eventually takes aid as input, and return
+    // proper questionire based on the aid category and other keywords
+    opSurveyPoC = (aid) => 
+    {
+	    if (this.state.opSurveyAID !== null && this.state.opSurveyAID !== aid) {
+		let readAID = this.state.readAID;
+	    	readAID.splice(readAID.indexOf(this.state.opSurveyAID), 1);
+		this.setState({readAID, opSurveyAID: aid, readCount: readAID.length});
+	    } else if (this.state.opSurveyAID === null) {
+		this.setState({opSurveyAID: aid});
+	    }
+
+	    let Qs = {
+		"Do you think Ethereum 2.0 will be released on time as planned?":
+		    {'Yes.': 0, 'No.': 1, 'Yes, but delayed.': 2, 'No, it will never be done.': 3},
+		"Do you think you will lose your current job to AI or robots?" : 
+		    {'Yes.': 0, 'No.': 1, 'Yes, but not any time soon': 2, 'No, not in my life time.': 3},
+		"Will your next smartphone be an iPhone from Apple?"           : 
+		    {'Yes.': 0, 'No.': 1, 'Yes, but not any time soon': 2, 'No, switching to Android': 3},
+		"How much would you pay for 5G data plan on mobile?"	       : 
+		    {'The same price as my current plan': 0, 'No more than 15% more': 1, 'No more than 20% more': 2, 'Do not plan to switch': 3},
+		"Are you enjoying Optract so far? If so, how much would you pay for it monthly?":
+		    {'Yes, $1/mo.': 0, 'Yes, $2/mo.': 1, 'Yes, ad-supported freemium.': 2, 'No.': 3}
+	    };
+
+	    let i = this.state.ticketCounts;
+	    let Q = Object.keys(Qs).sort()[Math.floor(Math.random()*i)]; // cheating for PoC.
+
+	    return {Q, S: Qs[Q]};
+    }
+
     genClaimButtons = (article) => {
         let aid = article.myAID;
+	let svy = this.opSurveyPoC.apply(this, [aid]);
+
         if (this.state.ticketCounts > 0) {
-            return (<div className="aidclk" onClick={() => { }}>
-                <div className="button"
+            return (<div className="item aidsvy" onClick={() => {}}>
+		<div className="item svyQ">{svy.Q}</div>
+		<div className="item svyS">
+		    <Form>
+		      <Form.Group>
+		    { 
+		      Object.keys(svy.S).map((ans) => {
+		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={ans} id={aid + '_' + svy.S[ans]}></Form.Check>
+		      })
+		    }
+		      </Form.Group>
+		    </Form>
+		</div>
+                <div className="button svyB"
                     style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }}
                     onClick={typeof (this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
                     {this.state.claimed === aid ? <p style={{ padding: '0px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
@@ -265,7 +313,7 @@ class MainView extends Reflux.Component {
     }
 
     claim = (article, aid, e) => {
-        this.setState({ claimed: aid });
+        this.setState({ claimed: aid, opSurveyAID: null });
         let v2blk = this.state.claimArticles[aid].blk[0];
         let v2txh = this.state.claimArticles[aid].txs[0];
         DlogsActions.claim(v2blk, v2txh, aid);
