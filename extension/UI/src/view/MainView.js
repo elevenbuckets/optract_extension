@@ -138,14 +138,14 @@ class MainView extends Reflux.Component {
 		      <Form.Group>
 		    { 
 		      Object.keys(svy.S).map((ans) => {
-		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={ans} id={aid + '_' + svy.S[ans]}></Form.Check>
+		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={' '+ ans} id={aid + '_' + svy.S[ans]}></Form.Check>
 		      })
 		    }
 		      </Form.Group>
 		    </Form>
 		</div>
                 <div className="button svyB"
-                    style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }}
+                    style={{ border: '1px solid yellow', color: 'yellow', textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }}
                     onClick={typeof (this.state.claimed) === 'undefined' ? this.claim.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
                     {this.state.claimed === aid ? <p style={{ padding: '0px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : 'Claim'}
                 </div>
