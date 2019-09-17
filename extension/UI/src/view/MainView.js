@@ -270,7 +270,7 @@ class MainView extends Reflux.Component {
 	      && typeof (articles[aid].page.error) === 'undefined'
 	    ) {
                 if (this.state.activeTabKey == 'finalList') return true;
-                if (this.state.claimArticleCounts > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined') {
+                if (this.state.ticketCounts > 0 && this.state.claimArticleCounts > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined') {
                 	if (this.state.activeTabKey == "totalList") {
 				claimArticles[aid] = articles[aid];
 			} else if (articles[aid].tags.tags.includes(this.state.activeTabKey)) {
@@ -288,7 +288,7 @@ class MainView extends Reflux.Component {
 
         if (pagelist.length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
-	if (this.state.claimArticleCounts === 0) {
+	if (this.state.ticketCounts === 0 || this.state.claimArticleCounts === 0) {
           return pagelist.map((aid) => {
             let article = articles[aid];
             article['myAID'] = aid;
