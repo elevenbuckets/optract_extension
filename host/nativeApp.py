@@ -40,7 +40,8 @@ FNULL = open(os.devnull, 'w')
 ipfsP = None
 nodeP = None
 
-def startServer():   
+def startServer():  
+    send_message(encode_message('in starting server')) 
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
         return
@@ -49,13 +50,16 @@ def startServer():
     ipfsBinPath = path.join("bin", "ipfs")
     ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo')
     if not os.path.exists(ipfsConfigPath):
+        send_message(encode_message('before init ipfs')) 
         print "init ipfs"
         subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
         return startServer()
     else:
-        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
+        send_message(encode_message('before starting ipfs')) 
+        subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
         print "start ipfs"
-
+        send_message(encode_message('after starting ipfs')) 
+    send_message(encode_message(' finish ipfs processing')) 
     ipfsAPI  = path.join(ipfsRepoPath, "api")
     ipfsLock = path.join(ipfsRepoPath, "repo.lock")
     while (not os.path.exists(ipfsAPI) or not os.path.exists(ipfsLock)):
@@ -63,7 +67,9 @@ def startServer():
 
     nodeCMD = path.join("bin", "node")
     daemonCMD =  path.join("lib", "daemon.js")
-    nodeP = subprocess.Popen([nodeCMD, daemonCMD, ], stdout=FNULL, stderr=subprocess.STDOUT)
+    send_message(encode_message(' starting node processing')) 
+    nodeP = subprocess.Popen([nodeCMD, daemonCMD], stdout=FNULL, stderr=subprocess.STDOUT)
+    send_message(encode_message('finish starting server')) 
     return ipfsP, nodeP
 
 def stopServer(ipfsP, nodeP):
@@ -82,7 +88,7 @@ while True:
         started = True
         send_message(encode_message('ping->pong')) 
         ipfsP, nodeP = startServer()
-         send_message(encode_message('ping->pong more'))
+        send_message(encode_message('ping->pong more'))
     #if message:
     #    send_message(encode_message("pong")) 
     if "pong" in message.values() and started == True:
