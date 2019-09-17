@@ -128,9 +128,10 @@ class MainView extends Reflux.Component {
 
     genClaimButtons = (article) => {
         let aid = article.myAID;
-	let svy = this.opSurveyPoC.apply(this, [aid]);
 
         if (this.state.ticketCounts > 0) {
+	    let svy = this.opSurveyPoC.apply(this, [aid]);
+
             return (<div className="item aidsvy" onClick={() => {}}>
 		<div className="item svyQ">{svy.Q}</div>
 		<div className="item svyS">
@@ -266,8 +267,8 @@ class MainView extends Reflux.Component {
             if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
             return <div title={'Source: ' + article.page.domain} className="aidcard">
                 <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
-                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000' }}>{article.page.title}</p>
-                    <p style={{ padding: '5px'}}>{this.genExcerpt.apply(this, [article])}</p>
+                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
+                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
                 </div>
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     {this.pickLeadImage.apply(this, [article])}
@@ -375,7 +376,7 @@ class MainView extends Reflux.Component {
                             this.state.articleTotal === 0 ?
                                 <div className='item' style={{ height: 'calc(100vh - 50px)', width: "100vw" }}><div className='item loader'></div>
                                     <label className='loaderlabel'>Loading ...</label></div> :
-                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="aidcard" style={{height: '594px', gridTemplateRows: '1fr'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '34px', minWidth: '100px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
+                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="aidcard" style={{height: '578px', gridTemplateRows: '1fr'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '34px', minWidth: '100px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
                                 <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}

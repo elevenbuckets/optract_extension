@@ -120,12 +120,13 @@ body {
 
 .button {
     width: 70px;
+    height: 33px;
     text-align: center;
     justify-self: center;
+    align-self: center;
     background-color: rgba(0,0,0,0);
     border: 2px solid rgb(109, 109, 109);
     color:rgb(109, 109, 109);
-    margin: 35px;
     cursor: pointer;
 }
 
@@ -576,7 +577,10 @@ body {
 .aidtitle { 
   grid-area: aidtitle; 
   text-align: left; 
-  padding: 15px 5px 0px 5px; 
+  padding: 15px 5px 0px 5px;
+  max-height: 282px;
+  z-index: 3;
+  box-shadow: 0px -3px 13px 0px #ffffff90; 
 }
 
 .aidpic { grid-area: aidpic; overflow: hidden; }
@@ -587,7 +591,7 @@ body {
 .aidclk {
   cursor: default;	
   grid-area: aidclk;
-  z-index: 1000;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
  }

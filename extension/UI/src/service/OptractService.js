@@ -332,7 +332,7 @@ class OptractService {
 	    this.getClaimTickets = (addr) => {
 		return this.opt.call('getClaimTickets', [addr]).then((data) => {
 		    DlogsActions.ticketWon(data);
-		}).catch((err) => { console.trace(err); })
+		}).catch((err) => { console.trace(err); throw 'redo'; })
 	    }
 
 	    this.getClaimArticles = (op, parsing, callback) => {
@@ -341,7 +341,7 @@ class OptractService {
 		    DlogsActions.updateState({claimArticles: data, claimArticleCounts: Object.keys(data).length});
 		    if (callback) callback()
 		    return {claimArticles: data}
-		}).catch((err) => { console.trace(err); })
+		}).catch((err) => { console.trace(err); throw 'redo'; })
 
 	    }
     }
@@ -357,7 +357,7 @@ class OptractService {
 		    o = { ...o, [n]: j}; n++; return o;
 	    }, {});
             DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
-        }).catch((err) => { console.log(`DEBUG: getFinalList:`); console.trace(err); })
+        }).catch((err) => { console.trace(err); throw 'redo'; })
     }
 
     newVote(block, leaf) {
