@@ -51,13 +51,11 @@ def startServer():
     ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo')
     if not os.path.exists(ipfsConfigPath):
         send_message(encode_message('before init ipfs')) 
-        print "init ipfs"
         subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
         return startServer()
     else:
         send_message(encode_message('before starting ipfs')) 
         subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
-        print "start ipfs"
         send_message(encode_message('after starting ipfs')) 
     send_message(encode_message(' finish ipfs processing')) 
     ipfsAPI  = path.join(ipfsRepoPath, "api")
@@ -81,6 +79,14 @@ def stopServer(ipfsP, nodeP):
 
 # startServer()
 started = False
+
+# while True:
+#     if started == False:
+#         started = True
+#         send_message(encode_message('ping->pong')) 
+#         ipfsP, nodeP = startServer()
+#         send_message(encode_message('ping->pong more'))
+
 
 while True:
     message = get_message()
