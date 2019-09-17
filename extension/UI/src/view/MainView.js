@@ -34,7 +34,7 @@ class MainView extends Reflux.Component {
             readCount: 0,
             showModal: false,
 	    loading: false,
-	    opSurveyAID: null
+	    opSurveyAID: '0x'
         }
 
         this.store = DlogsStore;
@@ -99,15 +99,31 @@ class MainView extends Reflux.Component {
     // proper questionire based on the aid category and other keywords
     opSurveyPoC = (aid) => 
     {
-	    if (this.state.opSurveyAID !== null && this.state.opSurveyAID !== aid) {
+	    if (this.state.opSurveyAID !== '0x' && this.state.opSurveyAID !== aid) {
 		let readAID = this.state.readAID;
-	    	readAID.splice(readAID.indexOf(this.state.opSurveyAID), 1);
-		this.setState({readAID, opSurveyAID: aid, readCount: readAID.length});
-	    } else if (this.state.opSurveyAID === null) {
+		if (this.state.claimAID.indexOf(this.state.opSurveyAID) === -1) {
+	    		readAID.splice(readAID.indexOf(this.state.opSurveyAID), 1);
+			this.setState({readAID, opSurveyAID: aid, readCount: readAID.length});
+		} else {
+			this.setState({opSurveyAID: aid});
+		}
+	    } else if (this.state.opSurveyAID === '0x') {
 		this.setState({opSurveyAID: aid});
 	    }
 
 	    let Qs = {
+		"If you are a fan of comics or movie series, how much will you spend on tied-in or themed products?":
+		    {'Under $50.': 0, 'Under $100.': 1, 'Under $250.': 2, 'No difference.': 3},
+		"Where did you learn about Optract?":
+		    {'Official or news website.': 0, 'Twitter or Facebook page.': 1, 'from other friends.': 2, 'Meetups or workshops.': 3},
+		"How many subscription based services you or your family currently have?":
+		    {'Under 5.': 0, '5 to 10.': 1, 'over 15.': 2, 'None.': 3},
+		"What is your most-wanted gadget this holiday season?":
+		    {'Smart watches.': 0, 'Smart phones.': 1, 'Game consoles.': 2, 'Smart TVs or set-top boxes.': 3},
+		"Should mankind simply colonize Mars or other planets without worrying about Earth?":
+		    {'Yes.': 0, 'No.': 1, 'Yes, if our technology allows.': 2, 'No, sustainability matters.': 3},
+		"Do you think cryptocurrency will one day replace conventional banks?":
+		    {'Yes, governments will lead the adoption.': 0, 'No. governents will destroy them.': 1, 'Yes, but heavily regulated.': 2, 'No, it will never be done.': 3},
 		"Do you think Ethereum 2.0 will be released on time as planned?":
 		    {'Yes.': 0, 'No.': 1, 'Yes, but delayed.': 2, 'No, it will never be done.': 3},
 		"Do you think you will lose your current job to AI or robots?" : 
@@ -120,8 +136,9 @@ class MainView extends Reflux.Component {
 		    {'Yes, $1/mo.': 0, 'Yes, $2/mo.': 1, 'Yes, ad-supported freemium.': 2, 'No.': 3}
 	    };
 
-	    let i = this.state.ticketCounts;
-	    let Q = Object.keys(Qs).sort()[Math.floor(Math.random()*i)]; // cheating for PoC.
+	    let i = Object.keys(Qs).length;
+	    let r = parseInt('0x' + aid.split('').splice(aid.length - 2, 2).join(''), 16) % i;
+	    let Q = Object.keys(Qs).sort()[r];
 
 	    return {Q, S: Qs[Q]};
     }
@@ -139,7 +156,7 @@ class MainView extends Reflux.Component {
 		      <Form.Group>
 		    { 
 		      Object.keys(svy.S).map((ans) => {
-		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={' '+ ans} id={aid + '_' + svy.S[ans]}></Form.Check>
+		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={ans} id={aid + '_' + svy.S[ans]}></Form.Check>
 		      })
 		    }
 		      </Form.Group>
@@ -160,7 +177,7 @@ class MainView extends Reflux.Component {
 
     handleShowButton = (article) =>
     {
-	    if (this.state.activeTabKey === 'claim') {
+	    if (article.claimable === true) {
 	    	if (this.state.ticketCounts > 0 && this.state.claimAID.indexOf(article.myAID) !== -1) {
 		    return (<div className="item aidclk" style={
                      {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
@@ -241,27 +258,38 @@ class MainView extends Reflux.Component {
 
         let articles = this.state.articles;
         if (this.state.activeTabKey === 'opStats') return this.genOpStatsPage.apply(this);
-        if (this.state.activeTabKey === 'claim') {
-            articles = this.state.claimArticles;
-        }
         if (this.state.activeTabKey === 'finalList'){
             articles = this.state.finalList;
         }
         if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
+	let claimArticles = {};
         let pagelist = Object.keys(articles).filter(aid => {
             if ( typeof (articles[aid].page) !== 'undefined' 
 	      && typeof (articles[aid].page.err) === 'undefined' 
 	      && typeof (articles[aid].page.error) === 'undefined'
 	    ) {
-                if (this.state.activeTabKey == "totalList" || this.state.activeTabKey == "claim" || this.state.activeTabKey == 'finalList') return true;
+                if (this.state.activeTabKey == 'finalList') return true;
+                if (this.state.claimArticleCounts > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined') {
+                	if (this.state.activeTabKey == "totalList") {
+				claimArticles[aid] = articles[aid];
+			} else if (articles[aid].tags.tags.includes(this.state.activeTabKey)) {
+				claimArticles[aid] = articles[aid];
+			}
+			return false; // delay and append claim article rendering 
+		} else {
+			articles[aid].claimable = false;
+		}
+
+                if (this.state.activeTabKey == "totalList") return true;
                 return articles[aid].tags.tags.includes(this.state.activeTabKey)
             }
         })
 
         if (pagelist.length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
-        return pagelist.map((aid) => {
+	if (this.state.claimArticleCounts === 0) {
+          return pagelist.map((aid) => {
             let article = articles[aid];
             article['myAID'] = aid;
             if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
@@ -281,7 +309,55 @@ class MainView extends Reflux.Component {
 
                 }
             </div>
-        })
+          });
+	} else {
+          let outputs = pagelist.map((aid) => {
+            let article = articles[aid];
+            article['myAID'] = aid;
+            if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
+            return <div title={'Source: ' + article.page.domain} className="aidcard">
+                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
+                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
+                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
+                </div>
+                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
+                    {this.pickLeadImage.apply(this, [article])}
+                </div>
+                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
+                    ? this.handleShowButton.apply(this, [article])
+                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
+                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
+                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
+
+                }
+            </div>
+          });
+
+	  outputs = [ ...outputs, ...Object.keys(claimArticles).map((aid) => {
+            let article = claimArticles[aid];
+            article['myAID'] = aid;
+	    article['claimable'] = true;
+            if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
+            return <div title={'Source: ' + article.page.domain} className="aidcard" style={{border: '1px solid gold'}}>
+                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
+                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
+                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
+                </div>
+                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
+                    {this.pickLeadImage.apply(this, [article])}
+                </div>
+                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
+                    ? this.handleShowButton.apply(this, [article])
+                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
+                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
+                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
+
+                }
+            </div>
+	  })];
+
+	  return outputs;
+	}
     }
 
     goToArticle = (article) => {
@@ -314,7 +390,7 @@ class MainView extends Reflux.Component {
     }
 
     claim = (article, aid, e) => {
-        this.setState({ claimed: aid, opSurveyAID: null });
+        this.setState({ claimed: aid, opSurveyAID: '0x' });
         let v2blk = this.state.claimArticles[aid].blk[0];
         let v2txh = this.state.claimArticles[aid].txs[0];
         DlogsActions.claim(v2blk, v2txh, aid);
@@ -370,7 +446,6 @@ class MainView extends Reflux.Component {
                                     <Tab eventKey="__" disabled title="|"></Tab>
                                     {this.state.finalListCounts > 0 ? <Tab eventKey="finalList" title="Final List"></Tab> : ''}
                                     <Tab eventKey="opStats" title="Status"></Tab>
-                                    {this.state.claimArticleCounts > 0 ? <Tab eventKey="claim" style={{ fontWeight: 'bold', color: 'red' }} title="Rewards"></Tab> : ''}
                                 </Tabs> : ''}
                         {this.state.view === "List" ?
                             this.state.articleTotal === 0 ?
