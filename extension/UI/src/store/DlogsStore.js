@@ -118,7 +118,7 @@ class DlogsStore extends Reflux.Store {
 	OptractService.serverCheck().then((rc) => {
         	this.setState({logining : true});
 		if (rc) {
-			this.unlocked(true);
+			this.unlocked();
 		} else {
         		this.setState({account: undefined, login: false, logining: false })
 		}
@@ -135,9 +135,9 @@ class DlogsStore extends Reflux.Store {
 	this.allAccounts();
     }
 
-    unlocked = (dispatch = false) =>{
+    unlocked = (dispatch = true) =>{
         this.setState({ login: true, logining : false })
-	OptractService.subscribeBlockData(DlogsActions.newBlock);
+	OptractService.subscribeBlockData();
 	OptractService.subscribeOpStats();
 	OptractService.subscribeCacheData();
         if (dispatch) {
