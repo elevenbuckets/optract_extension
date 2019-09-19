@@ -118,11 +118,16 @@ class DlogsStore extends Reflux.Store {
 	OptractService.serverCheck().then((rc) => {
         	this.setState({logining : true});
 		if (rc) {
-			this.unlocked(true);
+			this.unlocked();
 		} else {
         		this.setState({account: undefined, login: false, logining: false })
 		}
 	})	
+    }
+
+    onLoadMore = () =>
+    {
+	OptractService.refreshArticles();
     }
 
     onAllAccounts = () => 
@@ -130,16 +135,20 @@ class DlogsStore extends Reflux.Store {
 	this.allAccounts();
     }
 
-    unlocked = (dispatch = false) =>{
+    unlocked = (dispatch = true) =>{
         this.setState({ login: true, logining : false })
-	OptractService.subscribeBlockData(DlogsActions.newBlock);
+	OptractService.subscribeBlockData();
 	OptractService.subscribeOpStats();
 	OptractService.subscribeCacheData();
-        if (dispatch) {
-		OptractService.blockDataDispatcher({});
-	} else {
-		console.log(`DEBUG: active dispatch is off..`);
-	}
+        OptractService.opt.call('dbsync').then((rc) => {
+		console.log(`DEBUG: dbsync called..`);
+		if (rc) {
+			console.log(`DEBUG: Dispatcher called by store ..`);
+			OptractService.blockDataDispatcher({});
+		} else {
+			console.log(`DEBUG: active dispatch is off..`);
+		}
+	})
         OptractService.statProbe();
     }
 

@@ -116,16 +116,20 @@ body {
     align-items: center;
     margin: 0px;
     overflow: hidden;
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .button {
     width: 70px;
+    height: 33px;
     text-align: center;
     justify-self: center;
+    align-self: center;
     background-color: rgba(0,0,0,0);
     border: 2px solid rgb(109, 109, 109);
     color:rgb(109, 109, 109);
-    margin: 30px;
     cursor: pointer;
 }
 
@@ -557,7 +561,8 @@ body {
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.12);
   cursor: alias;
   display: grid;
-  max-width: 32vw;
+  max-width: 415px;
+  min-width: 415px;
   grid-template-columns: 1fr;
   grid-template-rows: 200px 3fr 1fr;
   grid-column-gap: 6px;
@@ -566,6 +571,7 @@ body {
    "aidtitle"
    "aidclk";
   border: 1px solid;
+  height: 578px;
 }
 
 .aidcard:hover {
@@ -573,7 +579,15 @@ body {
   -webkit-transition: box-shadow 300ms;
 }
 
-.aidtitle { grid-area: aidtitle; padding-top:15px; text-align: left; padding: 5px 5px 5px 1px rgba(0,0,0,0.42)}
+.aidtitle { 
+  grid-area: aidtitle; 
+  text-align: left; 
+  padding: 15px 5px 0px 5px;
+  max-height: 282px;
+  z-index: 3;
+  box-shadow: 0px -3px 13px 0px #ffffff90; 
+}
+
 .aidpic { grid-area: aidpic; overflow: hidden; }
 .aidpic img {
   max-width: 100%;
@@ -582,7 +596,7 @@ body {
 .aidclk {
   cursor: default;	
   grid-area: aidclk;
-  z-index: 1000;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
  }
@@ -590,13 +604,47 @@ body {
 .articles {
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(415px, 1fr));
   grid-template-rows: auto;
   grid-gap: 30px;
   padding: 30px;
   border: 1px solid #dee2e6;
   border-top: none;
   background-color: white;
+  min-width: 90vw;
+
+}
+
+.aidsvy {
+  padding: 0px;
+  margin: 0px;
+  z-index:  20;
+  display: grid;
+  grid-area: 1 / 1 / 4 / 1;
+  background-color: #1e1216;
+  grid-template-columns: 1fr;
+  grid-template-rows: 3fr 2fr 1fr;
+  grid-template-areas:
+     "svyQ"
+     "svyS"
+     "svyB";
+  color: white;
+  font-size: 20px;
+  cursor: default;
+}
+
+.svyQ {
+  grid-area: svyQ;
+  color: white;
+  font-weight: bold;
+  font-size: 26px;
+  padding: 42px;
+}
+
+.svyS {
+  grid-area: svyS;
+  color: white;
+  font-size: 22px;
 }
 
 /* les delay loading animation */

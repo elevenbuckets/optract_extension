@@ -118,6 +118,7 @@ class OptractService {
 		this.getBkRangeArticles = (startB, endB, arCap, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
 		    return this.opt.call('getBkRangeArticles', [startB, endB, arCap, parsing]).then((data) => {
+			this.articles = data;
 			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
 			if (callback) callback()
 		    }).catch((err) => { console.trace(err); })
@@ -186,12 +187,8 @@ class OptractService {
 		    const __handle_cacheData = (chObj) =>
 		    {
 			    console.log(`DEBUG: __handle_cacheData:`)
-			    console.dir(chObj);
-			    if ( chObj.aidlist.constructor === Object 
-			      && Object.keys(chObj.aidlist).length > 0
-			    ) {
-			    	DlogsActions.updateState(chObj);
-			    }
+			    this.chObj = chObj;
+			    this.updateCacheList(); 
 		    }
 
 		    this.opt.on('cacheData', __handle_cacheData);
@@ -201,19 +198,28 @@ class OptractService {
 	        this.DispatchLock = false;
 
 		this.blockDataDispatcher = (obj) => {
-		    console.log(`DEBUG: Dispatcher called...`)
+		    if (this.DispatchLock === true) {
+			    console.log(`DEBUG: dispatcher service locked...`)
+			    return;
+		    }
+
+		    clearTimeout(this.dispatchTout);
+		    this.DispatchLock = true;
+
+		    console.log(`DEBUG: Dispatcher service called...`)
+
+		    if (typeof(obj) === Object && typeof(obj.blockNo) !== 'undefined') {
+			    // new block
+			    this.chObj = {};
+		    }
+
 		    this.refreshArticles().then((rc) => {
-			if (!rc && this.DispatchLock === false) {
-		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
-				clearTimeout(this.dispatchTout);
-				this.dispatchTout = setTimeout(this.blockDataDispatcher, 2000, {});
-				this.DispatchLock = true;
+			this.DispatchLock = false;
+			if (!rc) {
+		    		console.log(`DEBUG: Dispatcher will be called in 4 secs...`)
+				this.dispatchTout = setTimeout(this.blockDataDispatcher, 4000, {});
 			} else if (rc) {
 				console.log(`DEBUG: refresh lock unset`);
-				this.DispatchLock = false;
-			} else {
-				console.log(`DEBUG: refresh locked`);
-				return;
 			}
 		    })
 		}
@@ -242,23 +248,41 @@ class OptractService {
 		})
 	    }
 
+	    this.articles = {};
+	    this.chObj = {};
+
+	    this.updateCacheList = () => 
+	    {
+		    if (typeof(this.chObj.aidlist) === 'undefined') return;
+
+		    this.chObj.aidlist = [ ...this.chObj.aidlist ].filter((aid) => { return typeof(this.articles[aid]) === 'undefined' });
+		    this.chObj.aidlistSize = this.chObj.aidlist.length;
+
+		    let output = {aidlist: this.chObj.aidlist, aidlistSize: this.chObj.aidlistSize};
+		    //console.log(`DEBUG: in updateCacheList:`); console.dir(output);
+
+		    DlogsActions.updateState(output);
+	    }
+
 	    this.getMultiBkArticles = (startBk, endBk) =>
 	    {
-		    let articles = {};
+		    let articles = this.articles;
 		    let articleTotal = 0;
 		    let _articleTotal = 0;
-
-		    if (endBk - startBk <= 2) return setTimeout(this.getBkRangeArticles, 0, startBk, endBk, 15, true);
 
 		    for (let i = startBk; i <= endBk; i++) {
 			    this.opt.call('getBlockArticles',[i, 10, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
+
 				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
 					console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
 					console.dir({articles, articleTotal});
 					_articleTotal = articleTotal;
 				}
+
+				this.articles = articles;
+
 				DlogsActions.updateState({articles, articleTotal});
 			    })
 		    }
@@ -311,7 +335,7 @@ class OptractService {
 	    this.getClaimTickets = (addr) => {
 		return this.opt.call('getClaimTickets', [addr]).then((data) => {
 		    DlogsActions.ticketWon(data);
-		}).catch((err) => { console.trace(err); })
+		}).catch((err) => { console.trace(err); throw 'redo'; })
 	    }
 
 	    this.getClaimArticles = (op, parsing, callback) => {
@@ -320,7 +344,7 @@ class OptractService {
 		    DlogsActions.updateState({claimArticles: data, claimArticleCounts: Object.keys(data).length});
 		    if (callback) callback()
 		    return {claimArticles: data}
-		}).catch((err) => { console.trace(err); })
+		}).catch((err) => { console.trace(err); throw 'redo'; })
 
 	    }
     }
@@ -336,7 +360,7 @@ class OptractService {
 		    o = { ...o, [n]: j}; n++; return o;
 	    }, {});
             DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
-        }).catch((err) => { console.log(`DEBUG: getFinalList:`); console.trace(err); })
+        }).catch((err) => { console.trace(err); throw 'redo'; })
     }
 
     newVote(block, leaf) {

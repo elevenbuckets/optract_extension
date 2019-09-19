@@ -71,10 +71,18 @@ class LoginView extends Reflux.Component {
 	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
 	    console.log(`DEBUG: account = ${this.state.account}`)
 	    console.dir(this.state.allAccounts);
+
+	    document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';
+            document.getElementById('app').style.backgroundOrigin = 'border-box';
+            document.getElementById('app').style.backgroundRepeat = 'no-repeat';
+            document.getElementById('app').style.backgroundPosition = 'center';
+            document.getElementById('app').style.backgroundSize = 'cover';
+            document.getElementById('app').style.backgroundColor = 'black';
+
         return (
-            <div className="item contentxt" style={{backgroundImage: 'url(assets/loadbg.png)'}}>
+            <div className="item contentxt">
                 { this.state.wsrpc === false ? <div className="item login"><div className="item loader"></div>
-                    <label className="loaderlabel">Starting local node, should takes about 15 secs or so...</label></div> :
+                    <label className="loaderlabel">Starting local node...</label></div> :
 		  this.state.logining ? <div className="item login"><div className="item loader"></div>
 		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
                     </div> : <div className="item login">
