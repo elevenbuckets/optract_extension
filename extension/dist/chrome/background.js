@@ -44,8 +44,8 @@ chrome.runtime.onConnect.addListener(function (port) {
 });
 
 
-// function sendNativeMessage(){
-// 	tport.postMessage({ text: "talking" })
-// }
+function sendNativeMessage(){
+	tport.postMessage({ text: "pong" })
+}
 
-// setInterval(sendNativeMessage, 5000 )
+setTimeout(sendNativeMessage, 15000 )

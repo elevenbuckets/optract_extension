@@ -11,6 +11,8 @@ import struct
 import subprocess
 import os.path as path
 import os
+import signal
+
 
 # Read a message from stdin and decode it.
 def get_message():
@@ -55,7 +57,7 @@ def startServer():
         return startServer()
     else:
         send_message(encode_message('before starting ipfs')) 
-        subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
+        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
         send_message(encode_message('after starting ipfs')) 
     send_message(encode_message(' finish ipfs processing')) 
     ipfsAPI  = path.join(ipfsRepoPath, "api")
@@ -68,14 +70,19 @@ def startServer():
     send_message(encode_message(' starting node processing')) 
     nodeP = subprocess.Popen([nodeCMD, daemonCMD], stdout=FNULL, stderr=subprocess.STDOUT)
     send_message(encode_message('finish starting server')) 
+    send_message(encode_message(str(nodeP)))
     return ipfsP, nodeP
 
 def stopServer(ipfsP, nodeP):
+    send_message(encode_message('in stoping server')) 
     nodeP.kill()
-    ipfsP.kill()
+    send_message(encode_message('nodeP killed')) 
+    ipfsP.terminate()
+    send_message(encode_message('ipfsP killed')) 
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
        os.remove(lockFile) 
+       send_message(encode_message('LockFile removed')) 
 
 # startServer()
 started = False
@@ -101,3 +108,4 @@ while True:
         started = False
         send_message(encode_message('pong->ping')) 
         stopServer(ipfsP, nodeP)
+        send_message(encode_message('pong->ping more'))
