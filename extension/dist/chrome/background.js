@@ -38,6 +38,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
 	port.onDisconnect.addListener(function () { 
 		// tport.disconnect();
+		console.log("sending pong to native app")
 		tport.postMessage({ text: "pong" })
 	})
 });
