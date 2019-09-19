@@ -34,7 +34,8 @@ class MainView extends Reflux.Component {
             readCount: 0,
             showModal: false,
 	    loading: false,
-	    opSurveyAID: '0x'
+	    opSurveyAID: '0x',
+	    surveyPick: null
         }
 
         this.store = DlogsStore;
@@ -122,8 +123,8 @@ class MainView extends Reflux.Component {
 		    {'Smart watches.': 0, 'Smart phones.': 1, 'Game consoles.': 2, 'Smart TVs or set-top boxes.': 3},
 		"Should mankind simply colonize Mars or other planets without worrying about Earth?":
 		    {'Yes.': 0, 'No.': 1, 'Yes, if our technology allows.': 2, 'No, sustainability matters.': 3},
-		"Do you think cryptocurrency will one day replace conventional banks?":
-		    {'Yes, governments will lead the adoption.': 0, 'No. governents will destroy them.': 1, 'Yes, but heavily regulated.': 2, 'No, it will never be done.': 3},
+		"Do you believe crypto currency will one day replace conventional banks?":
+		    {'No, banks will adopt it.': 0, 'No. destroyed by governments.': 1, 'Yes, but heavily regulated.': 2, 'Yes, because we want it.': 3},
 		"Do you think Ethereum 2.0 will be released on time as planned?":
 		    {'Yes.': 0, 'No.': 1, 'Yes, but delayed.': 2, 'No, it will never be done.': 3},
 		"Do you think you will lose your current job to AI or robots?" : 
@@ -143,6 +144,12 @@ class MainView extends Reflux.Component {
 	    return {Q, S: Qs[Q]};
     }
 
+    handleSurveyPick = (event) =>
+    {
+	    console.log(`DEBUG: survey pick ${event.target.id}`);
+	    this.setState({surveyPick: event.target.id})
+    }
+
     genClaimButtons = (article) => {
         let aid = article.myAID;
 
@@ -156,7 +163,14 @@ class MainView extends Reflux.Component {
 		      <Form.Group>
 		    { 
 		      Object.keys(svy.S).map((ans) => {
-		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={ans} id={aid + '_' + svy.S[ans]}></Form.Check>
+		         return <Form.Check 
+			      		style={{cursor: "pointer"}} 
+			      		type="radio" 
+			      		label={ans} 
+			      		id={aid + '_' + svy.S[ans]}
+				        checked={this.state.surveyPick === aid + '_' + svy.S[ans]}
+			      		onChange={this.handleSurveyPick.bind(this)}>
+				</Form.Check>
 		      })
 		    }
 		      </Form.Group>

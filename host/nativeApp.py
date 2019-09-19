@@ -46,12 +46,10 @@ def startServer():
     ipfsBinPath = path.join("bin", "ipfs")
     ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo');
     if(not os.path.exists(ipfsConfigPath)):
-        print "init ipfs"
         subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
         return startServer();
     else:
         subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
-        print "start ipfs"
 
     ipfsAPI  = path.join(ipfsRepoPath, "api")
     ipfsLock = path.join(ipfsRepoPath, "repo.lock")
