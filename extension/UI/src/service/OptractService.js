@@ -198,7 +198,15 @@ class OptractService {
 	        this.DispatchLock = false;
 
 		this.blockDataDispatcher = (obj) => {
-		    console.log(`DEBUG: Dispatcher called...`)
+		    if (this.DispatchLock === true) {
+			    console.log(`DEBUG: dispatcher service locked...`)
+			    return;
+		    }
+
+		    clearTimeout(this.dispatchTout);
+		    this.DispatchLock = true;
+
+		    console.log(`DEBUG: Dispatcher service called...`)
 
 		    if (typeof(obj) === Object && typeof(obj.blockNo) !== 'undefined') {
 			    // new block
@@ -206,17 +214,12 @@ class OptractService {
 		    }
 
 		    this.refreshArticles().then((rc) => {
-			if (!rc && this.DispatchLock === false) {
-		    		console.log(`DEBUG: Dispatcher will be called in 2 secs...`)
-				clearTimeout(this.dispatchTout);
-				this.dispatchTout = setTimeout(this.blockDataDispatcher, 2000, {});
-				this.DispatchLock = true;
+			this.DispatchLock = false;
+			if (!rc) {
+		    		console.log(`DEBUG: Dispatcher will be called in 4 secs...`)
+				this.dispatchTout = setTimeout(this.blockDataDispatcher, 4000, {});
 			} else if (rc) {
 				console.log(`DEBUG: refresh lock unset`);
-				this.DispatchLock = false;
-			} else {
-				console.log(`DEBUG: refresh locked`);
-				return;
 			}
 		    })
 		}

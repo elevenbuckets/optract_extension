@@ -116,6 +116,9 @@ body {
     align-items: center;
     margin: 0px;
     overflow: hidden;
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .button {
@@ -558,7 +561,8 @@ body {
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.12);
   cursor: alias;
   display: grid;
-  max-width: 32vw;
+  max-width: 415px;
+  min-width: 415px;
   grid-template-columns: 1fr;
   grid-template-rows: 200px 3fr 1fr;
   grid-column-gap: 6px;
@@ -567,6 +571,7 @@ body {
    "aidtitle"
    "aidclk";
   border: 1px solid;
+  height: 578px;
 }
 
 .aidcard:hover {
@@ -599,13 +604,15 @@ body {
 .articles {
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(415px, 1fr));
   grid-template-rows: auto;
   grid-gap: 30px;
   padding: 30px;
   border: 1px solid #dee2e6;
   border-top: none;
   background-color: white;
+  min-width: 90vw;
+
 }
 
 .aidsvy {

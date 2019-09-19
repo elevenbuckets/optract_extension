@@ -422,6 +422,11 @@ class MainView extends Reflux.Component {
 
         if (this.state.articleTotal === 0) {
             document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';
+            document.getElementById('app').style.backgroundOrigin = 'border-box';
+            document.getElementById('app').style.backgroundRepeat = 'no-repeat';
+            document.getElementById('app').style.backgroundPosition = 'center';
+            document.getElementById('app').style.backgroundSize = 'cover';
+            document.getElementById('app').style.backgroundColor = 'black';
         } else {
             document.getElementById('app').style.backgroundImage = 'none';
             document.getElementById('app').style.backgroundColor = 'aliceblue';
