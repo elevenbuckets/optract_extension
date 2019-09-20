@@ -272,9 +272,9 @@ class MainView extends Reflux.Component {
 
         let articles = this.state.articles;
         if (this.state.activeTabKey === 'opStats') return this.genOpStatsPage.apply(this);
-        if (this.state.activeTabKey === 'finalList'){
-            articles = this.state.finalList;
-        }
+        //if (this.state.activeTabKey === 'finalList'){
+        //    articles = this.state.finalList;
+        //}
         if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
 	let claimArticles = {};
@@ -283,7 +283,7 @@ class MainView extends Reflux.Component {
 	      && typeof (articles[aid].page.err) === 'undefined' 
 	      && typeof (articles[aid].page.error) === 'undefined'
 	    ) {
-                if (this.state.activeTabKey == 'finalList') return true;
+                if (this.state.finalListCounts > 0 && typeof(this.state.finalList[aid]) !== 'undefined') articles[aid]['final'] = true;
                 if (this.state.ticketCounts > 0 && this.state.claimArticleCounts > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined') {
                 	if (this.state.activeTabKey == "totalList") {
 				claimArticles[aid] = articles[aid];
@@ -302,51 +302,30 @@ class MainView extends Reflux.Component {
 
         if (pagelist.length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
+        let outputs = pagelist.map((aid) => {
+            let article = articles[aid];
+            article['myAID'] = aid;
+            if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
+            return <div title={'Source: ' + article.page.domain} className="aidcard">
+                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
+                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
+                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
+                </div>
+                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
+		    {typeof(article.final) !== 'undefined' ? <div class="ribbon ribbon-top-right"><span>Final List</span></div> : ''}
+                    {this.pickLeadImage.apply(this, [article])}
+                </div>
+                {
+		  this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
+                    ? this.handleShowButton.apply(this, [article])
+                    : <div className="item aidclk" style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }} onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
+                }
+            </div>
+        });
+
 	if (this.state.ticketCounts === 0 || this.state.claimArticleCounts === 0) {
-          return pagelist.map((aid) => {
-            let article = articles[aid];
-            article['myAID'] = aid;
-            if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
-            return <div title={'Source: ' + article.page.domain} className="aidcard">
-                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
-                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
-                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
-                </div>
-                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
-                    {this.pickLeadImage.apply(this, [article])}
-                </div>
-                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
-                    ? this.handleShowButton.apply(this, [article])
-                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
-                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
-
-                }
-            </div>
-          });
+		return outputs;
 	} else {
-          let outputs = pagelist.map((aid) => {
-            let article = articles[aid];
-            article['myAID'] = aid;
-            if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
-            return <div title={'Source: ' + article.page.domain} className="aidcard">
-                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
-                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
-                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
-                </div>
-                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
-                    {this.pickLeadImage.apply(this, [article])}
-                </div>
-                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
-                    ? this.handleShowButton.apply(this, [article])
-                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
-                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
-
-                }
-            </div>
-          });
-
 	  outputs = [ ...outputs, ...Object.keys(claimArticles).map((aid) => {
             let article = claimArticles[aid];
             article['myAID'] = aid;
@@ -360,12 +339,10 @@ class MainView extends Reflux.Component {
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     {this.pickLeadImage.apply(this, [article])}
                 </div>
-                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
+                {
+		  this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
                     ? this.handleShowButton.apply(this, [article])
-                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
-                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
-
+                    : <div className="item aidclk" style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }} onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
                 }
             </div>
 	  })];
@@ -465,7 +442,6 @@ class MainView extends Reflux.Component {
                                     <Tab eventKey="finance" title="Finance"></Tab>
                                     <Tab eventKey="investment" title="Investment"></Tab>
                                     <Tab eventKey="__" disabled title="|"></Tab>
-                                    {this.state.finalListCounts > 0 ? <Tab eventKey="finalList" title="Final List"></Tab> : ''}
                                     <Tab eventKey="opStats" title="Status"></Tab>
                                 </Tabs> : ''}
                         {this.state.view === "List" ?
