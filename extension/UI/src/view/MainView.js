@@ -457,7 +457,9 @@ class MainView extends Reflux.Component {
                                 <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
                                     <Tab eventKey="totalList" title="ALL"></Tab>
                                     <Tab eventKey="tech" title="Tech"></Tab>
+                                    <Tab eventKey="gadget" title="Gadgets"></Tab>
                                     <Tab eventKey="emergingTech" title="Emerging"></Tab>
+                                    <Tab eventKey="review" title="Reviews"></Tab>
                                     <Tab eventKey="science" title="Science"></Tab>
                                     <Tab eventKey="blockchain" title="Blockchain"></Tab>
                                     <Tab eventKey="finance" title="Finance"></Tab>
