@@ -561,8 +561,8 @@ body {
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.12);
   cursor: alias;
   display: grid;
-  max-width: 415px;
-  min-width: 415px;
+  max-width: 22vw;
+  min-width: 21vw;
   grid-template-columns: 1fr;
   grid-template-rows: 200px 3fr 1fr;
   grid-column-gap: 6px;
@@ -604,7 +604,7 @@ body {
 .articles {
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(415px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(21vw, 1fr));
   grid-template-rows: auto;
   grid-gap: 30px;
   padding: 30px;
@@ -695,6 +695,16 @@ body {
    position: absolute;
 }
 
+.ticketNote a {
+   text-decoration: none;
+   color: goldenrod;
+}
+
+.ticketNote a:hover {
+   text-decoration: underline;
+   color: goldenrod;
+}
+
 .statTable td {
    vertical-align: middle !important;
 }
@@ -763,4 +773,16 @@ body {
   top: 30px;
   transform: rotate(45deg);
   padding-left: 14px;
+}
+
+.opsLine {
+  min-width: 89vw;
+  text-align: left;
+  font-size: 33px;
+  font-weight: bold;
+  border-bottom: 2px solid goldenrod;
+  color: goldenrod;
+  padding-top: 5vh;
+  grid-column-start: 1;
+  grid-column-end: -1;
 }
