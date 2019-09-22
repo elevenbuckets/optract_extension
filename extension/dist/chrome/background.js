@@ -24,17 +24,34 @@ chrome.browserAction.onClicked.addListener(function (activeTab, url) {
 
 });
 
-var tport = chrome.runtime.connectNative('optract');
-tport.onMessage.addListener(function (msgs) {
-	console.log(msgs);
-})
+var tport 
+function stopRPCServer() {
+	console.log("sending pong to native app")
+	tport.postMessage({ text: "pong" })
+}
 
+function startRPCServer() {
+	tport = chrome.runtime.connectNative('optract');
+	tport.onMessage.addListener(function (msgs) {
+		console.log(msgs);
+	})
+	tport.postMessage({ text: "ping" })
+}
 chrome.runtime.onConnect.addListener(function (port) {
 	port.onMessage.addListener(function (msg) {
 		// Need to put nativeApp.py under dist directory, and update the optract.json under ~/.config/google-chrome/NativeMessagingHosts 
 		// to use nativeApp.py
-		tport.postMessage({ text: "ping" });
+		startRPCServer();
 	});
 
-	port.onDisconnect.addListener(function () { tport.disconnect(); })
+	port.onDisconnect.addListener(function () {
+		// tport.disconnect();
+		stopRPCServer()
+	})
 });
+
+
+
+
+// setTimeout(stopRPCServer, 15000)
+// setTimeout(startRPCServer, 30000)
