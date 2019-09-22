@@ -34,17 +34,25 @@ class MainView extends Reflux.Component {
             readCount: 0,
             showModal: false,
 	    loading: false,
-	    opSurveyAID: '0x'
+	    opSurveyAID: '0x',
+	    surveyPick: null
         }
 
         this.store = DlogsStore;
 	this.loadTimer;
+	this.cateOpsCounts = 0;
     }
 
     componentDidUpdate() {
         if (typeof (this.refs.canvas) !== 'undefined') {
             createCanvasWithAddress(this.refs.canvas, this.state.account);
-        }
+        } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
+		if (this.cateOpsCounts > 0) {
+			this.refs.ticketNote.style.display = 'inline-block';
+		} else {
+			this.refs.ticketNote.style.display = 'none';
+		}
+	}
     }
 
     getImgSize = ({ target: img }) => {
@@ -122,8 +130,8 @@ class MainView extends Reflux.Component {
 		    {'Smart watches.': 0, 'Smart phones.': 1, 'Game consoles.': 2, 'Smart TVs or set-top boxes.': 3},
 		"Should mankind simply colonize Mars or other planets without worrying about Earth?":
 		    {'Yes.': 0, 'No.': 1, 'Yes, if our technology allows.': 2, 'No, sustainability matters.': 3},
-		"Do you think cryptocurrency will one day replace conventional banks?":
-		    {'Yes, governments will lead the adoption.': 0, 'No. governents will destroy them.': 1, 'Yes, but heavily regulated.': 2, 'No, it will never be done.': 3},
+		"Do you believe crypto currency will one day replace conventional banks?":
+		    {'No, banks will adopt it.': 0, 'No. destroyed by governments.': 1, 'Yes, but heavily regulated.': 2, 'Yes, because we want it.': 3},
 		"Do you think Ethereum 2.0 will be released on time as planned?":
 		    {'Yes.': 0, 'No.': 1, 'Yes, but delayed.': 2, 'No, it will never be done.': 3},
 		"Do you think you will lose your current job to AI or robots?" : 
@@ -143,6 +151,12 @@ class MainView extends Reflux.Component {
 	    return {Q, S: Qs[Q]};
     }
 
+    handleSurveyPick = (event) =>
+    {
+	    console.log(`DEBUG: survey pick ${event.target.id}`);
+	    this.setState({surveyPick: event.target.id})
+    }
+
     genClaimButtons = (article) => {
         let aid = article.myAID;
 
@@ -156,7 +170,14 @@ class MainView extends Reflux.Component {
 		      <Form.Group>
 		    { 
 		      Object.keys(svy.S).map((ans) => {
-		         return <Form.Check style={{cursor: "pointer"}} type="radio" label={ans} id={aid + '_' + svy.S[ans]}></Form.Check>
+		         return <Form.Check 
+			      		style={{cursor: "pointer"}} 
+			      		type="radio" 
+			      		label={ans} 
+			      		id={aid + '_' + svy.S[ans]}
+				        checked={this.state.surveyPick === aid + '_' + svy.S[ans]}
+			      		onChange={this.handleSurveyPick.bind(this)}>
+				</Form.Check>
 		      })
 		    }
 		      </Form.Group>
@@ -258,9 +279,6 @@ class MainView extends Reflux.Component {
 
         let articles = this.state.articles;
         if (this.state.activeTabKey === 'opStats') return this.genOpStatsPage.apply(this);
-        if (this.state.activeTabKey === 'finalList'){
-            articles = this.state.finalList;
-        }
         if (Object.keys(articles).length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
 	let claimArticles = {};
@@ -269,7 +287,7 @@ class MainView extends Reflux.Component {
 	      && typeof (articles[aid].page.err) === 'undefined' 
 	      && typeof (articles[aid].page.error) === 'undefined'
 	    ) {
-                if (this.state.activeTabKey == 'finalList') return true;
+                if (this.state.finalListCounts > 0 && typeof(this.state.finalList[aid]) !== 'undefined') articles[aid]['final'] = true;
                 if (this.state.ticketCounts > 0 && this.state.claimArticleCounts > 0 && typeof(this.state.claimArticles[aid]) !== 'undefined') {
                 	if (this.state.activeTabKey == "totalList") {
 				claimArticles[aid] = articles[aid];
@@ -288,8 +306,7 @@ class MainView extends Reflux.Component {
 
         if (pagelist.length === 0) return this.handleNoArticles.apply(this, [this.state.activeTabKey]);
 
-	if (this.state.ticketCounts === 0 || this.state.claimArticleCounts === 0) {
-          return pagelist.map((aid) => {
+        let outputs = pagelist.map((aid) => {
             let article = articles[aid];
             article['myAID'] = aid;
             if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
@@ -299,46 +316,28 @@ class MainView extends Reflux.Component {
                     <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
                 </div>
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
+		    {typeof(article.final) !== 'undefined' ? <div class="ribbon ribbon-top-right"><span>Final List</span></div> : ''}
                     {this.pickLeadImage.apply(this, [article])}
                 </div>
-                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
+                {
+		  this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
                     ? this.handleShowButton.apply(this, [article])
-                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
-                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
-
+                    : <div className="item aidclk" style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }} onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
                 }
             </div>
-          });
+        });
+
+	if (this.state.ticketCounts === 0 || Object.keys(claimArticles).length === 0) {
+		this.cateOpsCounts = 0;
+		return outputs;
 	} else {
-          let outputs = pagelist.map((aid) => {
-            let article = articles[aid];
-            article['myAID'] = aid;
-            if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
-            return <div title={'Source: ' + article.page.domain} className="aidcard">
-                <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
-                    <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
-                    <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
-                </div>
-                <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
-                    {this.pickLeadImage.apply(this, [article])}
-                </div>
-                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
-                    ? this.handleShowButton.apply(this, [article])
-                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
-                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
-
-                }
-            </div>
-          });
-
+	  outputs.push(<div className="opsLine" id='opsLine'>OpSurvey</div>)
 	  outputs = [ ...outputs, ...Object.keys(claimArticles).map((aid) => {
             let article = claimArticles[aid];
             article['myAID'] = aid;
 	    article['claimable'] = true;
             if (article.page.excerpt === null) article.page.excerpt = '(no preview texts)';
-            return <div title={'Source: ' + article.page.domain} className="aidcard" style={{border: '1px solid gold'}}>
+            return <div title={'Source: ' + article.page.domain} className="aidcard" style={{border: '1px solid goldenrod'}}>
                 <div className="aidtitle" onClick={this.goToArticle.bind(this, article)}>
                     <p style={{ padding: '3px', fontWeight: 'bold', color: '#000000', fontSize: '22px' }}>{article.page.title}</p>
                     <p style={{ padding: '5px', fontSize: '18px' }}>{this.genExcerpt.apply(this, [article])}</p>
@@ -346,16 +345,15 @@ class MainView extends Reflux.Component {
                 <div className="aidpic" onClick={this.goToArticle.bind(this, article)}>
                     {this.pickLeadImage.apply(this, [article])}
                 </div>
-                {this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
+                {
+		  this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
                     ? this.handleShowButton.apply(this, [article])
-                    : this.state.activeTabKey === 'finalList' ? this.handleShowButton.apply(this, [article]) : <div className="item aidclk" style={
-                        { minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }
-                    } onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
-
+                    : <div className="item aidclk" style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }} onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
                 }
             </div>
 	  })];
 
+	  this.cateOpsCounts = Object.keys(claimArticles).length;
 	  return outputs;
 	}
     }
@@ -435,28 +433,28 @@ class MainView extends Reflux.Component {
         return (
             this.state.login ?
                 <div className="content">
-                    <div className="ticketNote" style={Object.keys(this.state.articles).length === 0 ? { display: 'none' } : { display: "inline-block" }}>
-                        {this.state.ticketCounts === 0 ? '' : `You have ${this.state.ticketCounts} ticket(s)`}</div>
+                    <div className="ticketNote" ref='ticketNote' style={{display: 'none'}}><a href='#opsLine'>You have {this.state.ticketCounts} tickets!</a></div>
                     <div className="item contentxt">
                         {
                             Object.keys(this.state.articles).length > 0 ?
                                 <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
                                     <Tab eventKey="totalList" title="ALL"></Tab>
                                     <Tab eventKey="tech" title="Tech"></Tab>
+                                    <Tab eventKey="gadget" title="Gadgets"></Tab>
                                     <Tab eventKey="emergingTech" title="Emerging"></Tab>
+                                    <Tab eventKey="review" title="Reviews"></Tab>
                                     <Tab eventKey="science" title="Science"></Tab>
                                     <Tab eventKey="blockchain" title="Blockchain"></Tab>
                                     <Tab eventKey="finance" title="Finance"></Tab>
                                     <Tab eventKey="investment" title="Investment"></Tab>
                                     <Tab eventKey="__" disabled title="|"></Tab>
-                                    {this.state.finalListCounts > 0 ? <Tab eventKey="finalList" title="Final List"></Tab> : ''}
                                     <Tab eventKey="opStats" title="Status"></Tab>
                                 </Tabs> : ''}
                         {this.state.view === "List" ?
                             this.state.articleTotal === 0 ?
                                 <div className='item' style={{ height: 'calc(100vh - 50px)', width: "100vw" }}><div className='item loader'></div>
                                     <label className='loaderlabel'>Loading ...</label></div> :
-                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="aidcard" style={{height: '578px', gridTemplateRows: '1fr'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '34px', minWidth: '100px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
+                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
                                 <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
