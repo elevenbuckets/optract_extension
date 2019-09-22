@@ -111,5 +111,5 @@ while True:
         send_message(encode_message('pong->ping')) 
         stopServer(ipfsP, nodeP)
         send_message(encode_message('pong->ping more'))
-        send_message(encode_message('close native app which will alse shutdown the ipfs'))
+        send_message(encode_message('close native app which will also shutdown the ipfs'))
         sys.exit(0)
