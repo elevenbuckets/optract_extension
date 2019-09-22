@@ -75,15 +75,17 @@ def startServer():
 
 def stopServer(ipfsP, nodeP):
     send_message(encode_message('in stoping server')) 
-    nodeP.kill()
-    send_message(encode_message('nodeP killed')) 
-    ipfsP.terminate()
-    send_message(encode_message('ipfsP killed')) 
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
        os.remove(lockFile) 
        send_message(encode_message('LockFile removed')) 
-
+    nodeP.kill()
+    send_message(encode_message('nodeP killed')) 
+    # This will not kill the ipfs by itself, but this is needed for the sys.exit() to kill it 
+    ipfsP.terminate()
+    # os.kill(ipfsP.pid, signal.SIGINT)
+    send_message(encode_message('ipfsP killed signal sent')) 
+    
 # startServer()
 started = False
 
@@ -109,3 +111,5 @@ while True:
         send_message(encode_message('pong->ping')) 
         stopServer(ipfsP, nodeP)
         send_message(encode_message('pong->ping more'))
+        send_message(encode_message('close native app which will alse shutdown the ipfs'))
+        sys.exit(0)
