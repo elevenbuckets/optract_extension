@@ -350,14 +350,12 @@ class OptractService {
     }
 
     getFinalList(op) {
-	//TODO: once we have enough final list, we should limit the query range...
-        this.opt.call('getOpRangeFinalList', [1, op, true]).then((data) => {
-	    let n = 0;
+	let sop = op > 5 ? op - 5 : 1;
+        this.opt.call('getOpRangeFinalList', [sop, op, true]).then((data) => {
 	    let list = Object.values(data).reduce((o, i) => {
 		    if (Object.keys(i).length === 0) return o;
-		    let ii = Object.values(i)[0];
-		    let j = { page: {...ii}, url: ii.url, tags: {tags: ['finalList'], comment: ''} };
-		    o = { ...o, [n]: j}; n++; return o;
+		    o = { ...o, ...i };
+		    return o;
 	    }, {});
             DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
         }).catch((err) => { console.trace(err); throw 'redo'; })
