@@ -494,7 +494,7 @@ body {
 }
 
 .noticeBoard {
-  min-width: 89vw;
+  min-width: calc(100vw - 160px);
   min-height: 77vh;
   border: 1px solid #dee2e6;
   margin: 20px;
@@ -507,7 +507,7 @@ body {
 .statusBoard {
   box-shadow: 0px 3px 15px -1px;
   overflow-y: scroll;	
-  min-width: 89vw;
+  min-width: calc(100vw - 160px);
   min-height: 77vh;
   border: 1px solid #dee2e6;
   text-align: center;
