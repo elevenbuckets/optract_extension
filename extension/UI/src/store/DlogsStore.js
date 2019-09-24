@@ -39,6 +39,7 @@ class DlogsStore extends Reflux.Store {
             login: false,
             logining: false,
 	    allAccounts: [],
+	    accListSize: -1,
             account: null,
             memberShipStatus: "active",
             activeTabKey : "totalList",
@@ -50,6 +51,7 @@ class DlogsStore extends Reflux.Store {
 	    EthBlock: 0,
 	    OptractBlock: 0,
             OproundNo: 0,
+	    LastBlock: 0,
 	    PeerCounts: 0,
 	    Account: null,
 	    MemberStatus: null,
@@ -149,6 +151,10 @@ class DlogsStore extends Reflux.Store {
 			console.log(`DEBUG: active dispatch is off..`);
 		}
 	})
+        OptractService.statProbe();
+    }
+
+    onOpStateProbe = () => {
         OptractService.statProbe();
     }
 

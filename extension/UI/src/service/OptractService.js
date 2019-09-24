@@ -39,7 +39,7 @@ class OptractService {
 	        {
 			console.log(`DEBUG: OptractService: allAccounts called ...`)
 			this.opt.call('allAccounts').then((rc) => {
-				   DlogsActions.updateState({allAccounts: rc});
+				   DlogsActions.updateState({allAccounts: rc, accListSize: rc.length});
 			})
 		}
 
