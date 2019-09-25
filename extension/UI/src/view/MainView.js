@@ -291,15 +291,15 @@ class MainView extends Reflux.Component {
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}><Form><Form.Check type="checkbox" id="custom-checkbox" checked={this.state.streamr === true} onChange={this.streamrSwitch.bind(this)}></Form.Check></Form></td>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.MemberStatus}</td>
                             </tr>
-                            <tr><td colSpan="3" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
-                            <tr><td colSpan="3" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
-                            <tr><td colSpan="3">Pending Transactions {this.state.pendingSize === 0 ? '' : `(Total: ${this.state.pendingSize})`}</td></tr>
+                            <tr><td colSpan="4" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
+                            <tr><td colSpan="4" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
+                            <tr><td colSpan="4">Pending Transactions {this.state.pendingSize === 0 ? '' : `(Total: ${this.state.pendingSize})`}</td></tr>
                             {this.state.pendingSize === 0
                                 ? <tr>
-                                    <td colSpan="3" style={{ fontFamily: 'monospace' }}><p style={{ padding: '0px 240px' }}>No pending Transactions</p></td>
+                                    <td colSpan="4" style={{ fontFamily: 'monospace' }}><p style={{ padding: '0px 240px' }}>No pending Transactions</p></td>
                                 </tr>
                                 : this.state.pending.txhash[this.state.account].map((tx) => {
-                                    return <tr><td colSpan="3" style={{ fontFamily: 'monospace' }}>{tx}</td></tr>
+                                    return <tr><td colSpan="4" style={{ fontFamily: 'monospace' }}>{tx}</td></tr>
                                 })}
                         </tbody>
                     </Table>
