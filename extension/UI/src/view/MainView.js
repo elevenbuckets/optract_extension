@@ -72,7 +72,7 @@ class MainView extends Reflux.Component {
 		}
 	} else if (this.state.articleTotal === 0) {
 		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(DlogsActions.opStateProbe, 5100);
+		this.initTimer = setTimeout(DlogsActions.opStateProbe, 2100);
 	}
     }
 
