@@ -15,7 +15,6 @@ class LoginView extends Reflux.Component {
     constructor(props) {
         super(props);
         this.store = DlogsStore;
-	this.log = false;
     }
 
     componentDidMount() {
@@ -23,12 +22,11 @@ class LoginView extends Reflux.Component {
     }
 
     componentDidUpdate() {
-	    if (this.state.wsrpc === true && this.state.account === null) {
+	    if (this.state.wsrpc === true && this.state.account === null && this.state.readiness === true) {
 		    if (this.state.accListSize === -1) DlogsActions.allAccounts();
-		    if (this.log === false) {
+		    if (this.state.validPass === false) {
 	    	    	    console.log(`DEBUG: did update...`)
 			    DlogsActions.serverCheck();
-		            this.log = true;
 		    }
 	    }
     }
@@ -61,14 +59,23 @@ class LoginView extends Reflux.Component {
 	);
     }
 
-    handleClose = () => {
+    handleClose = () => 
+    {
         this.setState({ modalOpen: false })
+    }
+
+    genNewAccount = () => 
+    {
+	 this.setState({generate: true});
+	 DlogsActions.newAccount();
     }
 
 
     render() {
 	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
 	    console.log(`DEBUG: account = ${this.state.account}`)
+	    console.log(`DEBUG: readiness = ${this.state.readiness}`)
+	    console.log(`DEBUG: validPass = ${this.state.validPass}`)
 	    console.dir(this.state.allAccounts);
 
 	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg.png)';
@@ -92,7 +99,9 @@ class LoginView extends Reflux.Component {
 			     Welcome to Optract
 			</div>
 			{ this.state.accListSize === 0 
-				? <div className="item" style={{fontSize: '22px', border: '1px solid white', display: 'inline-block', margin: '0px 0px 25px 0px', padding: '0px 80px' }}> Create New Account </div>
+				? this.state.readiness ? this.state.validPass ? <div className="item newAccount" onClick={this.genNewAccount.bind(this)}>{this.state.generate ? <p style={{ padding: '0px 90px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : `Create New Account`}</div> : <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> Please Enter Your Master Password: </div> : <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> Please Set Your Master Password: </div>
+				: typeof(this.state.account) !== 'undefined' && this.state.memberStatus === 'not member' 
+				?  <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> <label>Your Address:</label><div className="item AccountShow">{this.state.account}</div><br/> Please Visit www.optract.com to Register </div>
 				: <Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
 			  <Dropdown.Toggle style={{fontSize: '20px', fontFamily: 'monospace'}} variant="success" id="dropdown-basic">
 				{typeof(this.state.account) === 'undefined' ? " Please select your login account... " : this.state.account}
@@ -100,12 +109,13 @@ class LoginView extends Reflux.Component {
 			  {this.listAccounts()}
 			</Dropdown> }
 			</div>
-			<div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+			{ !this.state.validPass ? <div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
 			<label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Password: </label>
-			{ <input autoFocus 
+			<input autoFocus 
 			       style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', border: '0px'}} 
-			       type="password" ref="ps" onKeyUp={this.unlock} /> }
-			</div>
+			       type="password" ref="ps" onKeyUp={this.unlock} />
+			</div> : <div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+                        <label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Master Password Unlocked.</label></div>}
 		    </div>}
             </div></div>);
     }

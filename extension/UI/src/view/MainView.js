@@ -46,15 +46,29 @@ class MainView extends Reflux.Component {
     }
 
     componentDidUpdate() {
+	if (this.state.login === false) return;
+
 	if (typeof(this.state.account) === 'undefined') {
-		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(this.setState, 5001, {login: false, logining: false, account: null});
-	} else if ( typeof(this.state.account) !== 'undefined' 
+		if (this.state.accListSize === 0) {
+			clearTimeout(this.initTimer);
+			this.initTimer = setTimeout(DlogsActions.updateState, 5001, {login: false, logining: false});
+			return; // kick back to login for new account creation
+		} else if (this.state.accListSize > 0) {
+			clearTimeout(this.initTimer);
+			this.initTimer = setTimeout(DlogsActions.updateState, 5001, {login: false, logining: false, validPass: false});
+			return; // kick back to login for new account creation
+		}
+		console.log(`main view did update reset called...`);
+		return;
+	} else if ( this.state.account !== null
+		 && typeof(this.state.account) !== 'undefined' 
 	         && this.state.account === this.state.Account	
 	         && this.state.memberStatus === 'not member'
 	) {
 		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(this.setState, 10001, {login: false, logining: false});
+		this.initTimer = setTimeout(DlogsActions.updateState, 10001, {login: false, logining: false});
+		console.log(`main view did update registration called...`);
+		return;
 	}
 
         if (typeof (this.refs.canvas) !== 'undefined') {
@@ -446,6 +460,8 @@ class MainView extends Reflux.Component {
 	) {
 		return 'Account not registered, please register at www.optract.com. (return to login page in 10 secs ...)';
 	}
+
+	return this.state.EthBlock > 0 ? `Last Synced: ${this.state.LastBlock}/${this.state.OptractBlock} | Peers: ${this.state.PeerCounts}` : `Loading ...`;
     }
 
     render() {
@@ -492,7 +508,7 @@ class MainView extends Reflux.Component {
                         {this.state.view === "List" ?
                             this.state.articleTotal === 0 ?
                                 <div className='item login' style={{ height: 'calc(100vh - 50px)' }}><div className='item loader'></div>
-                                    <label className='loaderlabel'>{this.state.EthBlock > 0 ? `Last Synced: ${this.state.LastBlock}/${this.state.OptractBlock} | Peers: ${this.state.PeerCounts}` : `Loading ...`}</label></div> :
+                                    <label className='loaderlabel'>{ this.loginLoad.apply(this, []) }</label></div> :
                                 <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :

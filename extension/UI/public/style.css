@@ -796,3 +796,25 @@ body {
   grid-column-start: 1;
   grid-column-end: -1;
 }
+
+.newAccount {
+  font-size: 22px;
+  border: 1px solid white;
+  display: inline-block;
+  margin: 0px 0px 25px;
+  padding: 0px 80px !Important;
+}
+
+.AccountShow {
+  font-size: 22px;
+  border: 1px solid white;
+  display: inline-block;
+  margin: 0px 0px 25px;
+  padding: 0px 80px !Important;
+}
+
+.newAccount:hover {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
