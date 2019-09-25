@@ -69,7 +69,9 @@ class DlogsStore extends Reflux.Store {
 	    claimCounts: 0,
 	// cacheData
 	    aidlist: [],
-	    aidlistSize: 0
+	    aidlistSize: 0,
+	// streamr
+	    streamr: false
         }
 
 	this.probeTout;
@@ -110,6 +112,13 @@ class DlogsStore extends Reflux.Store {
     {
 	    this.shutdown();
 	    window.close();
+    }
+
+    onStreamrSwitch = () =>
+    {
+	    OptractService.opt.call('streamrSwitch').then((rc) => {
+		    this.setState({streamr: rc})
+	    })
     }
 
     onUnlock = (pw, acc) => 

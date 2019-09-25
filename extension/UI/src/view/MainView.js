@@ -264,6 +264,8 @@ class MainView extends Reflux.Component {
         }
     }
 
+    streamrSwitch = () => { DlogsActions.streamrSwitch() }
+
     genOpStatsPage = () => {
         return (<div className="statusBoard">
             <div className="item EthBlk">EthBlock:<br />{this.state.EthBlock}</div>
@@ -282,10 +284,11 @@ class MainView extends Reflux.Component {
                                 }} rowSpan="2">
                                     <canvas className="avatar" ref='canvas' width="190px" height="190px" />
                                 </td>
-                                <td>Account Address</td><td>Member Status</td>
+                                <td>Account Address</td><td>Streamr</td><td>Member Status</td>
                             </tr>
                             <tr>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.account}</td>
+                                <td style={{ fontFamily: 'monospace', padding: '30px' }}><Form><Form.Check type="checkbox" id="custom-checkbox" checked={this.state.streamr === true} onChange={this.streamrSwitch.bind(this)}></Form.Check></Form></td>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.MemberStatus}</td>
                             </tr>
                             <tr><td colSpan="3" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
