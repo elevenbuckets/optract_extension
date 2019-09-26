@@ -175,6 +175,7 @@ class DlogsStore extends Reflux.Store {
 	    let password = securePass.randomPassword();
 	    OptractService.opt.call('newAccount', [password]).then((acc) => {
 		    this.setState({account: acc, generate: false});
+		    this.allAccounts();
 		    DlogsActions.serverCheck();
 		    OptractService.statProbe();
 	    })
