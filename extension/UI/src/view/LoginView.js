@@ -15,7 +15,6 @@ class LoginView extends Reflux.Component {
     constructor(props) {
         super(props);
         this.store = DlogsStore;
-	this.log = false;
     }
 
     componentDidMount() {
@@ -23,13 +22,11 @@ class LoginView extends Reflux.Component {
     }
 
     componentDidUpdate() {
-	    if (this.state.wsrpc === true && this.state.account === null) {
-
-		    if (this.state.allAccounts.length === 0) DlogsActions.allAccounts();
-		    if (this.log === false) {
+	    if (this.state.wsrpc === true && this.state.account === null && this.state.readiness === true) {
+		    if (this.state.accListSize === -1) DlogsActions.allAccounts();
+		    if (this.state.validPass === false) {
 	    	    	    console.log(`DEBUG: did update...`)
 			    DlogsActions.serverCheck();
-		            this.log = true;
 		    }
 	    }
     }
@@ -62,49 +59,65 @@ class LoginView extends Reflux.Component {
 	);
     }
 
-    handleClose = () => {
+    handleClose = () => 
+    {
         this.setState({ modalOpen: false })
+    }
+
+    genNewAccount = () => 
+    {
+	 this.setState({generate: true});
+	 DlogsActions.newAccount();
     }
 
 
     render() {
 	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
 	    console.log(`DEBUG: account = ${this.state.account}`)
+	    console.log(`DEBUG: readiness = ${this.state.readiness}`)
+	    console.log(`DEBUG: validPass = ${this.state.validPass}`)
 	    console.dir(this.state.allAccounts);
 
-	    document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';
+	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg.png)';
+            document.getElementById('app').style.backgroundBlendMode = 'multiply';
+            document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
             document.getElementById('app').style.backgroundRepeat = 'no-repeat';
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
-            document.getElementById('app').style.backgroundColor = 'black';
 
         return (
+	    <div className="content">
             <div className="item contentxt">
-                { this.state.wsrpc === false ? <div className="item login"><div className="item loader"></div>
+                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 50px)'}}><div className="item loader"></div>
                     <label className="loaderlabel">Starting local node...</label></div> :
 		  this.state.logining ? <div className="item login"><div className="item loader"></div>
 		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
                     </div> : <div className="item login">
-			<div style={{display: 'inline-block', margin: '30px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>
+			<div style={{display: 'inline-block', margin: '0px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>
 			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', minWidth: '30vw', margin: '24px', borderBottom: '1px solid white'}}>
 			     Welcome to Optract
 			</div>
-			<Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+			{ this.state.accListSize === 0 
+				? this.state.readiness ? this.state.validPass ? <div className="item newAccount" onClick={this.genNewAccount.bind(this)}>{this.state.generate ? <p style={{ padding: '0px 90px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : `Create New Account`}</div> : <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> Please Enter Your Master Password: </div> : <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> Please Set Your Master Password: </div>
+				: typeof(this.state.account) !== 'undefined' && this.state.memberStatus === 'not member' 
+				?  <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> <label>Your Address:</label><div className="item AccountShow">{this.state.account}</div><br/> Please Visit www.optract.com to Register </div>
+				: <Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
 			  <Dropdown.Toggle style={{fontSize: '20px', fontFamily: 'monospace'}} variant="success" id="dropdown-basic">
 				{typeof(this.state.account) === 'undefined' ? " Please select your login account... " : this.state.account}
 			  </Dropdown.Toggle>
 			  {this.listAccounts()}
-			</Dropdown>
+			</Dropdown> }
 			</div>
-			<div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+			{ !this.state.validPass ? <div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
 			<label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Password: </label>
-                        <input autoFocus 
+			<input autoFocus 
 			       style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', border: '0px'}} 
 			       type="password" ref="ps" onKeyUp={this.unlock} />
-			</div>
+			</div> : <div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+                        <label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Master Password Unlocked.</label></div>}
 		    </div>}
-            </div>);
+            </div></div>);
     }
 
 }
