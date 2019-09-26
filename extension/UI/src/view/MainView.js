@@ -8,6 +8,7 @@ import Table from "react-bootstrap/Table";
 import renderHTML from 'react-render-html';
 import marked from "marked";
 import Form from "react-bootstrap/Form";
+import Toggle from 'react-toggle';
 
 // Store
 import DlogsStore from "../store/DlogsStore";
@@ -288,7 +289,10 @@ class MainView extends Reflux.Component {
                             </tr>
                             <tr>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.account}</td>
-                                <td style={{ fontFamily: 'monospace', padding: '30px' }}><Form><Form.Check type="checkbox" id="custom-checkbox" checked={this.state.streamr === true} onChange={this.streamrSwitch.bind(this)}></Form.Check></Form></td>
+                                <td style={{ fontFamily: 'monospace', padding: '30px' }}><Toggle
+                                id='streamr-check'
+                                defaultChecked={this.state.streamr}
+                                onChange={this.streamrSwitch.bind(this)} /></td>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.MemberStatus}</td>
                             </tr>
                             <tr><td colSpan="4" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
