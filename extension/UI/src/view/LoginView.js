@@ -78,7 +78,7 @@ class LoginView extends Reflux.Component {
 	    console.log(`DEBUG: validPass = ${this.state.validPass}`)
 	    console.dir(this.state.allAccounts);
 
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg.png)';
+	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg2.png)';
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
             document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
@@ -89,11 +89,8 @@ class LoginView extends Reflux.Component {
         return (
 	    <div className="content">
             <div className="item contentxt">
-                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 50px)'}}><div className="item loader"></div>
-                    <label className="loaderlabel">Starting local node...</label></div> :
-		  this.state.logining ? <div className="item login"><div className="item loader"></div>
-		    <label className="loaderlabel">Connect and retrieve article streams ...</label>
-                    </div> : <div className="item login">
+                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{backgroundColor: 'rgba(0,0,0,0)'}}>Starting Node...</div></div> :
+		  this.state.logining ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{backgroundColor: 'rgba(0,0,0,0)'}}>Connecting...</div></div> : <div className="item login" style={{height: 'calc(100vh - 100px)'}}>
 			<div style={{display: 'inline-block', margin: '0px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>
 			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', minWidth: '30vw', margin: '24px', borderBottom: '1px solid white'}}>
 			     Welcome to Optract

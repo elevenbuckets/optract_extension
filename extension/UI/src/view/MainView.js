@@ -36,7 +36,8 @@ class MainView extends Reflux.Component {
             showModal: false,
 	    loading: false,
 	    opSurveyAID: '0x',
-	    surveyPick: null
+	    surveyPick: null,
+	    greeting: 'Optract'
         }
 
         this.store = DlogsStore;
@@ -44,6 +45,7 @@ class MainView extends Reflux.Component {
 	this.initTimer;
 	this.stateSip;
 	this.cateOpsCounts = 0;
+	this._a = 0;
     }
 
     componentDidUpdate() {
@@ -87,7 +89,10 @@ class MainView extends Reflux.Component {
 		}
 	} else if (this.state.articleTotal === 0) {
 		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(DlogsActions.opStateProbe, 2100);
+		this.initTimer = setTimeout(() => { 
+			DlogsActions.opStateProbe();
+			this.state.greeting === 'Optract' ? this.setState({greeting: 'From Info to Insights'}) : this.setState({greeting: 'Optract'});
+		}, 3000);
 	}
     }
 
@@ -481,7 +486,7 @@ class MainView extends Reflux.Component {
         console.log(this.state.loading);
 
         if (this.state.articleTotal === 0) {
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg.png)';
+	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg2.png)';
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
             document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
@@ -502,7 +507,7 @@ class MainView extends Reflux.Component {
                     <div className="ticketNote" ref='ticketNote' style={{display: 'none'}}><a href='#opsLine'>You have {this.state.ticketCounts} tickets!</a></div>
                     <div className="item contentxt">
                         {
-                            Object.keys(this.state.articles).length > 0 ?
+                            this.state.articleTotal > 0 ?
                                 <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
                                     <Tab eventKey="totalList" title="ALL"></Tab>
                                     <Tab eventKey="tech" title="Tech"></Tab>
@@ -518,7 +523,7 @@ class MainView extends Reflux.Component {
                                 </Tabs> : ''}
                         {this.state.view === "List" ?
                             this.state.articleTotal === 0 ?
-                                <div className='item login' style={{ height: 'calc(100vh - 50px)' }}><div className='item loader'></div>
+                                <div className='item login' style={{ height: 'calc(100vh - 100px)' }}><div className='textloader' style={{height: 'fit-content', margin: '0px auto', alignSelf: 'end', backgroundColor: 'rgba(0,0,0,0)'}}>{this.state.greeting}</div>
                                     <label className='loaderlabel'>{ this.loginLoad.apply(this, []) }</label></div> :
                                 <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
