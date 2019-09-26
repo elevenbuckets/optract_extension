@@ -71,6 +71,8 @@ class LoginView extends Reflux.Component {
     }
 
 
+    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
+    //if (this.state.wsrpc === false || this.state.logining) document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
     render() {
 	    console.log(`DEBUG: wsrpc = ${this.state.wsrpc}`)
 	    console.log(`DEBUG: account = ${this.state.account}`)
@@ -78,7 +80,27 @@ class LoginView extends Reflux.Component {
 	    console.log(`DEBUG: validPass = ${this.state.validPass}`)
 	    console.dir(this.state.allAccounts);
 
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
+	    if (this.state.wsrpc === false || this.state.logining) {
+		    document.getElementById('app').background = 'linear-gradient(-10deg,lightgray 0, #000000aa),url(assets/loginbg.jpg)';
+		  //Hue-Rotation enabled themes:  (uncomment the animation as well as one of the three following line)
+    		  //document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate'; 
+		  // contour theme:
+    		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
+		  // ribbin theme:
+    		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)';
+		  // Optract theme:
+    		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)';
+	    } else {
+	    	    document.getElementById('app').style.background = 'url(assets/loginbg.jpg)';
+		  //Hue-Rotation enabled themes:  (uncomment one of the three following line accordingly)
+		  // contour theme:
+    		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
+		  // ribbin theme:
+    		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)';
+		  // Optract theme:
+    		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)';
+	    }
+
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
             document.getElementById('app').style.animation = '';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
@@ -86,7 +108,7 @@ class LoginView extends Reflux.Component {
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
 
-	    if (this.state.wsrpc === false || this.state.logining) document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
+
 
         return (
 	    <div className="content">

@@ -513,9 +513,12 @@ class MainView extends Reflux.Component {
 
     render() {
         if (this.state.articleTotal === 0) {
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
+	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
+	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)'; // ribbin theme
+	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)'; // contour theme
+	    document.getElementById('app').style.background = 'linear-gradient(-10deg,lightgray 0, #000000aa),url(assets/loginbg.jpg)';
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
-            document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
+            //document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate'; // hue-rotation
             document.getElementById('app').style.backgroundOrigin = 'border-box';
             document.getElementById('app').style.backgroundRepeat = 'no-repeat';
             document.getElementById('app').style.backgroundPosition = 'center';
