@@ -63,10 +63,10 @@ class MainView extends Reflux.Component {
 	} else if ( this.state.account !== null
 		 && typeof(this.state.account) !== 'undefined' 
 	         && this.state.account === this.state.Account	
-	         && this.state.memberStatus === 'not member'
+	         && this.state.MemberStatus === 'not member'
 	) {
 		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(DlogsActions.updateState, 10001, {login: false, logining: false});
+		this.initTimer = setTimeout(DlogsActions.updateState, 1001, {login: false, logining: false});
 		console.log(`main view did update registration called...`);
 		return;
 	}
@@ -249,6 +249,10 @@ class MainView extends Reflux.Component {
 		    return (<div className="item aidclk" style={
                      {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
                    } onClick={this.goToArticle.bind(this, article)}>You've already voted this.</div>)
+	    } else if (this.state.MemberStatus !== 'active') {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>Please Register To Participate!</div>)
 	    } else {
 		    return this.genVoteButtons.apply(this, [article])
 	    }
@@ -459,9 +463,9 @@ class MainView extends Reflux.Component {
 
 	if ( typeof(this.state.account) !== 'undefined'
 	  && this.state.account === this.state.Account	
-	  && this.state.memberStatus === 'not member'
+	  && this.state.MemberStatus !== 'active'
 	) {
-		return 'Account not registered, please register at www.optract.com. (return to login page in 10 secs ...)';
+		return 'Account not registered, please register at www.optract.com...';
 	}
 
 	return this.state.EthBlock > 0 ? `Last Synced: ${this.state.LastBlock}/${this.state.OptractBlock} | Peers: ${this.state.PeerCounts}` : `Loading ...`;

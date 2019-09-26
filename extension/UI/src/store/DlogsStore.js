@@ -43,7 +43,6 @@ class DlogsStore extends Reflux.Store {
 	    allAccounts: [],
 	    accListSize: -1,
             account: null,
-            memberShipStatus: "active",
             activeTabKey : "totalList",
             showVoteToaster: false,
 	    wsrpc: false,
@@ -153,6 +152,7 @@ class DlogsStore extends Reflux.Store {
     }
 
     unlocked = (dispatch = true) =>{
+        OptractService.statProbe();
         this.setState({ login: true, logining : false })
 	OptractService.readiness();
 	OptractService.passCheck();
@@ -168,7 +168,6 @@ class DlogsStore extends Reflux.Store {
 			console.log(`DEBUG: active dispatch is off..`);
 		}
 	})
-        OptractService.statProbe();
     }
 
     onNewAccount = () => 

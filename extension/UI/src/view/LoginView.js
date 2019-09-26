@@ -100,7 +100,7 @@ class LoginView extends Reflux.Component {
 			</div>
 			{ this.state.accListSize === 0 
 				? this.state.readiness ? this.state.validPass ? <div className="item newAccount" onClick={this.genNewAccount.bind(this)}>{this.state.generate ? <p style={{ padding: '0px 90px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : `Create New Account`}</div> : <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> Please Enter Your Master Password: </div> : <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> Please Set Your Master Password: </div>
-				: typeof(this.state.account) !== 'undefined' && this.state.memberStatus === 'not member' 
+				: typeof(this.state.account) !== 'undefined' && this.state.MemberStatus === 'not member' 
 				?  <div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> <label>Your Address:</label><div className="item AccountShow">{this.state.account}</div><br/> Please Visit www.optract.com to Register </div>
 				: <Dropdown onSelect={this.handleSelect} style={{backgroundColor: 'rgba(0,0,0,0)'}}>
 			  <Dropdown.Toggle style={{fontSize: '20px', fontFamily: 'monospace'}} variant="success" id="dropdown-basic">
