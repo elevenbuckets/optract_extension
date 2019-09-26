@@ -68,7 +68,7 @@ class DlogsStore extends Reflux.Store {
 	    claimCounts: 0,
 	// cacheData
 	    aidlist: [],
-	    aidlistSize: 0,
+	    aidlistSize: -1,
 	// streamr
 	    streamr: false
         }

@@ -37,7 +37,8 @@ class MainView extends Reflux.Component {
 	    loading: false,
 	    opSurveyAID: '0x',
 	    surveyPick: null,
-	    greeting: 'Optract'
+	    greeting: 'Optract',
+	    thePosition: window.pageYOffset
         }
 
         this.store = DlogsStore;
@@ -95,6 +96,30 @@ class MainView extends Reflux.Component {
 		}, 3000);
 	}
     }
+
+    componentDidMount() {
+	  window.addEventListener('scroll', this.listenToScroll.bind(this))
+    }
+
+    componentWillUnmount() {
+  	  window.removeEventListener('scroll', this.listenToScroll.bind(this))
+    }
+
+    listenToScroll = (e) => {
+	  const winScroll =
+	    document.body.scrollTop || document.documentElement.scrollTop
+
+	  const height =
+	    document.documentElement.scrollHeight -
+	    document.documentElement.clientHeight
+
+	  const scrolled = winScroll / height
+
+	  this.setState({
+	    thePosition: scrolled,
+	  })
+          e.stopPropagation();
+    } 
 
     getImgSize = ({ target: img }) => {
         if (img.naturalWidth < 420 || img.naturalWidth / img.naturalHeight < 2.1) img.style.minWidth = '415px';
@@ -480,11 +505,13 @@ class MainView extends Reflux.Component {
 	return this.state.EthBlock > 0 ? `Last Synced: ${this.state.LastBlock}/${this.state.OptractBlock} | Peers: ${this.state.PeerCounts}` : `Loading ...`;
     }
 
-    render() {
-        console.log(this.state.account);
-        console.dir(this.state.aidlist);
-        console.log(this.state.loading);
+    scrollToTop = () =>
+    {
+	document.body.scrollTop = 0;
+  	document.documentElement.scrollTop = 0;
+    }
 
+    render() {
         if (this.state.articleTotal === 0) {
 	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg2.png)';
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
@@ -504,6 +531,7 @@ class MainView extends Reflux.Component {
         return (
             this.state.login ?
                 <div className="content">
+		    <button onClick={this.scrollToTop.bind(this)} id="TopBtn" style={this.state.thePosition >= 0.2 ? {display: 'block'} : {display: 'none'}} title="Go to top">Top</button>
                     <div className="ticketNote" ref='ticketNote' style={{display: 'none'}}><a href='#opsLine'>You have {this.state.ticketCounts} tickets!</a></div>
                     <div className="item contentxt">
                         {
@@ -525,7 +553,7 @@ class MainView extends Reflux.Component {
                             this.state.articleTotal === 0 ?
                                 <div className='item login' style={{ height: 'calc(100vh - 100px)' }}><div className='textloader' style={{height: 'fit-content', margin: '0px auto', alignSelf: 'end', backgroundColor: 'rgba(0,0,0,0)'}}>{this.state.greeting}</div>
                                     <label className='loaderlabel'>{ this.loginLoad.apply(this, []) }</label></div> :
-                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
+                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true || this.state.aidlistSize === -1 ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
                                 <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
@@ -533,7 +561,7 @@ class MainView extends Reflux.Component {
                     </div>
                     <Toast show={this.state.showVoteToaster} style={{
                         position: 'fixed',
-                        bottom: 15,
+                        top: 15,
                         right: 10,
                         zIndex: 2000,
                         minHeight: '101px',
