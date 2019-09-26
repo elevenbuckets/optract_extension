@@ -78,13 +78,15 @@ class LoginView extends Reflux.Component {
 	    console.log(`DEBUG: validPass = ${this.state.validPass}`)
 	    console.dir(this.state.allAccounts);
 
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg2.png)';
+	    document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
-            document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
+            document.getElementById('app').style.animation = '';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
             document.getElementById('app').style.backgroundRepeat = 'no-repeat';
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
+
+	    if (this.state.wsrpc === false || this.state.logining) document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
 
         return (
 	    <div className="content">

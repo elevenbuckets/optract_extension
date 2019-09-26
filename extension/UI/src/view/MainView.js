@@ -513,7 +513,7 @@ class MainView extends Reflux.Component {
 
     render() {
         if (this.state.articleTotal === 0) {
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg2.png)';
+	    document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
             document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
