@@ -82,6 +82,8 @@ class MainView extends Reflux.Component {
 		    this.initTimer = setTimeout(DlogsActions.opStateProbe, 5100);
 		    this.stateSip = Math.floor(Date.now()/1000);
 	    }
+        } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
+		this.refs.ticketNote.style.display = 'none';
         } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
 		if (this.cateOpsCounts > 0) {
 			this.refs.ticketNote.style.display = 'inline-block';
@@ -572,8 +574,8 @@ class MainView extends Reflux.Component {
                     </div>
                     <Toast show={this.state.showVoteToaster} style={{
                         position: 'fixed',
-                        top: 15,
-                        right: 10,
+                        bottom: 15,
+                        left: 10,
                         zIndex: 2000,
                         minHeight: '101px',
                         minWidth: '360px',
