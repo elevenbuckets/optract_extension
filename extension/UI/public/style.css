@@ -1011,3 +1011,13 @@ body {
   background-color: rgb(94,163,179);
   color: white;
 }
+
+/* fade in for login transform */
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}

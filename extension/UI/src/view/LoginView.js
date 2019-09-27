@@ -81,7 +81,7 @@ class LoginView extends Reflux.Component {
 	    console.dir(this.state.allAccounts);
 
 	    if (this.state.wsrpc === false || this.state.logining) {
-		    document.getElementById('app').background = 'linear-gradient(-10deg,lightgray 0, #000000aa),url(assets/loginbg.jpg)';
+		    document.getElementById('app').background = 'url(assets/loginbg2.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
 		  //Hue-Rotation enabled themes:  (uncomment the animation as well as one of the three following line)
     		  //document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate'; 
 		  // contour theme:
@@ -91,7 +91,8 @@ class LoginView extends Reflux.Component {
 		  // Optract theme:
     		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)';
 	    } else {
-	    	    document.getElementById('app').style.background = 'url(assets/loginbg.jpg)';
+	    	    document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    	    document.getElementById('app').style.background = 'url(assets/loginbg2.png)';
 		  //Hue-Rotation enabled themes:  (uncomment one of the three following line accordingly)
 		  // contour theme:
     		    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)';

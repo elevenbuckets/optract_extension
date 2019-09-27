@@ -516,7 +516,13 @@ class MainView extends Reflux.Component {
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)'; // ribbin theme
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)'; // contour theme
-	    document.getElementById('app').style.background = 'linear-gradient(-10deg,lightgray 0, #000000aa),url(assets/loginbg.jpg)';
+	    if (this.state.login === false) {
+	        document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    	document.getElementById('app').style.background = 'url(assets/loginbg2.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
+	    } else {
+	        document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    	document.getElementById('app').style.background = 'url(assets/loginbg.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
+	    }
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
             //document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate'; // hue-rotation
             document.getElementById('app').style.backgroundOrigin = 'border-box';
@@ -524,6 +530,8 @@ class MainView extends Reflux.Component {
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
         } else {
+	    document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    console.log(`DEBUG: in Rander section M2`);
             document.getElementById('app').style.animation = '';
 	    document.getElementById('app').style.background = '';
             document.getElementById('app').style.backgroundBlendMode = '';
