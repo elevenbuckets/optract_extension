@@ -73,6 +73,12 @@ class MainView extends Reflux.Component {
 		this.initTimer = setTimeout(DlogsActions.updateState, 1001, {login: false, logining: false});
 		console.log(`main view did update registration called...`);
 		return;
+	} else if (this.state.articleTotal === 0) {
+		clearTimeout(this.initTimer);
+		this.initTimer = setTimeout(() => { 
+			DlogsActions.opStateProbe();
+			this.state.greeting === 'Optract' ? this.setState({greeting: 'From Info to Insights'}) : this.setState({greeting: 'Optract'});
+		}, 3000);
 	}
 
         if (typeof (this.refs.canvas) !== 'undefined') {
@@ -82,7 +88,9 @@ class MainView extends Reflux.Component {
 		    this.initTimer = setTimeout(DlogsActions.opStateProbe, 5100);
 		    this.stateSip = Math.floor(Date.now()/1000);
 	    }
-        } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
+        } 
+	   
+	if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
 		this.refs.ticketNote.style.display = 'none';
         } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
 		if (this.cateOpsCounts > 0) {
@@ -90,12 +98,6 @@ class MainView extends Reflux.Component {
 		} else {
 			this.refs.ticketNote.style.display = 'none';
 		}
-	} else if (this.state.articleTotal === 0) {
-		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(() => { 
-			DlogsActions.opStateProbe();
-			this.state.greeting === 'Optract' ? this.setState({greeting: 'From Info to Insights'}) : this.setState({greeting: 'Optract'});
-		}, 3000);
 	}
     }
 
