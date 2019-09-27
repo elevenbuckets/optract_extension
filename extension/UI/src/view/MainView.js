@@ -306,6 +306,7 @@ class MainView extends Reflux.Component {
     streamrSwitch = () => { DlogsActions.streamrSwitch() }
 
     genOpStatsPage = () => {
+	this.cateOpsCounts = 0;
         return (<div className="statusBoard">
             <div className="item EthBlk">EthBlock:<br />{this.state.EthBlock}</div>
             <div className="item OptBlk">OptBlock:<br />{this.state.OptractBlock}</div>
