@@ -57,6 +57,7 @@ class DlogsStore extends Reflux.Store {
 	    LastBlock: 0,
 	    PeerCounts: 0,
 	    Account: null,
+	    AccountBalance: 0,
 	    MemberStatus: null,
 	    pending: { txdata: {}, payload: {}, txhash: {}, nonces: {}},
 	    pendingSize: 0,
@@ -70,7 +71,9 @@ class DlogsStore extends Reflux.Store {
 	    aidlist: [],
 	    aidlistSize: -1,
 	// streamr
-	    streamr: false
+	    streamr: false,
+	// buy membership lock
+	    buying: false
         }
 
 	this.probeTout;
@@ -183,6 +186,17 @@ class DlogsStore extends Reflux.Store {
 
     onOpStateProbe = () => {
         OptractService.statProbe();
+    }
+
+    onBuyMembersip = () => {
+	if (this.state.buying) return;
+	this.setState({buying: true});
+        OptractService.opt.call('buyMembership').then((rc) => 
+	{
+		this.setState({buying: false});
+		OptractService.statProbe();
+	})
+	.catch((err) => { console.trace(err); this.setState({buying: false}); });
     }
 
     onUpdateState = (state) =>{

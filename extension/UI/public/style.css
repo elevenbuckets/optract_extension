@@ -837,10 +837,9 @@ body {
 
 .AccountShow {
   font-size: 22px;
-  border: 1px solid white;
   display: inline-block;
-  margin: 0px 0px 25px;
-  padding: 0px 80px !Important;
+  margin: 0px 20px 25px;
+  padding: 0px 40px !Important;
 }
 
 .newAccount:hover {
@@ -848,6 +847,70 @@ body {
   color: black;
   cursor: pointer;
 }
+
+.SignUpShow {
+  background-color: rgba(0,0,0,0) !Important;
+  font-size: 22px;
+  display: grid;
+  grid-template-rows: 33px 100px;
+  grid-template-columns: 1fr 30px 1fr;
+  grid-template-areas: 
+    "suInfo suInfo suInfo"
+    "   eth suor twt   ";
+  padding: 0px !Important;
+}
+
+.registerOr {
+  background-color: rgba(0,0,0,0) !Important;
+  color: white;
+  grid-area: suor;
+}
+
+.registerInfo {
+  background-color: rgba(0,0,0,0) !Important;
+  grid-area: suInfo;
+  padding: 0px 10px !Important;
+  color: white !Important;
+}
+
+.registerEth {
+  background-color: goldenrod !Important;
+  color: black !Important;
+  font-size: 22px;
+  font-weight: bold;
+  justify-self: center;
+  display: inline-flex;
+  min-width: 250px;
+  grid-area: eth;
+  min-height: 45px;
+  padding: 0px 10px 0px 0px !Important;
+}
+
+.registerEth:hover {
+  text-shadow: 3px 3px 3px rgba(255,255,255,0.51);
+  cursor: pointer;
+  box-shadow: 3px 3px 4px;
+}
+
+.registerTwt:hover {
+  text-shadow: 3px 3px 3px rgba(255,255,255,0.51);
+  cursor: pointer;
+  box-shadow: 3px 3px 4px;
+}
+
+.registerTwt {
+  background-color: goldenrod !Important;
+  color: black !Important;
+  font-size: 22px;
+  font-weight: bold;
+  justify-self: center;
+  display: inline-flex;
+  min-width: 250px;
+  grid-area: twt;
+  min-height: 45px;
+  padding: 0px 10px 0px 0px !Important;
+}
+
 .react-toggle {
   touch-action: pan-x;
 
