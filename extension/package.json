@@ -43,6 +43,7 @@
     "nvm": "0.0.4",
     "rpc-websockets": "^4.3.5",
     "secure-gossip": "^0.3.1",
+    "secure-random-password": "^0.2.1",
     "uuid": "^3.1.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",

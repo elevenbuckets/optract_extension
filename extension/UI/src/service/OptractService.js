@@ -15,8 +15,13 @@ class OptractService {
 
 		const WSClient = require('rpc-websockets').Client;
 		const connectRPC = (mn) => {
-		    this.opt = new WSClient('ws://127.0.0.1:59437', {max_reconnects: mn});
 		    const __ready = (resolve, reject) => {
+		        try {
+		    	    this.opt = new WSClient('ws://127.0.0.1:59437', {max_reconnects: mn});
+		        } catch(err) {
+			    return reject(false);
+		        }
+
 			this.opt.on('open', function (event) { 
 				console.log(`!!!!!!!!!!!!!!! CONNECTED`); 
 				stat = true; 
@@ -29,17 +34,26 @@ class OptractService {
 		    return new Promise(__ready);
 		}
 
-		this.shutdown = () => { 
+		this.shutdown = () => 
+	        { 
 			this.opt.close(); 
-
 			port.disconnect(); 
+		}
+
+	        this.readiness = () => 
+	        {
+			console.log(`DEBUG: readiness check called ...`);
+			this.opt.call('readiness').then((rc) => 
+			{
+				DlogsActions.updateState({readiness: rc});
+			})
 		}
 
 	        this.allAccounts = () => 
 	        {
 			console.log(`DEBUG: OptractService: allAccounts called ...`)
 			this.opt.call('allAccounts').then((rc) => {
-				   DlogsActions.updateState({allAccounts: rc});
+				   DlogsActions.updateState({allAccounts: rc, accListSize: rc.length});
 			})
 		}
 
@@ -48,16 +62,27 @@ class OptractService {
 			port.postMessage({test: 'wsrpc'});
 			console.log(`OptractService connect called`);
 			connectRPC(1).then((rc) => {
+				console.log(`OptractService connected the first time`);
 				if (!rc) throw "wait for socket";
 				this.allAccounts();
+				this.readiness();
 			})
 			.catch((err) => {
 				connectRPC(0).then((rc) => {
+					console.log(`OptractService connected after catch`);
 					if (!rc) throw "wait for socket";
 					this.allAccounts();
+					this.readiness();
 				}).catch((err) => { true })
 			})
 
+		}
+
+	        this.passCheck = () =>
+		{
+			this.opt.call('validPass').then((rc) => {
+				DlogsActions.updateState({validPass: rc});
+			})
 		}
 
 	        this.serverCheck = () => {
@@ -67,7 +92,12 @@ class OptractService {
 			]
 
 			return Promise.all(p).then((rc) => {
-				if (!rc[0]) return false;
+				if (!rc[0]) {
+					DlogsActions.updateState({validPass: false});
+					return false;
+				} else {
+					DlogsActions.updateState({validPass: true});
+				}
 				if (typeof(rc[1].OptractMedia) === 'undefined') return false;
 				//FIXME: address binded might still don't have password in bcup archive!
 
@@ -94,7 +124,13 @@ class OptractService {
 			   this.opt.call("password", args).then((rc) => {
 					if (rc === false) throw "wrong password"
 					this.opt.call("userWallet").then(rc => {
-						if (account === null) account = rc.OptractMedia;
+						if (account === null) {
+							account = rc.OptractMedia;
+						} else if (account !== rc.OptractMedia) {
+							DlogsActions.updateState({wsrpc: stat})
+							if (callback) callback();
+							return;
+						}
 						console.dir(rc);
 						let state = { account, wsrpc: stat };
 						this.account = account;

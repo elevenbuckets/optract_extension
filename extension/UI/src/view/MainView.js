@@ -8,6 +8,7 @@ import Table from "react-bootstrap/Table";
 import renderHTML from 'react-render-html';
 import marked from "marked";
 import Form from "react-bootstrap/Form";
+import Toggle from 'react-toggle';
 
 // Store
 import DlogsStore from "../store/DlogsStore";
@@ -40,18 +41,53 @@ class MainView extends Reflux.Component {
 
         this.store = DlogsStore;
 	this.loadTimer;
+	this.initTimer;
+	this.stateSip;
 	this.cateOpsCounts = 0;
     }
 
     componentDidUpdate() {
+	if (this.state.login === false) return;
+
+	if (typeof(this.state.account) === 'undefined') {
+		if (this.state.accListSize === 0) {
+			clearTimeout(this.initTimer);
+			this.initTimer = setTimeout(DlogsActions.updateState, 5001, {login: false, logining: false});
+			return; // kick back to login for new account creation
+		} else if (this.state.accListSize > 0) {
+			clearTimeout(this.initTimer);
+			this.initTimer = setTimeout(DlogsActions.updateState, 5001, {login: false, logining: false, validPass: false});
+			return; // kick back to login for new account creation
+		}
+		console.log(`main view did update reset called...`);
+		return;
+	} else if ( this.state.account !== null
+		 && typeof(this.state.account) !== 'undefined' 
+	         && this.state.account === this.state.Account	
+	         && this.state.memberStatus === 'not member'
+	) {
+		clearTimeout(this.initTimer);
+		this.initTimer = setTimeout(DlogsActions.updateState, 10001, {login: false, logining: false});
+		console.log(`main view did update registration called...`);
+		return;
+	}
+
         if (typeof (this.refs.canvas) !== 'undefined') {
             createCanvasWithAddress(this.refs.canvas, this.state.account);
+	    if(typeof(this.stateSip) === 'undefined' || Math.floor(Date.now()/1000) - this.stateSip > 60) {
+		    clearTimeout(this.initTimer);
+		    this.initTimer = setTimeout(DlogsActions.opStateProbe, 5100);
+		    this.stateSip = Math.floor(Date.now()/1000);
+	    }
         } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
 		if (this.cateOpsCounts > 0) {
 			this.refs.ticketNote.style.display = 'inline-block';
 		} else {
 			this.refs.ticketNote.style.display = 'none';
 		}
+	} else if (this.state.articleTotal === 0) {
+		clearTimeout(this.initTimer);
+		this.initTimer = setTimeout(DlogsActions.opStateProbe, 2100);
 	}
     }
 
@@ -229,6 +265,8 @@ class MainView extends Reflux.Component {
         }
     }
 
+    streamrSwitch = () => { DlogsActions.streamrSwitch() }
+
     genOpStatsPage = () => {
         return (<div className="statusBoard">
             <div className="item EthBlk">EthBlock:<br />{this.state.EthBlock}</div>
@@ -247,21 +285,25 @@ class MainView extends Reflux.Component {
                                 }} rowSpan="2">
                                     <canvas className="avatar" ref='canvas' width="190px" height="190px" />
                                 </td>
-                                <td>Account Address</td><td>Member Status</td>
+                                <td>Account Address</td><td>Streamr</td><td>Member Status</td>
                             </tr>
                             <tr>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.account}</td>
+                                <td style={{ fontFamily: 'monospace', padding: '30px' }}><Toggle
+                                id='streamr-check'
+                                defaultChecked={this.state.streamr}
+                                onChange={this.streamrSwitch.bind(this)} /></td>
                                 <td style={{ fontFamily: 'monospace', padding: '30px' }}>{this.state.MemberStatus}</td>
                             </tr>
-                            <tr><td colSpan="3" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
-                            <tr><td colSpan="3" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
-                            <tr><td colSpan="3">Pending Transactions {this.state.pendingSize === 0 ? '' : `(Total: ${this.state.pendingSize})`}</td></tr>
+                            <tr><td colSpan="4" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
+                            <tr><td colSpan="4" style={{ backgroundColor: 'white', borderRight: '1px solid white', borderLeft: '1px solid white' }}><br /></td></tr>
+                            <tr><td colSpan="4">Pending Transactions {this.state.pendingSize === 0 ? '' : `(Total: ${this.state.pendingSize})`}</td></tr>
                             {this.state.pendingSize === 0
                                 ? <tr>
-                                    <td colSpan="3" style={{ fontFamily: 'monospace' }}><p style={{ padding: '0px 240px' }}>No pending Transactions</p></td>
+                                    <td colSpan="4" style={{ fontFamily: 'monospace' }}><p style={{ padding: '0px 240px' }}>No pending Transactions</p></td>
                                 </tr>
                                 : this.state.pending.txhash[this.state.account].map((tx) => {
-                                    return <tr><td colSpan="3" style={{ fontFamily: 'monospace' }}>{tx}</td></tr>
+                                    return <tr><td colSpan="4" style={{ fontFamily: 'monospace' }}>{tx}</td></tr>
                                 })}
                         </tbody>
                     </Table>
@@ -413,19 +455,39 @@ class MainView extends Reflux.Component {
 	DlogsActions.loadMore();
     }
 
+    loginLoad = () =>
+    {
+	if (typeof(this.state.account) === 'undefined') {
+		return 'Account not selected, return to login page in 5 secs ...';
+	}
+
+	if ( typeof(this.state.account) !== 'undefined'
+	  && this.state.account === this.state.Account	
+	  && this.state.memberStatus === 'not member'
+	) {
+		return 'Account not registered, please register at www.optract.com. (return to login page in 10 secs ...)';
+	}
+
+	return this.state.EthBlock > 0 ? `Last Synced: ${this.state.LastBlock}/${this.state.OptractBlock} | Peers: ${this.state.PeerCounts}` : `Loading ...`;
+    }
+
     render() {
         console.log(this.state.account);
         console.dir(this.state.aidlist);
         console.log(this.state.loading);
 
         if (this.state.articleTotal === 0) {
-            document.getElementById('app').style.backgroundImage = 'url(assets/loadbg.png)';
+	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg.png)';
+            document.getElementById('app').style.backgroundBlendMode = 'multiply';
+            document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
             document.getElementById('app').style.backgroundOrigin = 'border-box';
             document.getElementById('app').style.backgroundRepeat = 'no-repeat';
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
-            document.getElementById('app').style.backgroundColor = 'black';
         } else {
+            document.getElementById('app').style.animation = '';
+	    document.getElementById('app').style.background = '';
+            document.getElementById('app').style.backgroundBlendMode = '';
             document.getElementById('app').style.backgroundImage = 'none';
             document.getElementById('app').style.backgroundColor = 'aliceblue';
         }
@@ -452,8 +514,8 @@ class MainView extends Reflux.Component {
                                 </Tabs> : ''}
                         {this.state.view === "List" ?
                             this.state.articleTotal === 0 ?
-                                <div className='item' style={{ height: 'calc(100vh - 50px)', width: "100vw" }}><div className='item loader'></div>
-                                    <label className='loaderlabel'>Loading ...</label></div> :
+                                <div className='item login' style={{ height: 'calc(100vh - 50px)' }}><div className='item loader'></div>
+                                    <label className='loaderlabel'>{ this.loginLoad.apply(this, []) }</label></div> :
                                 <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :

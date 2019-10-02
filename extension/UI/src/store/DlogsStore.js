@@ -5,7 +5,7 @@ import FileService from "../service/FileService";
 import OptractService from "../service/OptractService";
 import Mercury from '@postlight/mercury-parser';
 import { toHexString } from "multihashes";
-
+const securePass = require('secure-random-password');
 
 const fs = null
 
@@ -38,7 +38,10 @@ class DlogsStore extends Reflux.Store {
             currentBlogContent: "",
             login: false,
             logining: false,
+	    validPass: false,
+	    generate: false,
 	    allAccounts: [],
+	    accListSize: -1,
             account: null,
             memberShipStatus: "active",
             activeTabKey : "totalList",
@@ -46,10 +49,13 @@ class DlogsStore extends Reflux.Store {
 	    wsrpc: false,
 	    voted: undefined,
 	    claimed: undefined,
+	// init
+	    readiness: true,
 	// opStats
 	    EthBlock: 0,
 	    OptractBlock: 0,
             OproundNo: 0,
+	    LastBlock: 0,
 	    PeerCounts: 0,
 	    Account: null,
 	    MemberStatus: null,
@@ -63,7 +69,9 @@ class DlogsStore extends Reflux.Store {
 	    claimCounts: 0,
 	// cacheData
 	    aidlist: [],
-	    aidlistSize: 0
+	    aidlistSize: 0,
+	// streamr
+	    streamr: false
         }
 
 	this.probeTout;
@@ -106,6 +114,13 @@ class DlogsStore extends Reflux.Store {
 	    window.close();
     }
 
+    onStreamrSwitch = () =>
+    {
+	    OptractService.opt.call('streamrSwitch').then((rc) => {
+		    this.setState({streamr: rc})
+	    })
+    }
+
     onUnlock = (pw, acc) => 
     {
         this.setState({logining : true});
@@ -114,7 +129,8 @@ class DlogsStore extends Reflux.Store {
 
     onServerCheck = () =>
     {
-	console.log(`DEBUG: service check called!!`)
+	console.log(`DEBUG: service check called!!`);
+	OptractService.readiness();
 	OptractService.serverCheck().then((rc) => {
         	this.setState({logining : true});
 		if (rc) {
@@ -122,7 +138,8 @@ class DlogsStore extends Reflux.Store {
 		} else {
         		this.setState({account: undefined, login: false, logining: false })
 		}
-	})	
+	})
+	.catch((err) => { true })
     }
 
     onLoadMore = () =>
@@ -137,6 +154,8 @@ class DlogsStore extends Reflux.Store {
 
     unlocked = (dispatch = true) =>{
         this.setState({ login: true, logining : false })
+	OptractService.readiness();
+	OptractService.passCheck();
 	OptractService.subscribeBlockData();
 	OptractService.subscribeOpStats();
 	OptractService.subscribeCacheData();
@@ -149,6 +168,20 @@ class DlogsStore extends Reflux.Store {
 			console.log(`DEBUG: active dispatch is off..`);
 		}
 	})
+        OptractService.statProbe();
+    }
+
+    onNewAccount = () => 
+    {
+	    let password = securePass.randomPassword();
+	    OptractService.opt.call('newAccount', [password]).then((acc) => {
+		    this.setState({account: acc, generate: false});
+		    DlogsActions.serverCheck();
+		    OptractService.statProbe();
+	    })
+    }
+
+    onOpStateProbe = () => {
         OptractService.statProbe();
     }
 
