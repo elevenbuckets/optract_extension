@@ -38,7 +38,9 @@ class MainView extends Reflux.Component {
 	    opSurveyAID: '0x',
 	    surveyPick: null,
 	    greeting: 'Optract',
-	    thePosition: window.pageYOffset
+	    thePosition: window.pageYOffset,
+	  // Login view state props
+	    signUpInfo: 'Please Finish Registration with'
         }
 
         this.store = DlogsStore;
@@ -516,6 +518,8 @@ class MainView extends Reflux.Component {
   	document.documentElement.scrollTop = 0;
     }
 
+    updateState = (staObj) => { this.setState(staObj) }
+
     render() {
         if (this.state.articleTotal === 0) {
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
@@ -610,7 +614,7 @@ class MainView extends Reflux.Component {
                   	    </p>
                         </Modal.Body>
                     </Modal>
-                </div> : <LoginView />);
+                </div> : <LoginView updateState={this.updateState.bind(this)} signUpInfo={this.state.signUpInfo}/>);
 
     }
 
