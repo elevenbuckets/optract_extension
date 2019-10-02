@@ -118,7 +118,12 @@ class LoginView extends Reflux.Component {
 		    console.log(`DEBUG: NOT buying membership ...`);
 	    }
     }
-    twtBtnClick = () => {}
+
+    twtBtnClick = () => {
+	    let twitterURL = 'https://twitter.com/intent/tweet?text=';
+	    let tweet = 'Super%20excited%20to%20sign%20up%20for%20%23Optract%2C%20my%20address%20is%20' + this.state.account + '%20on%20the%20%23Rinkeby%20%23Ethereum%20test%20network.';
+	    window.open(twitterURL + tweet);
+    }
 
     signUpPanel = () =>
     {
