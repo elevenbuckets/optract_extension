@@ -36,7 +36,9 @@ class MainView extends Reflux.Component {
             showModal: false,
 	    loading: false,
 	    opSurveyAID: '0x',
-	    surveyPick: null
+	    surveyPick: null,
+	    greeting: 'Optract',
+	    thePosition: window.pageYOffset
         }
 
         this.store = DlogsStore;
@@ -44,6 +46,7 @@ class MainView extends Reflux.Component {
 	this.initTimer;
 	this.stateSip;
 	this.cateOpsCounts = 0;
+	this._a = 0;
     }
 
     componentDidUpdate() {
@@ -64,12 +67,18 @@ class MainView extends Reflux.Component {
 	} else if ( this.state.account !== null
 		 && typeof(this.state.account) !== 'undefined' 
 	         && this.state.account === this.state.Account	
-	         && this.state.memberStatus === 'not member'
+	         && this.state.MemberStatus === 'not member'
 	) {
 		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(DlogsActions.updateState, 10001, {login: false, logining: false});
+		this.initTimer = setTimeout(DlogsActions.updateState, 1001, {login: false, logining: false});
 		console.log(`main view did update registration called...`);
 		return;
+	} else if (this.state.articleTotal === 0) {
+		clearTimeout(this.initTimer);
+		this.initTimer = setTimeout(() => { 
+			DlogsActions.opStateProbe();
+			this.state.greeting === 'Optract' ? this.setState({greeting: 'From Info to Insights'}) : this.setState({greeting: 'Optract'});
+		}, 3000);
 	}
 
         if (typeof (this.refs.canvas) !== 'undefined') {
@@ -79,17 +88,42 @@ class MainView extends Reflux.Component {
 		    this.initTimer = setTimeout(DlogsActions.opStateProbe, 5100);
 		    this.stateSip = Math.floor(Date.now()/1000);
 	    }
+        } 
+	   
+	if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
+		this.refs.ticketNote.style.display = 'none';
         } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
 		if (this.cateOpsCounts > 0) {
 			this.refs.ticketNote.style.display = 'inline-block';
 		} else {
 			this.refs.ticketNote.style.display = 'none';
 		}
-	} else if (this.state.articleTotal === 0) {
-		clearTimeout(this.initTimer);
-		this.initTimer = setTimeout(DlogsActions.opStateProbe, 2100);
 	}
     }
+
+    componentDidMount() {
+	  window.addEventListener('scroll', this.listenToScroll.bind(this))
+    }
+
+    componentWillUnmount() {
+  	  window.removeEventListener('scroll', this.listenToScroll.bind(this))
+    }
+
+    listenToScroll = (e) => {
+	  const winScroll =
+	    document.body.scrollTop || document.documentElement.scrollTop
+
+	  const height =
+	    document.documentElement.scrollHeight -
+	    document.documentElement.clientHeight
+
+	  const scrolled = winScroll / height
+
+	  this.setState({
+	    thePosition: scrolled,
+	  })
+          e.stopPropagation();
+    } 
 
     getImgSize = ({ target: img }) => {
         if (img.naturalWidth < 420 || img.naturalWidth / img.naturalHeight < 2.1) img.style.minWidth = '415px';
@@ -250,6 +284,10 @@ class MainView extends Reflux.Component {
 		    return (<div className="item aidclk" style={
                      {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
                    } onClick={this.goToArticle.bind(this, article)}>You've already voted this.</div>)
+	    } else if (this.state.MemberStatus !== 'active') {
+		    return (<div className="item aidclk" style={
+                     {minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6"}
+                   } onClick={this.goToArticle.bind(this, article)}>Please Register To Participate!</div>)
 	    } else {
 		    return this.genVoteButtons.apply(this, [article])
 	    }
@@ -268,6 +306,7 @@ class MainView extends Reflux.Component {
     streamrSwitch = () => { DlogsActions.streamrSwitch() }
 
     genOpStatsPage = () => {
+	this.cateOpsCounts = 0;
         return (<div className="statusBoard">
             <div className="item EthBlk">EthBlock:<br />{this.state.EthBlock}</div>
             <div className="item OptBlk">OptBlock:<br />{this.state.OptractBlock}</div>
@@ -463,28 +502,41 @@ class MainView extends Reflux.Component {
 
 	if ( typeof(this.state.account) !== 'undefined'
 	  && this.state.account === this.state.Account	
-	  && this.state.memberStatus === 'not member'
+	  && this.state.MemberStatus !== 'active'
 	) {
-		return 'Account not registered, please register at www.optract.com. (return to login page in 10 secs ...)';
+		return 'Account not registered, please register at www.optract.com...';
 	}
 
 	return this.state.EthBlock > 0 ? `Last Synced: ${this.state.LastBlock}/${this.state.OptractBlock} | Peers: ${this.state.PeerCounts}` : `Loading ...`;
     }
 
-    render() {
-        console.log(this.state.account);
-        console.dir(this.state.aidlist);
-        console.log(this.state.loading);
+    scrollToTop = () =>
+    {
+	document.body.scrollTop = 0;
+  	document.documentElement.scrollTop = 0;
+    }
 
+    render() {
         if (this.state.articleTotal === 0) {
-	    document.getElementById('app').style.background = 'linear-gradient(180deg,#00d0ff 0,#2eff43),url(assets/loadbg.png)';
+	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
+	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)'; // ribbin theme
+	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)'; // contour theme
+	    if (this.state.login === false) {
+	        document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    	document.getElementById('app').style.background = 'url(assets/loginbg2.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
+	    } else {
+	        document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    	document.getElementById('app').style.background = 'url(assets/loginbg.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
+	    }
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
-            document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate';
+            //document.getElementById('app').style.animation = 'colorful 11s ease 1.11s infinite alternate'; // hue-rotation
             document.getElementById('app').style.backgroundOrigin = 'border-box';
             document.getElementById('app').style.backgroundRepeat = 'no-repeat';
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
         } else {
+	    document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
+	    console.log(`DEBUG: in Rander section M2`);
             document.getElementById('app').style.animation = '';
 	    document.getElementById('app').style.background = '';
             document.getElementById('app').style.backgroundBlendMode = '';
@@ -495,10 +547,11 @@ class MainView extends Reflux.Component {
         return (
             this.state.login ?
                 <div className="content">
+		    <button onClick={this.scrollToTop.bind(this)} id="TopBtn" style={this.state.thePosition >= 0.2 ? {display: 'block'} : {display: 'none'}} title="Go to top">Top</button>
                     <div className="ticketNote" ref='ticketNote' style={{display: 'none'}}><a href='#opsLine'>You have {this.state.ticketCounts} tickets!</a></div>
                     <div className="item contentxt">
                         {
-                            Object.keys(this.state.articles).length > 0 ?
+                            this.state.articleTotal > 0 ?
                                 <Tabs defaultActiveKey="totalList" onSelect={this.updateTab}>
                                     <Tab eventKey="totalList" title="ALL"></Tab>
                                     <Tab eventKey="tech" title="Tech"></Tab>
@@ -514,9 +567,9 @@ class MainView extends Reflux.Component {
                                 </Tabs> : ''}
                         {this.state.view === "List" ?
                             this.state.articleTotal === 0 ?
-                                <div className='item login' style={{ height: 'calc(100vh - 50px)' }}><div className='item loader'></div>
+                                <div className='item login' style={{ height: 'calc(100vh - 100px)' }}><div className='textloader' style={{height: 'fit-content', margin: '0px auto', alignSelf: 'end', backgroundColor: 'rgba(0,0,0,0)', fontSize: '72px'}}>{this.state.greeting}</div>
                                     <label className='loaderlabel'>{ this.loginLoad.apply(this, []) }</label></div> :
-                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
+                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true || this.state.aidlistSize === -1 ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
                             this.state.view === "Content" ?
                                 <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
                                 <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
@@ -525,7 +578,7 @@ class MainView extends Reflux.Component {
                     <Toast show={this.state.showVoteToaster} style={{
                         position: 'fixed',
                         bottom: 15,
-                        right: 10,
+                        left: 10,
                         zIndex: 2000,
                         minHeight: '101px',
                         minWidth: '360px',
