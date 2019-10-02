@@ -194,6 +194,7 @@ class DlogsStore extends Reflux.Store {
         OptractService.opt.call('buyMembership').then((rc) => 
 	{
 		this.setState({buying: false});
+		DlogsActions.serverCheck();
 		OptractService.statProbe();
 	})
 	.catch((err) => { console.trace(err); this.setState({buying: false}); });
