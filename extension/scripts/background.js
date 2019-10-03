@@ -91,14 +91,19 @@ var parentTabURL;
 var lastKnownActive;
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.get(tabs[0].openerTabId, function(parent_tab) {
-		parentTabURL = parent_tab.url;	
-                if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
-    			lastKnownActive = activeInfo.tabId;
-		}
-		console.dir({parentTabURL, lastKnownActive})
-	})
+    //chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.get(activeInfo.tabId, function(active_tab) {
+	try {    
+		chrome.tabs.get(active_tab.openerTabId, function(parent_tab) {
+			parentTabURL = parent_tab.url;	
+			if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
+				lastKnownActive = activeInfo.tabId;
+			}
+			console.dir({parentTabURL, lastKnownActive})
+		})
+	} catch(err) {
+		parentTabURL = undefined;
+	}
     })
 });
 
