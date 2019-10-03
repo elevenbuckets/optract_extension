@@ -25,6 +25,10 @@ chrome.browserAction.onClicked.addListener(function (activeTab, url) {
 });
 
 var tport 
+var state ={
+	rpcConnected : false,
+	rpcStarted: false
+}
 function stopRPCServer() {
 	console.log("sending pong to native app")
 	tport.postMessage({ text: "pong" })
@@ -49,6 +53,12 @@ chrome.runtime.onConnect.addListener(function (port) {
 		stopRPCServer()
 	})
 });
+
+function connectRPC(){
+	
+}
+
+
 
 
 
