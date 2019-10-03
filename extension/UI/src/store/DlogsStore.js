@@ -43,7 +43,6 @@ class DlogsStore extends Reflux.Store {
 	    allAccounts: [],
 	    accListSize: -1,
             account: null,
-            memberShipStatus: "active",
             activeTabKey : "totalList",
             showVoteToaster: false,
 	    wsrpc: false,
@@ -58,6 +57,7 @@ class DlogsStore extends Reflux.Store {
 	    LastBlock: 0,
 	    PeerCounts: 0,
 	    Account: null,
+	    AccountBalance: 0,
 	    MemberStatus: null,
 	    pending: { txdata: {}, payload: {}, txhash: {}, nonces: {}},
 	    pendingSize: 0,
@@ -69,9 +69,11 @@ class DlogsStore extends Reflux.Store {
 	    claimCounts: 0,
 	// cacheData
 	    aidlist: [],
-	    aidlistSize: 0,
+	    aidlistSize: -1,
 	// streamr
-	    streamr: false
+	    streamr: false,
+	// buy membership lock
+	    buying: false
         }
 
 	this.probeTout;
@@ -153,6 +155,7 @@ class DlogsStore extends Reflux.Store {
     }
 
     unlocked = (dispatch = true) =>{
+        OptractService.statProbe();
         this.setState({ login: true, logining : false })
 	OptractService.readiness();
 	OptractService.passCheck();
@@ -168,7 +171,6 @@ class DlogsStore extends Reflux.Store {
 			console.log(`DEBUG: active dispatch is off..`);
 		}
 	})
-        OptractService.statProbe();
     }
 
     onNewAccount = () => 
@@ -176,6 +178,7 @@ class DlogsStore extends Reflux.Store {
 	    let password = securePass.randomPassword();
 	    OptractService.opt.call('newAccount', [password]).then((acc) => {
 		    this.setState({account: acc, generate: false});
+		    this.allAccounts();
 		    DlogsActions.serverCheck();
 		    OptractService.statProbe();
 	    })
@@ -183,6 +186,17 @@ class DlogsStore extends Reflux.Store {
 
     onOpStateProbe = () => {
         OptractService.statProbe();
+    }
+
+    onBuyMembersip = () => {
+	if (this.state.buying) return;
+	this.setState({buying: true});
+        OptractService.opt.call('buyMembership').then((rc) => 
+	{
+		this.setState({buying: false});
+		OptractService.statProbe();
+	})
+	.catch((err) => { console.trace(err); this.setState({buying: false}); });
     }
 
     onUpdateState = (state) =>{

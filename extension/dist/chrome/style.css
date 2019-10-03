@@ -192,6 +192,36 @@ body {
   background-color: rgba(0,0,0,0.34);
 }
 
+@keyframes load {
+    0%{
+        opacity: 0.08;
+/*      font-size: 10px; */
+/*  	font-weight: 400; */
+	filter: blur(5px);
+	letter-spacing: 3px;
+        }
+    100%{
+/*       opacity: 1; */
+/*       font-size: 12px; */
+/*  	 font-weight:600; */
+/* 	 filter: blur(0); */
+        }
+}
+
+.textloader {
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	margin: auto;
+ 	width: fit-content; 
+ 	font-size: 56px; 
+	font-family: Helvetica, sans-serif, Arial;
+	animation: load 1.6s infinite 0s ease-in-out;
+	animation-direction: alternate;
+	text-shadow: 0 0 1px white;
+}
+
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg) skewY(11deg); }
   34% { -webkit-transform: rotate(130deg) skewX(36deg); }
@@ -958,4 +988,36 @@ body {
   -webkit-box-shadow: 0px 0px 5px 5px #0099E0;
   -moz-box-shadow: 0px 0px 5px 5px #0099E0;
   box-shadow: 0px 0px 5px 5px #0099E0;
+}
+
+/* back to top button */
+#TopBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: rgba(94,163,179,0.45);
+  color: darkslateblue;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+#TopBtn:hover {
+  background-color: rgb(94,163,179);
+  color: white;
+}
+
+/* fade in for login transform */
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
