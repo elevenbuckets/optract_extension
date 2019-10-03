@@ -9,9 +9,7 @@
         "tabs"
     ],
     "background": {
-        "scripts": [
-            "background.js"
-        ],
+        "page": "background.html",
         "persistent": true
     },
     "incognito":"split",
@@ -22,8 +20,17 @@
               ],
 
             "js": [
-                "content.js",
                 "bundle.js"
+            ]
+        },
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+              ],
+
+            "js": [
+                "content.js"
             ]
         }
     ],

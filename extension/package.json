@@ -5,6 +5,7 @@
   "main": "background.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
     "mvPopUptoDist": " cp popup.html dist/chrome/popup.html && cp scripts/popup.js dist/chrome/popup.js "
   },
   "author": "",
@@ -13,6 +14,9 @@
     "@postlight/mercury-parser": "^2.1.0",
     "ascii-table": "0.0.9",
     "async": "^2.6.2",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
     "bignumber.js": "^5.0.0",
     "browserify": "^16.2.3",
     "browserify-derequire": "^0.9.4",
@@ -49,6 +53,10 @@
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1",
     "web3": "^0.19",
-    "web3-eth-abi": "^1.0.0-beta.37"
+    "web3-eth-abi": "^1.0.0-beta.37",
+    "webpack": "^4.41.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.9"
   }
 }

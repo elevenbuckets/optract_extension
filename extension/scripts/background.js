@@ -1,69 +1,104 @@
+const WSClient = require('rpc-websockets').Client;
+var opt;
+var tport
+var state = {
+	rpcConnected: false,
+	rpcStarted: false
+}
 
-// const Optract = require('../optractNode.js');
+function openTab(filename) {
+	var myid = chrome.i18n.getMessage("@@extension_id"); chrome.windows.getCurrent(function (win) {
+		chrome.tabs.query({ 'windowId': win.id }, function (tabArray) {
+			for (var i in tabArray) {
+				if (tabArray[i].url == "chrome-extension://" + myid + "/" + filename) { // console.log("already opened");
+					chrome.tabs.update(tabArray[i].id, { active: true }); return;
+				}
+			} chrome.tabs.create({ url: chrome.extension.getURL(filename) });
+		});
+	});
+}
 
-const messageTypesFromContent = {
-	Connect_WS_RPC:  "Connect_WS_RPC"
+// openTab("index.html")
+
+function isNewTab(tab, url) {
+	return (
+		typeof url === 'undefined' && tab.active && tab.url === 'chrome://newtab/'
+	)
+}
+
+function stopRPCServer() {
+	console.log("sending pong to native app")
+	tport.postMessage({ text: "pong" })
+	state.rpcStarted = false;
+}
+
+function startRPCServer() {
+	tport = chrome.runtime.connectNative('optract');
+	tport.onMessage.addListener(function (msgs) {
+		console.log(msgs);
+	})
+	tport.postMessage({ text: "ping" })
+	state.rpcStarted = true;
 }
 
 
-const cfgObj = { dappdir: '/home/liang/Liang_Learn/git_hub/OptractP2pCLI/dapps',
-dns: 
- { server: [ 'discovery1.datprotocol.com', 'discovery2.datprotocol.com' ] },
-dht: 
- { bootstrap: 
-	[ 'bootstrap1.datprotocol.com:6881',
-	  'bootstrap2.datprotocol.com:6881',
-	  'bootstrap3.datprotocol.com:6881',
-	  'bootstrap4.datprotocol.com:6881' ] },
-port: 45015 }
+chrome.browserAction.onClicked.addListener(function (activeTab, url) {
+	if (isNewTab(activeTab, url)) {
+		openTab("index.html")
+	} else {
+		try {
+			if(!state.rpcStarted){
+				startRPCServer();
+			}
+			opt = new WSClient('ws://127.0.0.1:59437', { max_reconnects: 10 });
+			opt.on('open', function (event) { 
+				console.log(`!!!!!!!!!!!!!!! CONNECTED`); 
+			});
+
+			opt.on('close', function (event) { 
+				stopRPCServer()
+				console.log(`!!!!!!!!!!!!!!! Connection Closed`); 
+			});
+
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+});
 
 
-const optract = new Optract(cfgObj);
+
 
 
 chrome.runtime.onConnect.addListener(function (port) {
 	port.onMessage.addListener(function (msg) {
-		handleMessageFromContent(msg, port);
+		// Need to put nativeApp.py under dist directory, and update the optract.json under ~/.config/google-chrome/NativeMessagingHosts 
+		// to use nativeApp.py
+		if(!state.rpcStarted){
+			startRPCServer();
+		}
 	});
+
+	port.onDisconnect.addListener(function () {
+		// tport.disconnect();
+		if(opt){
+			opt.close();
+		}else{
+			stopRPCServer();
+		}
+		
+	})
 });
 
+function connectRPC() {
 
-handleMessageFromContent = (msg, port) => {
-	try {
-		let data = JSON.parse(msg);
-		if (data.type == "Connect_WS-RPC") {
-			console.log(msg);
-			port.postMessage("Response from extension for : " + msg);
-		}
-	} catch (e) {
-		console.log(msg);
-		port.postMessage("Response from extension for : " + msg);
-	}
 }
 
 
-handleMessageFromNativeApp = msg => {
 
-	try {
-		let data = JSON.parse(msg);
-		if (data.type === messageTypesFromNativeApp.ENABLE_NAMESPACE) {
-			console.log(msg);
-			port.postMessage("Response from extension for : " + msg);
-		}
-	} catch (e) {
-		console.log(msg);
-		port.postMessage("Response from extension for : " + msg);
-	}
-}
 
-// msg will be a json object
-sendMessageUsingPort = port => msg => {
-	port.postMessage(msg);
-}
 
-// msg is string
-sendNativeMessage = (appName, msg, callback) => {
-	chrome.runtime.sendNativeMessage(appName,
-		{ text: msg },
-		callback);
-}
+
+// setTimeout(stopRPCServer, 15000)
+// setTimeout(startRPCServer, 30000)
