@@ -397,9 +397,9 @@ class OptractService {
         }).catch((err) => { console.trace(err); throw 'redo'; })
     }
 
-    newVote(block, leaf) {
+    newVote(block, leaf, comment = '') {
         console.log(`Now vote with args: ${block} ${leaf}`);
-        return this.opt.call('newVote', { args: [block, leaf] });
+        return this.opt.call('newVote', { args: [block, leaf, comment] });
     }
 
     newClaim(v1block, v1leaf, v2block, v2leaf, comment) {
@@ -412,4 +412,23 @@ class OptractService {
 }
 
 const optractService = new OptractService();
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+	console.log(`DEBUG: background message sent to OptractService!!!!!`)
+	if (sender.tab) return sendResponse({results: 'Invalid sender'});
+	console.log(`Working on it .......`);
+	let url = message.voteRequest;
+	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
+
+	let aid = Object.keys(optractService.articles).filter((aid) => { return optractService.articles[aid].url === url });
+	let article = optractSevice.articles[aid];
+
+	let l = article.txs.length;
+        let i = Math.floor(Math.random() * l);
+	DlogsActions.updateState({voted: aid});
+	DlogsActions.vote(article.blk[i], article.txs[i], aid, comment);
+
+	return sendResponse({results: article})
+})
+
 export default optractService;

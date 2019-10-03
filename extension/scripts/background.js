@@ -6,20 +6,21 @@ var state = {
 	rpcStarted: false
 }
 var myid = chrome.i18n.getMessage("@@extension_id");
+var myTabId;
 
 function openTab(filename) {
 	chrome.windows.getCurrent(function (win) {
 		chrome.tabs.query({ 'windowId': win.id }, function (tabArray) {
 			for (var i in tabArray) {
 				if (tabArray[i].url == "chrome-extension://" + myid + "/" + filename) { // console.log("already opened");
-					chrome.tabs.update(tabArray[i].id, { active: true }); return;
+					myTabId = tabArray[i].id;
+					chrome.tabs.update(tabArray[i].id, { active: true }); 
+					return;
 				}
 			} chrome.tabs.create({ url: chrome.extension.getURL(filename) });
 		});
 	});
 }
-
-// openTab("index.html")
 
 function isNewTab(tab, url) {
 	return (
@@ -108,12 +109,20 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    console.log(`got message from tab! DEBUG...`)
-    console.dir(sender);
-    if (sender.tab.id === lastKnownActive) {
-	sendResponse({yourParent: parentTabURL});
+    //console.log(`got message from tab! DEBUG...`)
+    //console.dir(sender);
+    if ( message.myParent === "chrome-extension://" + myid + "/index.html"
+      && typeof(message.voteThis) !== 'undefined'
+    ) {
+	    console.log(`vote requested from content page!`);
+            let highlight = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
+	    chrome.tabs.sendMessage(myTabId, {voteRequest: sender.url, highlight}, function(response) {
+		console.dir(response.results);
+	    })
+    } else if (sender.tab.id === lastKnownActive && message.landing === true) {
+ 	    sendResponse({yourParent: parentTabURL});
     } else {
-	sendResponse({yourParent: 'Not from Optract'});
+	    sendResponse({yourParent: 'Not from Optract'});
     }
 })
     /*chrome.tabs.get(activeInfo.tabId, function(active_tab) {
