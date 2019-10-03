@@ -22,8 +22,17 @@
               ],
 
             "js": [
-                "content.js",
                 "bundle.js"
+            ]
+        },
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+              ],
+
+            "js": [
+                "content.js"
             ]
         }
     ],
