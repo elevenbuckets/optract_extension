@@ -76,7 +76,10 @@ chrome.runtime.onConnect.addListener(function (port) {
 
 	port.onDisconnect.addListener(function () {
 		// tport.disconnect();
-		stopRPCServer()
+		if(opt){
+			opt.close();
+		}
+		stopRPCServer();
 	})
 });
 
