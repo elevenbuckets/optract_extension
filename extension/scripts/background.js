@@ -54,6 +54,12 @@ chrome.browserAction.onClicked.addListener(function (activeTab, url) {
 			opt.on('open', function (event) { 
 				console.log(`!!!!!!!!!!!!!!! CONNECTED`); 
 			});
+
+			opt.on('close', function (event) { 
+				stopRPCServer()
+				console.log(`!!!!!!!!!!!!!!! Connection Closed`); 
+			});
+
 		} catch (err) {
 			console.error(err);
 		}
@@ -78,8 +84,10 @@ chrome.runtime.onConnect.addListener(function (port) {
 		// tport.disconnect();
 		if(opt){
 			opt.close();
+		}else{
+			stopRPCServer();
 		}
-		stopRPCServer();
+		
 	})
 });
 

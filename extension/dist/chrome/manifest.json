@@ -9,9 +9,7 @@
         "tabs"
     ],
     "background": {
-        "scripts": [
-            "background_bundle.js"
-        ],
+        "page": "background.html",
         "persistent": true
     },
     "incognito":"split",
