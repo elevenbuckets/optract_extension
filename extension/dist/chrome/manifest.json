@@ -1,7 +1,7 @@
 {
     "name": "Optract",
     "version": "1.0",
-    "description": "Build an Extension",
+    "description": "Optract: Refine understanding and gain insights collectively in today's highly connected world.",
     "permissions": [
         "storage",
         "nativeMessaging",

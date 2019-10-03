@@ -5,9 +5,10 @@ var state = {
 	rpcConnected: false,
 	rpcStarted: false
 }
+var myid = chrome.i18n.getMessage("@@extension_id");
 
 function openTab(filename) {
-	var myid = chrome.i18n.getMessage("@@extension_id"); chrome.windows.getCurrent(function (win) {
+	chrome.windows.getCurrent(function (win) {
 		chrome.tabs.query({ 'windowId': win.id }, function (tabArray) {
 			for (var i in tabArray) {
 				if (tabArray[i].url == "chrome-extension://" + myid + "/" + filename) { // console.log("already opened");
@@ -41,7 +42,6 @@ function startRPCServer() {
 	state.rpcStarted = true;
 }
 
-
 chrome.browserAction.onClicked.addListener(function (activeTab, url) {
 	if (isNewTab(activeTab, url)) {
 		openTab("index.html")
@@ -67,10 +67,6 @@ chrome.browserAction.onClicked.addListener(function (activeTab, url) {
 
 });
 
-
-
-
-
 chrome.runtime.onConnect.addListener(function (port) {
 	port.onMessage.addListener(function (msg) {
 		// Need to put nativeApp.py under dist directory, and update the optract.json under ~/.config/google-chrome/NativeMessagingHosts 
@@ -91,14 +87,48 @@ chrome.runtime.onConnect.addListener(function (port) {
 	})
 });
 
-function connectRPC() {
+var parentTabURL;
+var lastKnownActive;
 
-}
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.get(tabs[0].openerTabId, function(parent_tab) {
+		parentTabURL = parent_tab.url;	
+                if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
+    			lastKnownActive = activeInfo.tabId;
+		}
+		console.dir({parentTabURL, lastKnownActive})
+	})
+    })
+});
 
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    console.log(`got message from tab! DEBUG...`)
+    console.dir(sender);
+    if (sender.tab.id === lastKnownActive) {
+	sendResponse({yourParent: parentTabURL});
+    } else {
+	sendResponse({yourParent: 'Not from Optract'});
+    }
+})
+    /*chrome.tabs.get(activeInfo.tabId, function(active_tab) {
+        chrome.tabs.get(active_tab.openerTabId, function(parent_tab) {
+	    //alert(parent_tab.url);
+	    console.log(`tabs get called from ${activeInfo.tabId}, parent: ${parent_tab.url}`);
+            if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
+		    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+			    console.log(`got message from tab! DEBUG...`)
+			    console.dir(sender);
+			    if (sender.tab.id === activeInfo.tabId) {
+			    	sendResponse({yourParent: parent_tab.url});
+			    } else {
+			    	sendResponse({yourParent: 'not from Optract'});
+			    }
+		    })
+		    //chrome.tabs.sendMessage(activeInfo.tabId, {greeting: "hello"}, function(response) {
+		    //	    console.log("active tab say: " + response.farewell + "! Round trip between extension to active tab done");
+		    //})
+	    }
+        });     
+    });*/
 
-
-
-
-
-// setTimeout(stopRPCServer, 15000)
-// setTimeout(startRPCServer, 30000)
