@@ -415,7 +415,7 @@ const optractService = new OptractService();
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	console.log(`DEBUG: background message sent to OptractService!!!!!`)
-	if (!sender.tab || typeof(message.myParent) === 'undefined') return sendResponse({results: 'Invalid sender'});
+	if (!sender.tab || typeof(message.myParent) === 'undefined') return;
 	console.log(`Working on it .......`);
 	let url = message.voteRequest;
 	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
@@ -425,6 +425,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	}
 
 	let aid = Object.keys(optractService.articles).filter((aid) => { return optractService.articles[aid].url === url })[0];
+
 	let article = optractService.articles[aid];
 	if (Object.keys(article).length > 0) { 
 		console.log(`Optract AID of URL found .......`);
