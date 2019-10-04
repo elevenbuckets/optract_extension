@@ -111,14 +111,14 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     //console.log(`got message from tab! DEBUG...`)
     //console.dir(sender);
-    if ( message.myParent === "chrome-extension://" + myid + "/index.html"
-      && typeof(message.voteThis) !== 'undefined'
-    ) {
-	    console.log(`vote requested from content page!`);
-            let highlight = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
-	    chrome.tabs.sendMessage(myTabId, {voteRequest: sender.url, highlight}, function(response) {
-		console.dir(response.results);
-	    })
+    if ( message.myParent === "chrome-extension://" + myid + "/index.html" ) {
+	    //console.log(`vote requested from content page!`);
+            //let highlight = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
+	    console.dir(message);
+	    console.log(sender.url);
+	    //chrome.tabs.sendMessage(myTabId, {voteRequest: sender.url, highlight}, function(response) {
+	    //	console.dir(response.results);
+	    //})
     } else if (sender.tab.id === lastKnownActive && message.landing === true) {
  	    sendResponse({yourParent: parentTabURL});
     } else {

@@ -415,13 +415,21 @@ const optractService = new OptractService();
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	console.log(`DEBUG: background message sent to OptractService!!!!!`)
-	if (sender.tab) return sendResponse({results: 'Invalid sender'});
+	if (!sender.tab || typeof(message.myParent) === 'undefined') return sendResponse({results: 'Invalid sender'});
 	console.log(`Working on it .......`);
 	let url = message.voteRequest;
 	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
+	if (comment) {
+		console.log(`DEBUG: vote with quote ..`)
+		console.log(comment);
+	}
 
-	let aid = Object.keys(optractService.articles).filter((aid) => { return optractService.articles[aid].url === url });
-	let article = optractSevice.articles[aid];
+	let aid = Object.keys(optractService.articles).filter((aid) => { return optractService.articles[aid].url === url })[0];
+	let article = optractService.articles[aid];
+	if (Object.keys(article).length > 0) { 
+		console.log(`Optract AID of URL found .......`);
+		console.dir(article);
+	}
 
 	let l = article.txs.length;
         let i = Math.floor(Math.random() * l);

@@ -219,6 +219,7 @@ class DlogsStore extends Reflux.Store {
         OptractService.newVote(block, leaf, comment).then(data =>{
             console.dir(data); console.log(`DEBUG: vote comment = ${comment}`);
 	    let voteAID = [ ...this.state.voteAID ];
+
 	    voteAID.push(aid);
 	    let voteCounts = voteAID.length;
             this.setState({voted: undefined, showVoteToaster: true, voteAID, voteCounts})
