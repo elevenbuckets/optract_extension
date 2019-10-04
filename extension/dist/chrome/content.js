@@ -14,7 +14,7 @@ chrome.runtime.sendMessage({landing: true},
 	            + 'font-size: 22px !Important; '
 		    + 'align-items: center !Important; ' 
 		    + 'justify-content: center !Important; ' 
-		    + 'width: 320px; height: 330px !Important; '
+		    + 'width: 320px !Important; height: 330px; '
 		    + 'position: absolute; ' 
 	            + 'border: 2px solid lightgrey !Important; '
 	            + 'box-shadow: 2px 2px 5px black !Important; '
@@ -68,14 +68,16 @@ chrome.runtime.sendMessage({landing: true},
 	    window.addEventListener('message', function (e) {
 		    if (e.source != window) return;
 		    if (e.data.type === 'OPTRACT_QUOTE') {
-			    console.log(`DEBUG: ContentScript get quote and vote event. URL = ${window.location.href}`);
-			    console.log(`DEBUG: ${e.data.txt}`)
-			    chrome.runtime.sendMessage({myParent: response.yourParent, highlight: e.data.txt, voteRequest: window.location.href});
+			    let url = window.location.href;
+			    console.log(`DEBUG: ContentScript get quote and vote event. URL = ${url}`);
+			    console.log(`DEBUG: ${e.data.txt}`);
+
+			    chrome.runtime.sendMessage({myParent: response.yourParent, highlight: e.data.txt, voteRequest: url});
 		    }
 	    })
 
 	    var actualCode = 
-		'var OptractSelectTimer; '
+		'var OptractSelectTimer; var voteCasted = false; '
 	      + 'function selectionCheck (e) { setTimeout(getSelected, 180) }; '
 	      + 'function getSelected () { let txt = window.getSelection().toString(); '
 	      +                          ' clearTimeout(OptractSelectTimer); ' 
@@ -83,7 +85,12 @@ chrome.runtime.sendMessage({landing: true},
 	      +                          ' let div = document.getElementById("OptractPopUp"); '
 	      +                          ' let btn = document.getElementById("OptractVote"); '
 	      +                          ' if (txt) { ' 
-	      +                          '     btn.onclick = () => { window.postMessage({type: "OPTRACT_QUOTE", txt}); }; '
+	      +                          '     if (voteCasted === true) { ' 
+              +                          '           btn.disable = true; btn.value = "Already Voted"; '
+	      +                          '           pop.style.height = "64px"; '
+	      +                          '           txt.display = "none"; '
+	      +                          '     } '
+	      +                          '     btn.onclick = () => { window.postMessage({type: "OPTRACT_QUOTE", txt}); voteCasted = true; window.getSelection().removeAllRanges(); }; '
 	      +                          '     OptractSelectTimer = setTimeout(() => { div.style.position = "fixed"; div.style.right = "10px"; }, 1200); '
 	      +                          ' } else { '
 	      +                          '     div.style.position = "absolute"; div.style.right = "-330px"; '
