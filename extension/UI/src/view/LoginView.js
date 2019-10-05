@@ -14,9 +14,6 @@ class LoginView extends Reflux.Component {
 
     constructor(props) {
         super(props);
-	this.state = {
-		signUpInfo: 'Please Finish Registration with'
-	};
         this.store = DlogsStore;
 	this.accTimer = null;
     }
@@ -96,23 +93,21 @@ class LoginView extends Reflux.Component {
 	    if(e.target.id === 'Eth') {
 		    if (Number(this.state.AccountBalance) === 0) {
 			    let signUpInfo = 'Ether Balance Needed (your balance: 0.00 Eth).';
-			    this.setState({signUpInfo});
-			    e.stopPropagation();
+			    this.props.updateState({signUpInfo});
 		    } else {
 			    let signUpInfo = 'Membership fee: 0.01 Eth (in addition to gas fee).';
-			    this.setState({signUpInfo});
-			    e.stopPropagation();
+			    this.props.updateState({signUpInfo});
 		    }
 	    } else if (e.target.id === 'Twt') {
 	            let signUpInfo = 'Promote Optract on Twitter to sign up!';
-		    this.setState({signUpInfo});
-		    e.stopPropagation();
+		    this.props.updateState({signUpInfo});
 	    }
+	    e.stopPropagation();
     }
 
     btnCursorLeave = (e) =>
     {
-	    this.setState({signUpInfo: 'Please Finish Registration with'});
+	    this.props.updateState({signUpInfo: 'Please Finish Registration with'});
 	    e.stopPropagation();
     }
 
@@ -123,14 +118,19 @@ class LoginView extends Reflux.Component {
 		    console.log(`DEBUG: NOT buying membership ...`);
 	    }
     }
-    twtBtnClick = () => {}
+
+    twtBtnClick = () => {
+	    let twitterURL = 'https://twitter.com/intent/tweet?text=';
+	    let tweet = 'Super%20excited%20to%20sign%20up%20for%20%23Optract%2C%20my%20address%20is%20' + this.state.account + '%20on%20the%20%23Rinkeby%20%23Ethereum%20test%20network.';
+	    window.open(twitterURL + tweet);
+    }
 
     signUpPanel = () =>
     {
 	    return (<div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> 
 		      <label>Your Account Address:</label><div className="item AccountShow">{this.state.account}</div><br/>
 		      <div className="item SignUpShow">
-		        <label className="item registerInfo">{this.state.signUpInfo}</label> 
+		        <label className="item registerInfo">{this.props.signUpInfo}</label> 
 		      { this.state.buying === false
 			? <div className="item registerEth" id="Eth" 
 		             onMouseEnter={this.btnCursorHover.bind(this)} onMouseLeave={this.btnCursorLeave.bind(this)} onClick={this.ethBtnClick.bind(this)}>

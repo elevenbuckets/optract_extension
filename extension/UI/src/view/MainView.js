@@ -31,14 +31,16 @@ class MainView extends Reflux.Component {
         this.state = {
             view: "List",
             currentBlog: "",
-            readAID: [],
-            readCount: 0,
             showModal: false,
 	    loading: false,
 	    opSurveyAID: '0x',
 	    surveyPick: null,
 	    greeting: 'Optract',
-	    thePosition: window.pageYOffset
+	    thePosition: window.pageYOffset,
+	    readAID: [],
+	    readCount: 0,
+	  // Login view state props
+	    signUpInfo: 'Please Finish Registration with'
         }
 
         this.store = DlogsStore;
@@ -516,7 +518,10 @@ class MainView extends Reflux.Component {
   	document.documentElement.scrollTop = 0;
     }
 
+    updateState = (staObj) => { this.setState(staObj) }
+
     render() {
+	console.log(`DEBUG: voted: ${this.state.voted}`)
         if (this.state.articleTotal === 0) {
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)'; // ribbin theme
@@ -610,7 +615,7 @@ class MainView extends Reflux.Component {
                   	    </p>
                         </Modal.Body>
                     </Modal>
-                </div> : <LoginView />);
+                </div> : <LoginView updateState={this.updateState.bind(this)} signUpInfo={this.state.signUpInfo}/>);
 
     }
 

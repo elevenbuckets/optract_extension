@@ -188,12 +188,13 @@ class DlogsStore extends Reflux.Store {
         OptractService.statProbe();
     }
 
-    onBuyMembersip = () => {
+    onBuyMembership = () => {
 	if (this.state.buying) return;
 	this.setState({buying: true});
         OptractService.opt.call('buyMembership').then((rc) => 
 	{
 		this.setState({buying: false});
+		DlogsActions.serverCheck();
 		OptractService.statProbe();
 	})
 	.catch((err) => { console.trace(err); this.setState({buying: false}); });
@@ -214,10 +215,11 @@ class DlogsStore extends Reflux.Store {
 
     } 
 
-    onVote(block, leaf, aid) {
-        OptractService.newVote(block, leaf).then(data =>{
-            console.dir(data);
+    onVote(block, leaf, aid, comment = '') {
+        OptractService.newVote(block, leaf, comment).then(data =>{
+            console.dir(data); console.log(`DEBUG: vote comment = ${comment}`);
 	    let voteAID = [ ...this.state.voteAID ];
+
 	    voteAID.push(aid);
 	    let voteCounts = voteAID.length;
             this.setState({voted: undefined, showVoteToaster: true, voteAID, voteCounts})
