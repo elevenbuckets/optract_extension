@@ -30,9 +30,12 @@ class OptractService {
 				this.opt.reconnect = true;
 				this.opt.max_reconnects = 0;
 				console.log(`!!!!!!!!!!!!!!! CONNECTED`);
-
+				stat = true;
+				DlogsActions.updateState({wsrpc: true});
 				this.opt.removeAllListeners('error');
 				this.opt.on('error', (error) => { console.log(`DEBUG: WSClient error ?!?!??!??!?!??!?!?!??!!?!?!?!??!?!`); console.trace(error); });
+				this.allAccounts();
+				this.readiness();
 				resolve(true) 
 			});
 		    }
@@ -70,11 +73,6 @@ class OptractService {
 		this.connect = () => 
 		{
 			connectRPC({max_reconnects: 0, reconnect: true})
-			.then(() => {
-				DlogsActions.updateState({wsrpc: true});
-				this.allAccounts();
-				this.readiness();
-			})
 			.catch((err) => 
 			{
 				console.log(`DEBUG: connect init retrying ...`);
