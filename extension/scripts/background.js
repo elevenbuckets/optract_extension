@@ -105,7 +105,7 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 });
 
 var parentTabURL;
-var lastKnownActives {};
+var lastKnownActives = {};
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
 	chrome.tabs.get(activeInfo.tabId, function (active_tab) {
