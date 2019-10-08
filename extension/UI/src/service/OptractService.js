@@ -14,21 +14,30 @@ class OptractService {
 	        this.opround = 0;
 
 		const WSClient = require('rpc-websockets').Client;
-		const connectRPC = (mn) => {
+		const connectRPC = (options) => {
 		    const __ready = (resolve, reject) => {
-		        try {
-		    	    this.opt = new WSClient('ws://127.0.0.1:59437', {max_reconnects: mn});
-		        } catch(err) {
-			    return reject(false);
-		        }
+		    	try {
+				port.postMessage({test: 'wsrpc'});
+				console.log(`OptractService connect called`);
+				this.opt = new WSClient('ws://127.0.0.1:59437', {reconnect: false, max_reconnects: -1});
+				this.opt.on('error', (error) => { this.opt.close(); reject(false); });
+		    	} catch(err) {
+				this.opt.close();
+				return reject(false);
+		    	}
 
-			this.opt.on('open', function (event) { 
-				console.log(`!!!!!!!!!!!!!!! CONNECTED`); 
-				stat = true; 
-				DlogsActions.updateState({wsrpc: stat});
+			this.opt.on('open', (event) => { 
+				this.opt.reconnect = true;
+				this.opt.max_reconnects = 0;
+				console.log(`!!!!!!!!!!!!!!! CONNECTED`);
+				stat = true;
+				DlogsActions.updateState({wsrpc: true});
+				this.opt.removeAllListeners('error');
+				this.opt.on('error', (error) => { console.log(`DEBUG: WSClient error ?!?!??!??!?!??!?!?!??!!?!?!?!??!?!`); console.trace(error); });
+				this.allAccounts();
+				this.readiness();
 				resolve(true) 
 			});
-			this.opt.on('error', function (error) { reject(false) });
 		    }
 
 		    return new Promise(__ready);
@@ -36,7 +45,9 @@ class OptractService {
 
 		this.shutdown = () => 
 	        { 
-			this.opt.close(); 
+			this.opt.reconnect = false;
+			this.opt.max_reconnects = -1;
+			this.opt.close();
 			port.disconnect(); 
 		}
 
@@ -57,25 +68,17 @@ class OptractService {
 			})
 		}
 
+	        this.connectTimer;
+
 		this.connect = () => 
 		{
-			port.postMessage({test: 'wsrpc'});
-			console.log(`OptractService connect called`);
-			connectRPC(1).then((rc) => {
-				console.log(`OptractService connected the first time`);
-				if (!rc) throw "wait for socket";
-				this.allAccounts();
-				this.readiness();
+			connectRPC({max_reconnects: 0, reconnect: true})
+			.catch((err) => 
+			{
+				console.log(`DEBUG: connect init retrying ...`);
+				clearTimeout(this.connectTimer);
+				this.connectTimer = setTimeout(this.connect, 5000);
 			})
-			.catch((err) => {
-				connectRPC(0).then((rc) => {
-					console.log(`OptractService connected after catch`);
-					if (!rc) throw "wait for socket";
-					this.allAccounts();
-					this.readiness();
-				}).catch((err) => { true })
-			})
-
 		}
 
 	        this.passCheck = () =>
