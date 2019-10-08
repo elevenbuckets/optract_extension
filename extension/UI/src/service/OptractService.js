@@ -30,6 +30,12 @@ class OptractService {
 				this.opt.reconnect = true;
 				this.opt.max_reconnects = 0;
 				console.log(`!!!!!!!!!!!!!!! CONNECTED`);
+				if (typeof(this.account) !== 'undefined') {
+					// probably reconnected silently ...
+					this.subscribeBlockData();
+        				this.subscribeOpStats();
+        				this.subscribeCacheData();
+				}
 				stat = true;
 				DlogsActions.updateState({wsrpc: true});
 				this.opt.removeAllListeners('error');
