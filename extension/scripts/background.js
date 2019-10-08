@@ -114,7 +114,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 				parentTabURL = parent_tab.url;
 				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
 					if (typeof(lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
-					lastKnownActives[active_tab.windowId] = { ...lastKnownActives[active_tab.windowId], [activeInfo.tabId]: active_tab.url };
+					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url ;
 				}
 				console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
 			})
