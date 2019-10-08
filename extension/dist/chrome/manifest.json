@@ -6,7 +6,8 @@
         "storage",
         "nativeMessaging",
         "activeTab",
-        "tabs"
+        "tabs",
+        "background"
     ],
     "background": {
         "page": "background.html",
