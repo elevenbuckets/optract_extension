@@ -18,27 +18,49 @@ if (window.location.href.includes('chrome://')) {
 		            + 'font-size: 22px !Important; '
 			    + 'align-items: center !Important; ' 
 			    + 'justify-content: center !Important; ' 
-			    + 'width: 320px !Important; height: 330px; '
+			    + 'width: 320px !Important; height: 346px; '
 			    + 'position: absolute; ' 
 		            + 'border: 2px solid lightgrey !Important; '
 		            + 'box-shadow: 2px 2px 5px black !Important; '
 			    + 'top: 15px !Important; '
 			    + 'right: -330px; '
-		            + 'background-color: white !Important; '
+		            + 'background-color: aliceblue !Important; '
 			    + 'z-index: 2147483638 !Important; } '
+		      + '#OptractTitle { '
+		            + 'height: fit-content !Important; '
+		            + 'max-height: 28px !Important; '
+		            + 'text-align: center !Important; '
+		            + 'width: 300px !Important; '
+		            + 'margin: 3px 0px 3px 0px !Important; '
+		            + 'font-weight: bold !Important; '
+		            + 'align-self: center !Important; '
+		            + 'color: goldenrod !Important; '
+		            + 'background-color: aliceblue !Important; '
+		            + 'justify-self: center !Important; } '
 		      + '#OptractVote { ' 
 		            + 'font-size: 22px !Important; '
 		            + 'font-family: sans !Important; '
 		            + 'background-color: goldenrod !Important; '
 		            + 'color: black !Important; '
 		            + 'border: 1px solid slategrey !Important; '
-		            + 'width: 300px !Important; '
+		            + 'width: 100% !Important; '
 		            + 'height: fit-content !Important; '
+		            + 'max-height: 35px !Important; '
+		            + 'padding: 2px !Important; '
 		            + 'justify-self: center !Important; '
 			    + 'cursor: pointer !Important; }'
-		      + '#OptractSelection { ' 
+		      + '#OptractVote:disabled { '
+		            + 'background-color: slategray !Important; '
+		            + 'color: lightgray !Important; '
+		            + 'cursor: not-allowed !Important; } '
+		      + '#OptractSelection { '
+		            + 'border-radius: 0% !Important; '
 		            + 'font-size: 16px !Important; '
 		            + 'margin: 0px !Important; '
+		            + 'border-top: 1px solid rgb(169,169,169) !Important; '
+		            + 'border-left: 1px solid rgb(169,169,169) !Important; '
+		    	    + 'box-shadow: 4px 5px 7px #e3e3e3 inset !Important; '
+		            + 'background-color: white !Important; '
 		            + 'justify-self: center !Important; '
 		            + 'width: 300px !Important; '
 		            + 'height: 264px !Important; }';
@@ -49,6 +71,12 @@ if (window.location.href.includes('chrome://')) {
 		    // Optract in-page popup div
 		    var div = document.createElement("div");
 		    div.setAttribute('id', 'OptractPopUp');
+
+		    var tit = document.createElement("div");
+		    tit.setAttribute('id', 'OptractTitle');
+		    tit.innerHTML = 'Optract';
+	            
+		    div.appendChild(tit);
 	
 		    // hightlight-to-quote textarea
 		    var txt = document.createElement("textarea"); 
@@ -91,11 +119,11 @@ if (window.location.href.includes('chrome://')) {
 		      +                          ' if (txt) { ' 
 		      +                          '     if (voteCasted === true) { ' 
 	              +                          '           btn.disabled = true; btn.value = "Already Voted"; '
-		      +                          '           div.style.height = "64px"; '
+		      +                          '           div.style.height = "82px"; '
 		      +                          '           pop.style.display = "none"; '
 		      +                          '     } '
 		      +                          '     btn.onclick = () => { window.postMessage({type: "OPTRACT_QUOTE", txt}); voteCasted = true; window.getSelection().removeAllRanges(); }; '
-		      +                          '     OptractSelectTimer = setTimeout(() => { div.style.position = "fixed"; div.style.right = "10px"; }, 1200); '
+		      +                          '     OptractSelectTimer = setTimeout(() => { div.style.position = "fixed"; div.style.right = "26px"; }, 1200); '
 		      +                          ' } else { '
 		      +                          '     div.style.position = "absolute"; div.style.right = "-330px"; '
 		      +                          ' } '
