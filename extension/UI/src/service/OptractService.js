@@ -301,7 +301,7 @@ class OptractService {
 		    if (typeof(this.chObj.aidlist) === 'undefined') return;
 
 		    let aidlist = [ ...this.chObj.aidlist ].filter((aid) => { return typeof(this.articles[aid]) === 'undefined' });
-		    let aidlistSize = aidlist.length > 0 ? aidlist.length : -1;
+		    let aidlistSize = aidlist.length;
 
 		    let output = {aidlist, aidlistSize, quoteCache: this.chObj.quoteCache, quoteTotal: this.chObj.quoteTotal };
 		    console.log(`DEBUG: in updateCacheList:`); console.dir(output);
