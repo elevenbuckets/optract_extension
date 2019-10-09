@@ -70,6 +70,8 @@ class DlogsStore extends Reflux.Store {
 	// cacheData
 	    aidlist: [],
 	    aidlistSize: -1,
+	    quoteCache: {},
+	    quoteTotal: 0,
 	// streamr
 	    streamr: false,
 	// buy membership lock

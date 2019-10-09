@@ -1084,3 +1084,25 @@ body {
 		opacity: 1;
 	}
 }
+
+.quoteTable {
+	display: grid;
+	grid-gap: 10px;
+	grid-template-rows: 1fr;
+  	grid-template-columns: 200px 1fr;
+  	grid-template-areas: "avatarq quoteq";
+	margin: 10px;
+}
+
+.avatarq {
+	grid-area: avatarq;
+	padding: 5px;
+	height: fit-content;
+	display: grid;
+}
+
+.quoteq {
+	grid-area: quoteq;
+	padding: 5px;
+	height: 100%;
+}
