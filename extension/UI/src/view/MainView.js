@@ -174,15 +174,15 @@ class MainView extends Reflux.Component {
 
     genVoteButtons = (article) => {
         let aid = article.myAID;
-        return (<div className="aidclk" onClick={() => { }}>
-            <div className="button"
-                style={{ textAlign: 'center', cursor: 'pointer' }}
+        return (<div className="aidclk" style={{gridColumnGap: '42px', padding: '10px', borderTop: '1px solid lightgray', backgroundColor: '#fdfdfd'}} onClick={() => { }}>
+            <div className="button" id="hoverClick"
+                style={{ textAlign: 'center', cursor: 'pointer', display: 'grid', justifyContent: 'center', alignContent: 'center', color: 'black', border: '1px groove black', fontSize: '18px', display: 'grid', paddingTop: '2px', paddingLeft: '2px' }}
                 onClick={typeof (this.state.voted) === 'undefined' ? this.vote.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
                 {this.state.voted === aid
                     ? <p style={{ padding: '0px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p>
                     : 'Vote'}
             </div>
-	   { this.state.quoteTotal > 0 && typeof(this.state.quoteCache[aid]) !== 'undefined' && this.state.quoteCache[aid].total > 0 ? <div className="button" onClick={this.setShowModal.bind(this, aid)} style={{ textAlign: 'center', cursor: 'pointer', backgroundImage: 'url(assets/quote.png)', display: 'grid', alignContent: 'center', width: '52px', height: '52px', backgroundSize: 'cover', border: 'none' }}>{this.state.quoteCache[aid].total > 50 ? '50+' : this.state.quoteCache[aid].total }</div> : ''}
+	   { this.state.quoteTotal > 0 && typeof(this.state.quoteCache[aid]) !== 'undefined' && this.state.quoteCache[aid].total > 0 ? <div className="button" id="hoverClick" onClick={this.setShowModal.bind(this, aid)} style={{ textAlign: 'center', cursor: 'pointer', display: 'grid', alignContent: 'center', backgroundImage: 'url(assets/quote.png)', backgroundSize: '77.5% 42px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', border: 'none', width: '102px', height: '62px', fontSize: '18px', color: 'black' }}>{this.state.quoteCache[aid].total > 50 ? '50+' : this.state.quoteCache[aid].total }</div> : ''}
         </div>)
     }
 
@@ -622,7 +622,7 @@ class MainView extends Reflux.Component {
 				{
 				  this.state.showModal !== false && typeof(this.state.quoteCache[this.state.showModal]) !== 'undefined'
 				  ? Object.keys(this.state.quoteCache[this.state.showModal].cmtlist).map((acc, i) => { 
-					return (<div className="quoteTable"><div className="avatarq" style={i % 2 === 0 ? {backgroundColor: 'cornsilk'} : {backgroundColor: 'white'}}><canvas ref={'canvas_' + acc} style={{ border: '1px solid goldenrod', justifySelf: 'center', alignSelf: 'center', borderRadius: '5em' }}/></div><div className="quoteq" style={i % 2 === 0 ? {backgroundColor: 'cornsilk'} : {backgroundColor: 'white'}}><p style={{alignSelf: 'center', justifySelf: 'center', fontSize: '28px', margin: '10px'}}>{this.state.quoteCache[this.state.showModal].cmtlist[acc]}</p></div></div>) 
+					return (<div className="quoteTable"><div className="avatarq"><canvas ref={'canvas_' + acc} style={{ border: '5px solid slategray', justifySelf: 'right', alignSelf: 'end', borderRadius: '5em' }}/></div><div className="quoteq" style={i % 2 === 0 ? {backgroundColor: 'cornsilk'} : {backgroundColor: 'white'}}><p style={{alignSelf: 'center', justifySelf: 'center', fontSize: '28px', margin: '10px'}}>{this.state.quoteCache[this.state.showModal].cmtlist[acc]}</p></div></div>) 
 				    })
 				  : ''
 				}
