@@ -3,7 +3,8 @@ var opt;
 var tport
 var state = {
 	rpcConnected: false,
-	rpcStarted: false
+	rpcStarted: false,
+	login: false
 }
 var myid = chrome.i18n.getMessage("@@extension_id");
 var myTabId;
@@ -29,8 +30,8 @@ function isNewTab(tab, url) {
 }
 
 function isOptractTab(tab, url) {
-	return (
-		typeof url === 'undefined' && tab.active && tab.url === "chrome-extension://" + myid + "/index.html" 
+	return ( tab.url === "chrome-extension://" + myid + "/index.html" 
+	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === url)
 	)
 }
 
@@ -49,35 +50,55 @@ function startRPCServer() {
 	state.rpcStarted = true;
 }
 
-chrome.browserAction.onClicked.addListener(function (activeTab, url) {
-	// state.rpcStarted can be replaced by state.login in future, once the rpc call is ready in optractService 
-	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
-		openTab("index.html");
-	} else if(!isOptractTab(activeTab, url)) {
-		if (!opt) {
-			try {
-				opt = new WSClient('ws://127.0.0.1:59437', { max_reconnects: 10 });
-				opt.on('open', function (event) {
-					console.log(`!!!!!!!!!!!!!!! CONNECTED`);
-					// This is where to call opt.call("sendInfluence", [url])
-					console.log("influence sent with url : " + activeTab.url);
-				});
-
-				opt.on('close', function (event) {
-					stopRPCServer()
-					console.log(`!!!!!!!!!!!!!!! Connection Closed`);
-				});
-
-			} catch (err) {
-				console.error(err);
-			}
-		} else {
-			// This is where to call opt.call("sendInfluence", [url])
-			console.log("influence sent with url : " + activeTab.url);
-		}
-
+const __ready = (resolve, reject) =>
+{
+	try {
+		opt = new WSClient('ws://127.0.0.1:59437', {reconnect: false, max_reconnects: -1});
+		opt.on('error', (error) => { opt.close(); reject(false); });
+	} catch(err) {
+		opt.close();
+		return reject(false);
 	}
 
+	opt.on('open', (event) => {
+		opt.reconnect = true;
+		opt.max_reconnects = 0;
+		console.log(`!!!!!!!!!!!!!!! CONNECTED`);
+		state.login = true;
+
+		opt.removeAllListeners('error');
+		opt.on('error', (error) => { console.log(`Background Script WSClient error...`); console.trace(error); });
+
+		opt.removeAllListeners('close');
+		opt.on('close', function (event) {
+			state.login = false;
+			stopRPCServer()
+			console.log(`!!!!!!!!!!!!!!! Connection Closed`);
+		});
+
+		resolve(true)
+	});
+}
+
+chrome.browserAction.onClicked.addListener(function (activeTab) {
+	let url = activeTab.url;
+
+	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
+		openTab("index.html");
+	} else if (state.rpcStarted === true && state.login === false) {
+		new Promise(__ready).catch((err) => { setTimeout(__ready, 5000) })
+	} else if(isOptractTab(activeTab, url) === false) {
+		// This is where to call opt.call("sendInfluence", [url])
+		console.log("influence sent with url : " + activeTab.url);
+		//console.dir(activeTab);
+		//console.log(`DEBUG: lastKnownActives: `);
+		//console.dir(lastKnownActives);
+	} else {
+		console.log(`DEBUG: last known actives, new tab, or optract... skipped`);
+		//console.dir(activeTab);
+		//console.log(`DEBUG: lastKnownActives: `);
+		//console.dir(lastKnownActives);
+	}
 });
 
 chrome.runtime.onConnect.addListener(function (port) {
@@ -87,6 +108,8 @@ chrome.runtime.onConnect.addListener(function (port) {
 		if (!state.rpcStarted) {
 			startRPCServer();
 		}
+
+		new Promise(__ready).catch((err) => { setTimeout(__ready, 5000) })
 	});
 
 	port.onDisconnect.addListener(function () {
@@ -128,6 +151,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
 				parentTabURL = parent_tab.url;
 				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
+					console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
 					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
 					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
 				}
@@ -135,7 +159,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 			})
 		} catch (err) {
 			console.trace(err);
-			parentTabURL = undefined;
+			//parentTabURL = undefined;
 		}
 	})
 });
