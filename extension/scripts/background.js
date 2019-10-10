@@ -23,9 +23,9 @@ function openTab(filename) {
 	});
 }
 
-function isNewTab(tab, url) {
+function isNewTab(tab) {
 	return (
-		typeof url === 'undefined' && tab.active && tab.url === 'chrome://newtab/'
+		tab.active && tab.url === 'chrome://newtab/'
 	)
 }
 
@@ -109,7 +109,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 			startRPCServer();
 		}
 
-		new Promise(__ready).catch((err) => { setTimeout(__ready, 5000) })
+		new Promise(__ready).catch((err) => { setTimeout(() => { return new Promise(__ready); }, 5000) })
 	});
 
 	port.onDisconnect.addListener(function () {
