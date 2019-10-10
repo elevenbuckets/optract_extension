@@ -46,7 +46,6 @@ function startRPCServer() {
 chrome.browserAction.onClicked.addListener(function (activeTab, url) {
 	if (isNewTab(activeTab, url)) {
 		openTab("index.html");
-		console.log(chrome.app.windows.length);
 	} else {
 		try {
 			if (!state.rpcStarted) {
@@ -90,6 +89,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 });
 
 chrome.windows.onRemoved.addListener(function (windowId) {
+	delete lastKnownActives[windowId];
 	chrome.windows.getAll(function (wins) {
 		console.log("windows number is " + wins.length);
 		if (wins.length == 0 && state.rpcStarted == true) {
@@ -105,20 +105,21 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 });
 
 var parentTabURL;
-var lastKnownActive;
+var lastKnownActives = {};
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-	//chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	chrome.tabs.get(activeInfo.tabId, function (active_tab) {
 		try {
 			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
 				parentTabURL = parent_tab.url;
 				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
-					lastKnownActive = activeInfo.tabId;
+					if (typeof(lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
+					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url ;
 				}
-				console.dir({ parentTabURL, lastKnownActive })
+				console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
 			})
 		} catch (err) {
+			console.trace(err);
 			parentTabURL = undefined;
 		}
 	})
@@ -135,30 +136,21 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		//chrome.tabs.sendMessage(myTabId, {voteRequest: sender.url, highlight}, function(response) {
 		//	console.dir(response.results);
 		//})
-	} else if (sender.tab.id === lastKnownActive && message.landing === true) {
-		sendResponse({ yourParent: parentTabURL });
+	} else if ( typeof(lastKnownActives[sender.tab.windowId]) !== 'undefined' 
+	         && typeof(lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined' 
+	         && message.landing === true
+	) {
+		if (sender.url === lastKnownActives[sender.tab.windowId][sender.tab.id]) {
+			sendResponse({ yourParent: parentTabURL });
+		} else {
+			sendResponse({ yourParent: 'orphanized' });
+		}
 	} else {
 		sendResponse({ yourParent: 'Not from Optract' });
 	}
-})
-    /*chrome.tabs.get(activeInfo.tabId, function(active_tab) {
-	chrome.tabs.get(active_tab.openerTabId, function(parent_tab) {
-	//alert(parent_tab.url);
-	console.log(`tabs get called from ${activeInfo.tabId}, parent: ${parent_tab.url}`);
-		if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
-		chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-			console.log(`got message from tab! DEBUG...`)
-			console.dir(sender);
-			if (sender.tab.id === activeInfo.tabId) {
-				sendResponse({yourParent: parent_tab.url});
-			} else {
-				sendResponse({yourParent: 'not from Optract'});
-			}
-		})
-		//chrome.tabs.sendMessage(activeInfo.tabId, {greeting: "hello"}, function(response) {
-		//	    console.log("active tab say: " + response.farewell + "! Round trip between extension to active tab done");
-		//})
-	}
-	});
-});*/
+});
 
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+	let windowId = removeInfo.windowId;
+	delete lastKnownActives[windowId][tabId];
+});

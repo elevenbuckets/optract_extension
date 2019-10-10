@@ -30,6 +30,12 @@ class OptractService {
 				this.opt.reconnect = true;
 				this.opt.max_reconnects = 0;
 				console.log(`!!!!!!!!!!!!!!! CONNECTED`);
+				if (typeof(this.account) !== 'undefined') {
+					// probably reconnected silently ...
+					this.subscribeBlockData();
+        				this.subscribeOpStats();
+        				this.subscribeCacheData();
+				}
 				stat = true;
 				DlogsActions.updateState({wsrpc: true});
 				this.opt.removeAllListeners('error');
@@ -294,11 +300,11 @@ class OptractService {
 	    {
 		    if (typeof(this.chObj.aidlist) === 'undefined') return;
 
-		    this.chObj.aidlist = [ ...this.chObj.aidlist ].filter((aid) => { return typeof(this.articles[aid]) === 'undefined' });
-		    this.chObj.aidlistSize = this.chObj.aidlist.length;
+		    let aidlist = [ ...this.chObj.aidlist ].filter((aid) => { return typeof(this.articles[aid]) === 'undefined' });
+		    let aidlistSize = aidlist.length;
 
-		    let output = {aidlist: this.chObj.aidlist, aidlistSize: this.chObj.aidlistSize};
-		    //console.log(`DEBUG: in updateCacheList:`); console.dir(output);
+		    let output = {aidlist, aidlistSize, quoteCache: this.chObj.quoteCache, quoteTotal: this.chObj.quoteTotal };
+		    console.log(`DEBUG: in updateCacheList:`); console.dir(output);
 
 		    DlogsActions.updateState(output);
 	    }

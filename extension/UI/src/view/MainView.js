@@ -90,7 +90,18 @@ class MainView extends Reflux.Component {
 		    this.initTimer = setTimeout(DlogsActions.opStateProbe, 5100);
 		    this.stateSip = Math.floor(Date.now()/1000);
 	    }
-        } 
+        }
+
+	if (this.state.showModal !== false) {
+		let aid = this.state.showModal;
+		let total = this.state.quoteCache[aid].total;
+
+		Object.keys(this.state.quoteCache[aid].cmtlist).map((acc) => {
+			if (typeof (this.refs['canvas_' + acc]) !== 'undefined') {
+	            		createCanvasWithAddress(this.refs['canvas_' + acc], acc);
+			}
+		})
+	}
 	   
 	if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
 		this.refs.ticketNote.style.display = 'none';
@@ -163,14 +174,15 @@ class MainView extends Reflux.Component {
 
     genVoteButtons = (article) => {
         let aid = article.myAID;
-        return (<div className="aidclk" onClick={() => { }}>
-            <div className="button"
-                style={{ textAlign: 'center', right: '25px', cursor: 'pointer', display: 'inline-block' }}
+        return (<div className="aidclk" style={{gridColumnGap: '42px', padding: '10px', borderTop: '1px solid lightgray', backgroundColor: '#fdfdfd'}} onClick={() => { }}>
+            <div className="button" id="hoverClick"
+                style={{ textAlign: 'center', cursor: 'pointer', display: 'grid', justifyContent: 'center', alignContent: 'center', color: 'black', border: '1px groove black', fontSize: '18px', display: 'grid', paddingTop: '2px', paddingLeft: '2px' }}
                 onClick={typeof (this.state.voted) === 'undefined' ? this.vote.bind(this, article, aid) : this.goToArticle.bind(this, article)}>
                 {this.state.voted === aid
                     ? <p style={{ padding: '0px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p>
                     : 'Vote'}
             </div>
+	   { this.state.quoteTotal > 0 && typeof(this.state.quoteCache[aid]) !== 'undefined' && this.state.quoteCache[aid].total > 0 ? <div className="button" id="hoverClick" onClick={this.setShowModal.bind(this, aid)} style={{ textAlign: 'center', cursor: 'pointer', display: 'grid', alignContent: 'center', backgroundImage: 'url(assets/quote.png)', backgroundSize: '77.5% 42px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', border: 'none', width: '102px', height: '62px', fontSize: '18px', color: 'black' }}>{this.state.quoteCache[aid].total > 50 ? '50+' : this.state.quoteCache[aid].total }</div> : ''}
         </div>)
     }
 
@@ -521,7 +533,7 @@ class MainView extends Reflux.Component {
     updateState = (staObj) => { this.setState(staObj) }
 
     render() {
-	console.log(`DEBUG: voted: ${this.state.voted}`)
+	console.log(`DEBUG: quoteTotal: ${this.state.quoteTotal}`);
         if (this.state.articleTotal === 0) {
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)'; // ribbin theme
@@ -596,23 +608,24 @@ class MainView extends Reflux.Component {
                         <Toast.Body style={{ justifyContent: 'center', textAlign: 'center', height: '71px', width: '360px' }}>Vote Success!</Toast.Body>
                     </Toast>
                     <Modal
-                        show={this.state.showModal}
+                        show={this.state.showModal !== false}
                         onHide={() => this.setShowModal(false)}
                         dialogClassName="modal-90w"
                         aria-labelledby="example-custom-modal-styling-title"
                     >
                         <Modal.Header closeButton>
                             <Modal.Title id="example-custom-modal-styling-title" style={{fontSize:"3rem"}}>
-                                Rewards Page
+                                Highlights from other Optract members
                   </Modal.Title>
                         </Modal.Header>
                         <Modal.Body style={{fontSize:"2rem"}}>
-                            <p>
-                                This is the second round of voting, reward tokens will be issued for your participation.<br/> 
-				You need to use one ticket per vote (called "claim"). In each round you will be able to claim
-				as many times as long as you still have "winning" tickets, but you will only be eligible to claim
-				rewards once per round.
-                  	    </p>
+				{
+				  this.state.showModal !== false && typeof(this.state.quoteCache[this.state.showModal]) !== 'undefined'
+				  ? Object.keys(this.state.quoteCache[this.state.showModal].cmtlist).map((acc, i) => { 
+					return (<div className="quoteTable"><div className="avatarq"><canvas ref={'canvas_' + acc} style={{ border: '5px solid slategray', justifySelf: 'right', alignSelf: 'end', borderRadius: '5em' }}/></div><div className="quoteq" style={i % 2 === 0 ? {backgroundColor: 'cornsilk'} : {backgroundColor: 'white'}}><p style={{alignSelf: 'center', justifySelf: 'center', fontSize: '28px', margin: '10px'}}>{this.state.quoteCache[this.state.showModal].cmtlist[acc]}</p></div></div>) 
+				    })
+				  : ''
+				}
                         </Modal.Body>
                     </Modal>
                 </div> : <LoginView updateState={this.updateState.bind(this)} signUpInfo={this.state.signUpInfo}/>);
