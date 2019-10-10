@@ -28,6 +28,12 @@ function isNewTab(tab, url) {
 	)
 }
 
+function isOptractTab(tab, url) {
+	return (
+		typeof url === 'undefined' && tab.active && tab.url === "chrome-extension://" + myid + "/index.html" 
+	)
+}
+
 function stopRPCServer() {
 	console.log("sending pong to native app")
 	tport.postMessage({ text: "pong" })
@@ -44,26 +50,32 @@ function startRPCServer() {
 }
 
 chrome.browserAction.onClicked.addListener(function (activeTab, url) {
-	if (isNewTab(activeTab, url)) {
+	// state.rpcStarted can be replaced by state.login in future, once the rpc call is ready in optractService 
+	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
 		openTab("index.html");
-	} else {
-		try {
-			if (!state.rpcStarted) {
-				startRPCServer();
+	} else if(!isOptractTab(activeTab, url)) {
+		if (!opt) {
+			try {
+				opt = new WSClient('ws://127.0.0.1:59437', { max_reconnects: 10 });
+				opt.on('open', function (event) {
+					console.log(`!!!!!!!!!!!!!!! CONNECTED`);
+					// This is where to call opt.call("sendInfluence", [url])
+					console.log("influence sent with url : " + activeTab.url);
+				});
+
+				opt.on('close', function (event) {
+					stopRPCServer()
+					console.log(`!!!!!!!!!!!!!!! Connection Closed`);
+				});
+
+			} catch (err) {
+				console.error(err);
 			}
-			opt = new WSClient('ws://127.0.0.1:59437', { max_reconnects: 10 });
-			opt.on('open', function (event) {
-				console.log(`!!!!!!!!!!!!!!! CONNECTED`);
-			});
-
-			opt.on('close', function (event) {
-				stopRPCServer()
-				console.log(`!!!!!!!!!!!!!!! Connection Closed`);
-			});
-
-		} catch (err) {
-			console.error(err);
+		} else {
+			// This is where to call opt.call("sendInfluence", [url])
+			console.log("influence sent with url : " + activeTab.url);
 		}
+
 	}
 
 });
@@ -95,7 +107,10 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 		if (wins.length == 0 && state.rpcStarted == true) {
 			console.log("Shutdown optract rpc server.");
 			if (opt) {
+				opt.reconnect = false;
+				opt.max_reconnects = -1;
 				opt.close();
+				opt = null;
 			} else {
 				stopRPCServer();
 			}
@@ -113,8 +128,8 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
 				parentTabURL = parent_tab.url;
 				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
-					if (typeof(lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
-					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url ;
+					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
+					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
 				}
 				console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
 			})
@@ -136,9 +151,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		//chrome.tabs.sendMessage(myTabId, {voteRequest: sender.url, highlight}, function(response) {
 		//	console.dir(response.results);
 		//})
-	} else if ( typeof(lastKnownActives[sender.tab.windowId]) !== 'undefined' 
-	         && typeof(lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined' 
-	         && message.landing === true
+	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
+		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
+		&& message.landing === true
 	) {
 		if (sender.url === lastKnownActives[sender.tab.windowId][sender.tab.id]) {
 			sendResponse({ yourParent: parentTabURL });
@@ -150,7 +165,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	}
 });
 
-chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
 	let windowId = removeInfo.windowId;
 	delete lastKnownActives[windowId][tabId];
 });
