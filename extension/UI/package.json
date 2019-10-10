@@ -5,10 +5,12 @@
   "main": "main.js",
   "scripts": {
     "distRelease": "npm run build && npm run mvUItoDist",
+    "distReleaseWin": "npm run build && npm run mvUItoDistWin",
     "serve": "live-server public/",
     "build": "webpack",
     "dev-server": "webpack-dev-server",
-    "mvUItoDist": " cp public/style.css ../dist/chrome/style.css && cp public/bundle.js ../dist/chrome/bundle.js "
+    "mvUItoDist": " cp public/style.css ../dist/chrome/style.css && cp public/bundle.js ../dist/chrome/bundle.js ",
+    "mvUItoDistWin": "copy /y public\\style.css ..\\dist\\chrome\\style.css && copy /y public\\bundle.js ..\\dist\\chrome\\bundle.js "
   },
   "babel": {
     "plugins": [
