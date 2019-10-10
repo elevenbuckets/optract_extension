@@ -3,6 +3,7 @@
 // import IPFS from 'ipfs';
 // import ipfsClient from 'ipfs-http-client';
 
+const ethUtils = require('ethereumjs-utils');
 import DlogsActions from "../action/DlogsActions";
 var port = chrome.runtime.connect();
 var stat = false;
@@ -433,7 +434,18 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		console.log(comment);
 	}
 
-	let aid = Object.keys(optractService.articles).filter((aid) => { return optractService.articles[aid].url === url })[0];
+	let aid = Object.keys(optractService.articles).filter((aid) => { 
+		optractService.articles[aid]['myAID'] = aid; 
+		return optractService.articles[aid].url === url 
+	})[0];
+
+	if (typeof(aid) === 'undefined') { // backup plan
+		let domain = message.domain;
+		let title  = message.title;
+		aid = Object.values(optractService.articles).filter((artObj) => {
+			return artObj.page.domain === domain && artObj.page.title === title;
+		})[0].myAID;
+	}
 
 	let article = optractService.articles[aid];
 	if (Object.keys(article).length > 0) { 

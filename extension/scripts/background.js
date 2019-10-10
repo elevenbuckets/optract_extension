@@ -4,21 +4,28 @@ var tport
 var state = {
 	rpcConnected: false,
 	rpcStarted: false,
-	login: false
+	optConnected: false,
+	activeLogin: false
+
 }
 var myid = chrome.i18n.getMessage("@@extension_id");
-var myTabId;
+var myTabId = {};
 
 function openTab(filename) {
 	chrome.windows.getCurrent(function (win) {
 		chrome.tabs.query({ 'windowId': win.id }, function (tabArray) {
 			for (var i in tabArray) {
 				if (tabArray[i].url == "chrome-extension://" + myid + "/" + filename) { // console.log("already opened");
-					myTabId = tabArray[i].id;
+					myTabId[win.id] =  tabArray[i].id;
 					chrome.tabs.update(tabArray[i].id, { active: true });
+					console.log(`In Window ${win.id}, Optract tab already opened in ${myTabId[win.id]}`)
 					return;
 				}
-			} chrome.tabs.create({ url: chrome.extension.getURL(filename) });
+			} 
+			chrome.tabs.create({ url: chrome.extension.getURL(filename) }, function(tab) {
+				myTabId[win.id] = tab.id;
+				console.log(`In Window ${win.id}, Optract tab opened in ${myTabId[win.id]}`)
+			});
 		});
 	});
 }
@@ -30,8 +37,10 @@ function isNewTab(tab) {
 }
 
 function isOptractTab(tab, url) {
+	let domain = tab.url.split('/')[2];
+	let title  = tab.title;
 	return ( tab.url === "chrome-extension://" + myid + "/index.html" 
-	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === url)
+	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === title + domain)
 	)
 }
 
@@ -64,14 +73,14 @@ const __ready = (resolve, reject) =>
 		opt.reconnect = true;
 		opt.max_reconnects = 0;
 		console.log(`!!!!!!!!!!!!!!! CONNECTED`);
-		state.login = true;
+		state.optConnected = true;
 
 		opt.removeAllListeners('error');
 		opt.on('error', (error) => { console.log(`Background Script WSClient error...`); console.trace(error); });
 
 		opt.removeAllListeners('close');
 		opt.on('close', function (event) {
-			state.login = false;
+			state.optConnected = false;
 			stopRPCServer()
 			console.log(`!!!!!!!!!!!!!!! Connection Closed`);
 		});
@@ -80,24 +89,54 @@ const __ready = (resolve, reject) =>
 	});
 }
 
+const __active = (resolve, reject) =>
+{
+	if (state.optConnected === false) {
+		state.activeLogin = false;
+		return reject(false);
+	}
+
+	let p = [
+		opt.call('validPass'),
+		opt.call('userWallet')
+	];
+
+	Promise.all(p).then((rc) => {
+		if (rc[0] === false) return reject(false);
+		if (typeof(rc[1]['OptractMedia']) !== 'undefined') {
+			state.activeLogin = true;
+			resolve(true);
+		}
+	})
+	.catch((err) => {
+		console.log(`DEBUG: background script __active check failed`)
+		console.trace(err);
+		state.activeLogin = false;
+		return reject(false);
+	})
+}
+
+const sendInfluence = (url) =>
+{
+	console.log("influence sent with url : " + url);
+	return true; // place holder
+}
+
 chrome.browserAction.onClicked.addListener(function (activeTab) {
 	let url = activeTab.url;
 
 	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
 		openTab("index.html");
-	} else if (state.rpcStarted === true && state.login === false) {
+	} else if (state.rpcStarted === true && state.optConnected === false) {
 		new Promise(__ready).catch((err) => { setTimeout(__ready, 5000) })
 	} else if(isOptractTab(activeTab, url) === false) {
-		// This is where to call opt.call("sendInfluence", [url])
-		console.log("influence sent with url : " + activeTab.url);
-		//console.dir(activeTab);
-		//console.log(`DEBUG: lastKnownActives: `);
-		//console.dir(lastKnownActives);
+		if (state.activeLogin === false) {
+			new Promise(__active).then((rc) => { if (rc) sendInfluence(url); })
+		} else {
+			sendInfluence(url);
+		}
 	} else {
 		console.log(`DEBUG: last known actives, new tab, or optract... skipped`);
-		//console.dir(activeTab);
-		//console.log(`DEBUG: lastKnownActives: `);
-		//console.dir(lastKnownActives);
 	}
 });
 
@@ -124,7 +163,6 @@ chrome.runtime.onConnect.addListener(function (port) {
 });
 
 chrome.windows.onRemoved.addListener(function (windowId) {
-	delete lastKnownActives[windowId];
 	chrome.windows.getAll(function (wins) {
 		console.log("windows number is " + wins.length);
 		if (wins.length == 0 && state.rpcStarted == true) {
@@ -140,6 +178,8 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 		}
 
 	})
+	try { delete lastKnownActives[windowId]; } catch (err) {}
+	try { delete myTabId[windowId]; } catch (err) {}
 });
 
 var parentTabURL;
@@ -154,8 +194,8 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 					console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
 					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
 					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
+					console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
 				}
-				console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
 			})
 		} catch (err) {
 			console.trace(err);
@@ -165,21 +205,16 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 });
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-	//console.log(`got message from tab! DEBUG...`)
-	//console.dir(sender);
+	console.log(`got message from tab! DEBUG...`)
+	console.dir(sender);
 	if (message.myParent === "chrome-extension://" + myid + "/index.html") {
-		//console.log(`vote requested from content page!`);
-		//let highlight = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
-		console.dir(message);
-		console.log(sender.url);
-		//chrome.tabs.sendMessage(myTabId, {voteRequest: sender.url, highlight}, function(response) {
-		//	console.dir(response.results);
-		//})
+		//console.dir(message);
+		//console.log(sender.url);
 	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
 		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
 		&& message.landing === true
 	) {
-		if (sender.url === lastKnownActives[sender.tab.windowId][sender.tab.id]) {
+		if (sender.tab.openerTabId === myTabId[sender.tab.windowId]) {
 			sendResponse({ yourParent: parentTabURL });
 		} else {
 			sendResponse({ yourParent: 'orphanized' });

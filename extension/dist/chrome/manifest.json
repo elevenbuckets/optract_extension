@@ -29,7 +29,7 @@
                 "http://*/*",
                 "https://*/*"
               ],
-
+	    "run_at": "document_end",
             "js": [
                 "content.js"
             ]

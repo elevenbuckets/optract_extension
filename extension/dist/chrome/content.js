@@ -104,7 +104,7 @@ if (window.location.href.includes('chrome://')) {
 				    console.log(`DEBUG: ContentScript get quote and vote event. URL = ${url}`);
 				    console.log(`DEBUG: ${e.data.txt}`);
 	
-				    chrome.runtime.sendMessage({myParent: response.yourParent, highlight: e.data.txt, voteRequest: url});
+				    chrome.runtime.sendMessage({myParent: response.yourParent, highlight: e.data.txt, voteRequest: url, domain: e.data.domain, title: e.data.title });
 			    }
 		    })
 	
@@ -116,13 +116,15 @@ if (window.location.href.includes('chrome://')) {
 		      +                          ' let pop = document.getElementById("OptractSelection"); pop.value = txt; '
 		      +                          ' let div = document.getElementById("OptractPopUp"); '
 		      +                          ' let btn = document.getElementById("OptractVote"); '
+		      +                          ' let title = document.title; '
+		      +                          ' let domain = document.domain; '
 		      +                          ' if (txt) { ' 
 		      +                          '     if (voteCasted === true) { ' 
 	              +                          '           btn.disabled = true; btn.value = "Already Voted"; '
 		      +                          '           div.style.height = "82px"; '
 		      +                          '           pop.style.display = "none"; '
 		      +                          '     } '
-		      +                          '     btn.onclick = () => { window.postMessage({type: "OPTRACT_QUOTE", txt}); voteCasted = true; window.getSelection().removeAllRanges(); }; '
+		      + '     btn.onclick = () => { window.postMessage({type: "OPTRACT_QUOTE", txt, title, domain}); voteCasted = true; window.getSelection().removeAllRanges(); }; '
 		      +                          '     OptractSelectTimer = setTimeout(() => { div.style.position = "fixed"; div.style.right = "26px"; }, 1200); '
 		      +                          ' } else { '
 		      +                          '     div.style.position = "absolute"; div.style.right = "-330px"; '
