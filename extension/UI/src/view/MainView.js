@@ -118,6 +118,8 @@ class MainView extends Reflux.Component {
 	  window.addEventListener('scroll', this.listenToScroll.bind(this))
     }
 
+
+
     componentWillUnmount() {
   	  window.removeEventListener('scroll', this.listenToScroll.bind(this))
     }
@@ -146,19 +148,19 @@ class MainView extends Reflux.Component {
     pickLeadImage = (article) => {
         // special cases
 	try {
-        	if (article.page.domain.match('slashdot.org')) return (<img src='assets/slashdot_optract_logo.png'></img>)
+        	if (article.page.domain.match('slashdot.org')) return (<img src='assets/slashdot_optract_logo.png' style={{minWidth: 'unset'}}></img>)
 	} catch (err) {
 		console.log(`DEBUG: pickLeadImage:`)
 		console.trace(err);
 		console.dir(article);
-		return <img src='assets/optract_logo.png'></img>
+		return (<img src='assets/optract_logo.png' style={{minWidth: 'unset'}}></img>)
 	}
 
         // normal cases
         if (article.page.lead_image_url) {
             return (<img onLoad={this.getImgSize.bind(this)} src={article.page.lead_image_url}></img>)
         } else {
-            return <img src='assets/optract_logo.png'></img>
+            return (<img src='assets/optract_logo.png' style={{minWidth: 'unset'}}></img>)
         }
     }
 
@@ -470,6 +472,7 @@ class MainView extends Reflux.Component {
         if(activeKey === "claim"){
             this.setShowModal(true);
         }
+
         DlogsActions.updateTab(activeKey);
         this.goBackToList();
     }
