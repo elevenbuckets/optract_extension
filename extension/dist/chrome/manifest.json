@@ -13,13 +13,11 @@
         "page": "background.html",
         "persistent": true
     },
-    "incognito":"split",
     "content_scripts": [
         {
             "matches": [
                 "file://ilgdmcpggachbhfecjhbcdedhjpfipec/*"
               ],
-
             "js": [
                 "bundle.js"
             ]
@@ -37,6 +35,12 @@
     ],
     "browser_action": {
         "default_icon": "erebor.png"
+    },
+    "browser_specific_settings": {
+	"gecko": {
+      		"id": "optract@11be.org",
+      		"strict_min_version": "69.0"
+        }
     },
     "manifest_version": 2,
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

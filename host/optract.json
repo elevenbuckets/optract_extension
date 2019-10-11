@@ -1,12 +1,7 @@
 {
   "name": "optract",
-  "description": "optract server",
-  "path": "/proj/OptractClient/dist/nativeApp.py",
+  "description": "Example host for native messaging on firefod",
+  "path": "/Users/jasonlin/Projects/OptractClient/dist/nativeApp.py",
   "type": "stdio",
-  "browser_action": {
-    "default_icon": "icons/message.svg"
-  },
-  "allowed_origins": [
-    "chrome-extension://{extension-id}/"
-  ]
+  "allowed_extensions": [ "optract@11be.org" ]
 }

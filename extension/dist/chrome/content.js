@@ -1,4 +1,5 @@
-if (window.location.href.includes('chrome://')) {
+if (window.location.href.match(/^about\:.*/g) !== null) {
+	console.log(`DEBUG: match found: ${window.location.href}`)
 	false;
 } else {
 	console.log(`content script loaded!`)
@@ -6,7 +7,7 @@ if (window.location.href.includes('chrome://')) {
 	  function(response) {
 	    console.log(`DEBUG: got response from background`)
 	    if (response.yourParent === 'orphanized') return;
-	    if (response.yourParent.includes('chrome-extension://')) {
+	    if (response.yourParent.includes('moz-extension://')) {
 	    	    console.log(`DEBUG: This is an Optract recommended page!`);
 	
 		    // Optract in-page popup CSS

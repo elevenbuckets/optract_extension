@@ -15,7 +15,7 @@ function openTab(filename) {
 	chrome.windows.getCurrent(function (win) {
 		chrome.tabs.query({ 'windowId': win.id }, function (tabArray) {
 			for (var i in tabArray) {
-				if (tabArray[i].url == "chrome-extension://" + myid + "/" + filename) { // console.log("already opened");
+				if (tabArray[i].url == "moz-extension://" + myid + "/" + filename) { // console.log("already opened");
 					myTabId[win.id] =  tabArray[i].id;
 					chrome.tabs.update(tabArray[i].id, { active: true });
 					console.log(`In Window ${win.id}, Optract tab already opened in ${myTabId[win.id]}`)
@@ -32,14 +32,14 @@ function openTab(filename) {
 
 function isNewTab(tab) {
 	return (
-		tab.active && tab.url === 'chrome://newtab/'
+		tab.active && tab.url === 'about:newtab'
 	)
 }
 
 function isOptractTab(tab, url) {
 	let domain = tab.url.split('/')[2];
 	let title  = tab.title;
-	return ( tab.url === "chrome-extension://" + myid + "/index.html" 
+	return ( tab.url === "moz-extension://" + myid + "/index.html" 
 	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === title + domain)
 	)
 }
@@ -197,7 +197,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 		try {
 			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
 				parentTabURL = parent_tab.url;
-				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
+				if (parent_tab.url === "moz-extension://" + myid + "/index.html") {
 					console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
 					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
 					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
@@ -214,7 +214,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	console.log(`got message from tab! DEBUG...`)
 	console.dir(sender);
-	if (message.myParent === "chrome-extension://" + myid + "/index.html") {
+	if (message.myParent === "moz-extension://" + myid + "/index.html") {
 		//console.dir(message);
 		//console.log(sender.url);
 	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
