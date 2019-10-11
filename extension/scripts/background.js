@@ -76,12 +76,18 @@ const __ready = (resolve, reject) =>
 		state.optConnected = true;
 
 		opt.removeAllListeners('error');
-		opt.on('error', (error) => { console.log(`Background Script WSClient error...`); console.trace(error); });
+		opt.on('error', (error) => { 
+			console.log(`Background Script WSClient error...`); 
+			console.trace(error); 
+			opt.reconnect = false;
+			opt.max_reconnects = 0;
+			opt.close(); 
+		});
 
 		opt.removeAllListeners('close');
 		opt.on('close', function (event) {
 			state.optConnected = false;
-			stopRPCServer()
+			stopRPCServer();
 			console.log(`!!!!!!!!!!!!!!! Connection Closed`);
 		});
 
@@ -122,13 +128,15 @@ const sendInfluence = (url) =>
 	return true; // place holder
 }
 
+var optTimer;
+
 chrome.browserAction.onClicked.addListener(function (activeTab) {
 	let url = activeTab.url;
 
 	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
 		openTab("index.html");
-	} else if (state.rpcStarted === true && state.optConnected === false) {
-		new Promise(__ready).catch((err) => { setTimeout(__ready, 5000) })
+//	} else if (state.rpcStarted === true && state.optConnected === false) {
+//		new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(__ready, 5000) })
 	} else if(isOptractTab(activeTab, url) === false) {
 		if (state.activeLogin === false) {
 			new Promise(__active).then((rc) => { if (rc) sendInfluence(url); })
@@ -146,9 +154,8 @@ chrome.runtime.onConnect.addListener(function (port) {
 		// to use nativeApp.py
 		if (!state.rpcStarted) {
 			startRPCServer();
+		        new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(() => { return new Promise(__ready); }, 15000) })
 		}
-
-		new Promise(__ready).catch((err) => { setTimeout(() => { return new Promise(__ready); }, 5000) })
 	});
 
 	port.onDisconnect.addListener(function () {
@@ -163,6 +170,8 @@ chrome.runtime.onConnect.addListener(function (port) {
 });
 
 chrome.windows.onRemoved.addListener(function (windowId) {
+	try { delete lastKnownActives[windowId]; } catch (err) {}
+	try { delete myTabId[windowId]; } catch (err) {}
 	chrome.windows.getAll(function (wins) {
 		console.log("windows number is " + wins.length);
 		if (wins.length == 0 && state.rpcStarted == true) {
@@ -178,8 +187,6 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 		}
 
 	})
-	try { delete lastKnownActives[windowId]; } catch (err) {}
-	try { delete myTabId[windowId]; } catch (err) {}
 });
 
 var parentTabURL;
