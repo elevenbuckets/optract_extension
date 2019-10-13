@@ -15,7 +15,7 @@ function openTab(filename) {
 	chrome.windows.getCurrent(function (win) {
 		chrome.tabs.query({ 'windowId': win.id }, function (tabArray) {
 			for (var i in tabArray) {
-				if (tabArray[i].url == "moz-extension://" + myid + "/" + filename) { // console.log("already opened");
+				if (tabArray[i].url == "chrome-extension://" + myid + "/" + filename) { // console.log("already opened");
 					myTabId[win.id] =  tabArray[i].id;
 					chrome.tabs.update(tabArray[i].id, { active: true });
 					console.log(`In Window ${win.id}, Optract tab already opened in ${myTabId[win.id]}`)
@@ -32,14 +32,14 @@ function openTab(filename) {
 
 function isNewTab(tab) {
 	return (
-		tab.active && tab.url === 'about:newtab'
+		tab.active && tab.url === 'chrome://newtab'
 	)
 }
 
 function isOptractTab(tab, url) {
 	console.log(`DEBUG: isOptractTab`)
 	console.dir(lastKnownActives);
-	return ( tab.url === "moz-extension://" + myid + "/index.html" 
+	return ( tab.url === "chrome-extension://" + myid + "/index.html" 
 	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === url)
 	)
 }
@@ -135,8 +135,6 @@ chrome.browserAction.onClicked.addListener(function (activeTab) {
 
 	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
 		openTab("index.html");
-//	} else if (state.rpcStarted === true && state.optConnected === false) {
-//		new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(__ready, 5000) })
 	} else if(isOptractTab(activeTab, url) === false) {
 		let popup = 'influenced.html';
 		if (state.activeLogin === false) {
@@ -163,9 +161,15 @@ chrome.runtime.onConnect.addListener(function (port) {
 	port.onMessage.addListener(function (msg) {
 		// Need to put nativeApp.py under dist directory, and update the optract.json under ~/.config/google-chrome/NativeMessagingHosts 
 		// to use nativeApp.py
-		if (!state.rpcStarted) {
+		if (msg.test === 'wsrpc' && !state.rpcStarted) {
 			startRPCServer();
 		        new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(() => { return new Promise(__ready); }, 15000) })
+		} else if (msg.login === true) {
+			state.activeLogin = true;
+			console.log(`DEBUG: account logged in via UI, set active Login state...`);
+			if (state.optConnected === false) { 
+		        	new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(() => { return new Promise(__ready); }, 15000) })
+			}
 		}
 	});
 
@@ -208,7 +212,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 		try {
 			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
 				parentTabURL = parent_tab.url;
-				if (parent_tab.url === "moz-extension://" + myid + "/index.html") {
+				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
 					console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
 					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
 					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
@@ -225,7 +229,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	console.log(`got message from tab! DEBUG...`)
 	console.dir(sender);
-	if (message.myParent === "moz-extension://" + myid + "/index.html") {
+	if (message.myParent === "chrome-extension://" + myid + "/index.html") {
 		//console.dir(message);
 		//console.log(sender.url);
 	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
