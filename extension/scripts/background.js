@@ -37,10 +37,10 @@ function isNewTab(tab) {
 }
 
 function isOptractTab(tab, url) {
-	let domain = tab.url.split('/')[2];
-	let title  = tab.title;
+	console.log(`DEBUG: isOptractTab`)
+	console.dir(lastKnownActives);
 	return ( tab.url === "moz-extension://" + myid + "/index.html" 
-	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === title + domain)
+	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === url)
 	)
 }
 
@@ -138,10 +138,21 @@ chrome.browserAction.onClicked.addListener(function (activeTab) {
 //	} else if (state.rpcStarted === true && state.optConnected === false) {
 //		new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(__ready, 5000) })
 	} else if(isOptractTab(activeTab, url) === false) {
+		let popup = 'influenced.html';
 		if (state.activeLogin === false) {
-			new Promise(__active).then((rc) => { if (rc) sendInfluence(url); })
+			console.log('not active yet .. checking ...')
+			new Promise(__active).then((rc) => { 
+				if (rc) {
+					chrome.browserAction.setPopup({tabId: activeTab.id, popup}, function () {
+						sendInfluence(url); 
+					});
+				}
+			})
 		} else {
-			sendInfluence(url);
+			console.log('active !')
+			chrome.browserAction.setPopup({tabId: activeTab.id, popup}, function () {
+				sendInfluence(url); 
+			});
 		}
 	} else {
 		console.log(`DEBUG: last known actives, new tab, or optract... skipped`);
