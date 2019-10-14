@@ -227,6 +227,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	if (!sender.tab || message.influence) {
 		console.log(`DEBUG: got message sent from none tab component`)
 		console.log(message.influence);
+		console.log(message.category);
 		sendResponse({result: true});
 		chrome.browserAction.setPopup({tabId: message.tabId, popup: ''});
 	} else if (message.myParent === "chrome-extension://" + myid + "/index.html") {
