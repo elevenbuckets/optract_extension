@@ -32,13 +32,11 @@ function openTab(filename) {
 
 function isNewTab(tab) {
 	return (
-		tab.active && tab.url === 'chrome://newtab'
+		tab.active && tab.url === 'chrome://newtab/'
 	)
 }
 
 function isOptractTab(tab, url) {
-	console.log(`DEBUG: isOptractTab`)
-	console.dir(lastKnownActives);
 	return ( tab.url === "chrome-extension://" + myid + "/index.html" 
 	     || ( typeof lastKnownActives[tab.windowId] !== 'undefined' && typeof lastKnownActives[tab.windowId][tab.id] !== 'undefined' && lastKnownActives[tab.windowId][tab.id] === url)
 	)
@@ -81,6 +79,8 @@ const __ready = (resolve, reject) =>
 			console.trace(error); 
 			opt.reconnect = false;
 			opt.max_reconnects = 0;
+			state.activeLogin = false;
+			chrome.browserAction.setPopup({popup: ''});
 			opt.close(); 
 		});
 
@@ -122,10 +122,18 @@ const __active = (resolve, reject) =>
 	})
 }
 
-const sendInfluence = (url) =>
+const sendInfluence = (tabId, windowId, url) =>
 {
-	console.log("influence sent with url : " + url);
-	return true; // place holder
+	let domain = url.split('/')[2];
+	chrome.browserAction.getTitle({tabId}, function(title) {
+		if (title.includes('Optract Influenced')) return true;
+		chrome.extension.getViews({tabId, viewType: 'popup', windowId}, function(winlist) {
+			winlist[0].document.title = 'Optract Influenced: ' + domain;
+			console.log("influence sent with url : " + url);
+		})
+		return true; // place holder
+	})
+
 }
 
 var optTimer;
@@ -133,25 +141,8 @@ var optTimer;
 chrome.browserAction.onClicked.addListener(function (activeTab) {
 	let url = activeTab.url;
 
-	if (isNewTab(activeTab, url) || (!state.rpcStarted)) {
+	if (isNewTab(activeTab) || (!state.rpcStarted)) {
 		openTab("index.html");
-	} else if(isOptractTab(activeTab, url) === false) {
-		let popup = 'influenced.html';
-		if (state.activeLogin === false) {
-			console.log('not active yet .. checking ...')
-			new Promise(__active).then((rc) => { 
-				if (rc) {
-					chrome.browserAction.setPopup({tabId: activeTab.id, popup}, function () {
-						sendInfluence(url); 
-					});
-				}
-			})
-		} else {
-			console.log('active !')
-			chrome.browserAction.setPopup({tabId: activeTab.id, popup}, function () {
-				sendInfluence(url); 
-			});
-		}
 	} else {
 		console.log(`DEBUG: last known actives, new tab, or optract... skipped`);
 	}
@@ -164,7 +155,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 		if (msg.test === 'wsrpc' && !state.rpcStarted) {
 			startRPCServer();
 		        new Promise(__ready).catch((err) => { clearTimeout(optTimer); optTimer = setTimeout(() => { return new Promise(__ready); }, 15000) })
-		} else if (msg.login === true) {
+		} else if (msg.login === true && state.activeLogin === false) {
 			state.activeLogin = true;
 			console.log(`DEBUG: account logged in via UI, set active Login state...`);
 			if (state.optConnected === false) { 
@@ -217,11 +208,15 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
 					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
 					console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
+				} else {
+					console.log(`set popup in tabs.get...`)
+					if (state.activeLogin) chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: 'influenced.html'});
 				}
 			})
 		} catch (err) {
 			console.trace(err);
-			//parentTabURL = undefined;
+			chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
+			parentTabURL = undefined;
 		}
 	})
 });
@@ -229,19 +224,26 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	console.log(`got message from tab! DEBUG...`)
 	console.dir(sender);
-	if (message.myParent === "chrome-extension://" + myid + "/index.html") {
+	if (!sender.tab || message.influence) {
+		console.log(`DEBUG: got message sent from none tab component`)
+		console.log(message.influence);
+		sendResponse({result: true});
+		chrome.browserAction.setPopup({tabId: message.tabId, popup: ''});
+	} else if (message.myParent === "chrome-extension://" + myid + "/index.html") {
 		//console.dir(message);
 		//console.log(sender.url);
 	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
 		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
 		&& message.landing === true
 	) {
-		if (sender.tab.openerTabId === myTabId[sender.tab.windowId]) {
+		if (sender.tab.openerTabId === myTabId[sender.tab.windowId] && lastKnownActives[sender.tab.windowId][sender.tab.id] === sender.url) {
 			sendResponse({ yourParent: parentTabURL });
 		} else {
+			if (state.activeLogin) chrome.browserAction.setPopup({tabId: sender.tab.id, popup: 'influenced.html'});
 			sendResponse({ yourParent: 'orphanized' });
 		}
 	} else {
+		if (state.activeLogin) chrome.browserAction.setPopup({tabId: sender.tab.id, popup: 'influenced.html'});
 		sendResponse({ yourParent: 'Not from Optract' });
 	}
 });

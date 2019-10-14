@@ -36,6 +36,7 @@ class OptractService {
 					this.subscribeBlockData();
         				this.subscribeOpStats();
         				this.subscribeCacheData();
+					port.postMessage({login: true});
 				}
 				stat = true;
 				DlogsActions.updateState({wsrpc: true});
@@ -112,6 +113,7 @@ class OptractService {
 				//FIXME: address binded might still don't have password in bcup archive!
 
 				this.account = rc[1].OptractMedia;
+				port.postMessage({login: true});
 				DlogsActions.updateState({account: rc[1].OptractMedia});
 				return true;
 			})
@@ -144,6 +146,7 @@ class OptractService {
 						console.dir(rc);
 						let state = { account, wsrpc: stat };
 						this.account = account;
+						port.postMessage({login: true});
 						DlogsActions.updateState(state);
 						if (callback) callback();
 					})
@@ -448,6 +451,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	}
 
 	let article = optractService.articles[aid];
+
+	//FIXME: need to sendResponse back to content script if failed to find aid
+	//       this indicates we either have outdated cache or the article has changed
+	//       dramatically since Optract curation.
+
 	if (Object.keys(article).length > 0) { 
 		console.log(`Optract AID of URL found .......`);
 		console.dir(article);
