@@ -5,7 +5,8 @@
 
 const ethUtils = require('ethereumjs-utils');
 import DlogsActions from "../action/DlogsActions";
-var port = chrome.runtime.connect();
+const port = chrome.runtime.connect();
+const myid = chrome.i18n.getMessage("@@extension_id");
 var stat = false;
 
 class OptractService {
@@ -365,6 +366,9 @@ class OptractService {
 				this.opround = data.optract.opround;
 			}
 
+			// For streamr demonstration ... temporary changes only
+			//if (os < 155) os = 155; 
+
 			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
 			//setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, 15, true);
 
@@ -428,7 +432,8 @@ const optractService = new OptractService();
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	console.log(`DEBUG: background message sent to OptractService!!!!!`)
-	if (!sender.tab || typeof(message.myParent) === 'undefined') return;
+	if (!sender.tab || message.myParent !== 'chrome-extension://' + myid + '/index.html') return;
+
 	console.log(`Working on it .......`);
 	let url = message.voteRequest;
 	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);

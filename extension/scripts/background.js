@@ -203,7 +203,9 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 		try {
 			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
 				parentTabURL = parent_tab.url;
-				if (parent_tab.url === "chrome-extension://" + myid + "/index.html") {
+				if ( parent_tab.url === "chrome-extension://" + myid + "/index.html"
+				  || parent_tab.url === "chrome-extension://" + myid + "/index.html#opsLine"  // if opSurvey is enabled
+				) {
 					console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
 					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
 					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
@@ -228,7 +230,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		console.log(`DEBUG: got message sent from none tab component`)
 		console.log(message.influence);
 		console.log(message.category);
-		sendResponse({result: true});
+		opt.call('newArticle',{args: [message.influence, [message.category], 'sent from Optract']}).then(() => {
+			sendResponse({result: true});
+		})
 		chrome.browserAction.setPopup({tabId: message.tabId, popup: ''});
 	} else if (message.myParent === "chrome-extension://" + myid + "/index.html") {
 		//console.dir(message);
@@ -238,7 +242,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		&& message.landing === true
 	) {
 		if (sender.tab.openerTabId === myTabId[sender.tab.windowId] && lastKnownActives[sender.tab.windowId][sender.tab.id] === sender.url) {
-			sendResponse({ yourParent: parentTabURL });
+			sendResponse({ yourParent: "chrome-extension://" + myid + "/index.html" });
 		} else {
 			if (state.activeLogin) chrome.browserAction.setPopup({tabId: sender.tab.id, popup: 'influenced.html'});
 			sendResponse({ yourParent: 'orphanized' });

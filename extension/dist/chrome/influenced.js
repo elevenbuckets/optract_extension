@@ -18,7 +18,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 		     let category = document.getElementById('category').value;
      		     chrome.runtime.sendMessage({influence: activeURL, tabId: activeTab.id, category}, function(response) {
 			     document.getElementById('popform').style.backgroundColor= 'rgb(222,226,230)';
-			     document.getElementById('popform').innerHTML = '<h2 style="font-size: 22px; margin: 0px; padding: 10px 0px; color: green; text-shadow: 2px 3px 4px slategray;">Sent! Thank You!!</h2>';
+			     document.getElementById('popform').innerHTML = '<h2 style="font-size: 22px; margin: 0px; padding: 10px 0px; color: green; text-shadow: 2px 3px 4px darkgray;">Sent! Thank You!!</h2>';
 		             let myTimer = setTimeout(function() { window.close(); }, 2400)
 	     	     })
 	     }
