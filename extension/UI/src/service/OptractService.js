@@ -168,8 +168,8 @@ class OptractService {
 		this.getBkRangeArticles = (startB, endB, arCap, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
 		    return this.opt.call('getBkRangeArticles', [startB, endB, arCap, parsing]).then((data) => {
-			this.articles = data;
-			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
+			this.articles = { ...this.articles, ...data};
+			DlogsActions.updateState({articles: this.articles, articleTotal: Object.keys(this.articles).length});
 			if (callback) callback()
 		    }).catch((err) => { console.trace(err); })
 		}
@@ -366,11 +366,8 @@ class OptractService {
 				this.opround = data.optract.opround;
 			}
 
-			// For streamr demonstration ... temporary changes only
-			//if (os < 155) os = 155; 
-
-			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
-			//setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, 15, true);
+			//setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
+			setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, 15, true);
 
 			if (data.optract.lottery.drawed === true) {
 				setTimeout(this.getClaimArticles, 0, data.optract.opround, true); 
