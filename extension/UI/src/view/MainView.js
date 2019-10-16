@@ -106,7 +106,7 @@ class MainView extends Reflux.Component {
 	if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
 		this.refs.ticketNote.style.display = 'none';
         } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
-		if (this.cateOpsCounts > 0) {
+		if (this.cateOpsCounts > 0 && this.state.claimCounts < this.state.claimArticleCounts) {
 			this.refs.ticketNote.style.display = 'inline-block';
 		} else {
 			this.refs.ticketNote.style.display = 'none';
@@ -424,7 +424,7 @@ class MainView extends Reflux.Component {
             </div>
         });
 
-	if (this.state.ticketCounts === 0 || Object.keys(claimArticles).length === 0) {
+	if (this.state.ticketCounts === 0 || Object.keys(claimArticles).length === 0 || this.state.claimCounts >= this.state.claimArticleCounts) {
 		this.cateOpsCounts = 0;
 		return outputs;
 	} else {

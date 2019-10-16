@@ -366,8 +366,8 @@ class OptractService {
 				this.opround = data.optract.opround;
 			}
 
-			//setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
-			setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, 15, true);
+			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
+			//setTimeout(() => { this.getBkRangeArticles(os, data.optract.synced, 15, true, null) }, 0)
 
 			if (data.optract.lottery.drawed === true) {
 				setTimeout(this.getClaimArticles, 0, data.optract.opround, true); 
