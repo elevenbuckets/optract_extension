@@ -324,6 +324,7 @@ class OptractService {
 			    this.opt.call('getBlockArticles',[i, 10, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
+				console.log(`DEBUG: getMultiBkArticles gets ${articleTotal} from  block ${i}...`)
 
 				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
 					console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
@@ -340,12 +341,29 @@ class OptractService {
 
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
+			        if (data.optract.opround >= 1) {
+					return this.opt.call('getOproundInfo', [data.optract.opround - 1]).then((rc) => {
+						data['prevOpStart'] = rc[0][2];
+						return data;
+					}).catch((err) => { data['prevOpStart'] = data.opround.opStart; return data; }) // better than nothing
+				} else {
+					return data;
+				}
+		       }).then((data) => {
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
-			if (data.optract.synced > 20) {
-				os = data.optract.synced - 2;
-				if (data.optract.opStart < os) os = data.optract.opStart;
+//			if (data.optract.synced > 20) {
+//				os = data.optract.synced - 2;
+//				if (data.optract.opStart < os) os = data.optract.opStart;
+//			}
+			
+			if (data.optract.opround < 1) {
+				os = 0;
+			} else {
+				os = data.prevOpStart;
 			}
+
+			console.log(`INFO: refreshArticles: obtaining articles from block ${os} to ${data.optract.synced}`);
 
 /*
 			this.opt.call('getMyVault', [this.account]).then((rc) => {
@@ -366,7 +384,7 @@ class OptractService {
 				this.opround = data.optract.opround;
 			}
 
-			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
+			setTimeout(() => { this.getMultiBkArticles(os, data.optract.synced); }, 0); 
 			//setTimeout(() => { this.getBkRangeArticles(os, data.optract.synced, 15, true, null) }, 0)
 
 			if (data.optract.lottery.drawed === true) {
@@ -408,7 +426,7 @@ class OptractService {
 		    return o;
 	    }, {});
             DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
-        }).catch((err) => { console.trace(err); throw 'redo'; })
+        }).catch((err) => { console.trace(err); })
     }
 
     newVote(block, leaf, comment = '') {
