@@ -342,8 +342,8 @@ class OptractService {
 		return this.opt.call('reports').then((data) => {
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
-			if (data.optract.synced > 3) {
-				os = data.optract.synced - 3;
+			if (data.optract.synced > 20) {
+				os = data.optract.synced - 2;
 				if (data.optract.opStart < os) os = data.optract.opStart;
 			}
 
@@ -400,7 +400,7 @@ class OptractService {
     }
 
     getFinalList(op) {
-	let sop = op > 5 ? op - 5 : 1;
+	let sop = op > 20 ? op - 20 : 1;
         this.opt.call('getOpRangeFinalList', [sop, op, true]).then((data) => {
 	    let list = Object.values(data).reduce((o, i) => {
 		    if (Object.keys(i).length === 0) return o;
