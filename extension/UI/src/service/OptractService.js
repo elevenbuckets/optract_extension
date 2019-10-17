@@ -403,7 +403,7 @@ class OptractService {
 	    this.getClaimTickets = (addr) => {
 		return this.opt.call('getClaimTickets', [addr]).then((data) => {
 		    DlogsActions.ticketWon(data);
-		}).catch((err) => { console.trace(err); throw 'redo'; })
+		}).catch((err) => { console.trace(err); })
 	    }
 
 	    this.getClaimArticles = (op, parsing, callback) => {
@@ -412,7 +412,7 @@ class OptractService {
 		    DlogsActions.updateState({claimArticles: data, claimArticleCounts: Object.keys(data).length});
 		    if (callback) callback()
 		    return {claimArticles: data}
-		}).catch((err) => { console.trace(err); throw 'redo'; })
+		}).catch((err) => { console.trace(err); })
 
 	    }
     }
