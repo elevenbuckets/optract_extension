@@ -341,23 +341,22 @@ class OptractService {
 
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
-			        if (data.optract.opround >= 1) {
+			        if (data.optract.opround > 1) {
 					return this.opt.call('getOproundInfo', [data.optract.opround - 1]).then((rc) => {
-						data['prevOpStart'] = rc[0][2];
+						data['prevOpStart'] = rc[2];
 						return data;
 					}).catch((err) => { data['prevOpStart'] = data.opround.opStart; return data; }) // better than nothing
 				} else {
 					return data;
 				}
-		       }).then((data) => {
+		}).then((data) => {
+		    console.log(`DEBUG in refreshArticles: `);
+		    console.dir(data);
+
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
-//			if (data.optract.synced > 20) {
-//				os = data.optract.synced - 2;
-//				if (data.optract.opStart < os) os = data.optract.opStart;
-//			}
 			
-			if (data.optract.opround < 1) {
+			if (data.optract.opround <= 1) {
 				os = 0;
 			} else {
 				os = data.prevOpStart;
@@ -384,8 +383,8 @@ class OptractService {
 				this.opround = data.optract.opround;
 			}
 
-			setTimeout(() => { this.getMultiBkArticles(os, data.optract.synced); }, 0); 
-			//setTimeout(() => { this.getBkRangeArticles(os, data.optract.synced, 15, true, null) }, 0)
+			//setTimeout(() => { this.getMultiBkArticles(os, data.optract.synced); }, 0); 
+			setTimeout(() => { this.getBkRangeArticles(os, data.optract.synced, 15, true, null) }, 0)
 
 			if (data.optract.lottery.drawed === true) {
 				setTimeout(this.getClaimArticles, 0, data.optract.opround, true); 
