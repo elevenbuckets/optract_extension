@@ -5,8 +5,8 @@ var state = {
 	rpcConnected: false,
 	rpcStarted: false,
 	optConnected: false,
-	activeLogin: false
-
+	activeLogin: false,
+	curate: false
 }
 var myid = chrome.i18n.getMessage("@@extension_id");
 var myTabId = {};
@@ -195,6 +195,19 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 	})
 });
 
+const __handlePopup = (tabId) =>
+{
+	if (state.curate === true) return chrome.browserAction.setPopup({tabId, popup: 'influenced.html'});
+	opt.call('addrTokenBalance', ['QOT']).then((rc) => {
+		if (rc >= 50000000000000) {
+			chrome.browserAction.setPopup({tabId, popup: 'influenced.html'});
+			state.curate = true;
+		} else {
+			chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
+		}
+	}).catch((err) => { console.trace(err); chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''}); })
+}
+
 var parentTabURL;
 var lastKnownActives = {};
 
@@ -212,7 +225,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 					console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
 				} else {
 					console.log(`set popup in tabs.get...`)
-					if (state.activeLogin) chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: 'influenced.html'});
+					if (state.activeLogin) __handlePopup(activeInfo.tabId);
 				}
 			})
 		} catch (err) {
@@ -244,11 +257,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		if (sender.tab.openerTabId === myTabId[sender.tab.windowId] && lastKnownActives[sender.tab.windowId][sender.tab.id] === sender.url) {
 			sendResponse({ yourParent: "chrome-extension://" + myid + "/index.html" });
 		} else {
-			if (state.activeLogin) chrome.browserAction.setPopup({tabId: sender.tab.id, popup: 'influenced.html'});
+			if (state.activeLogin) __handlePopup(sender.tab.id);
 			sendResponse({ yourParent: 'orphanized' });
 		}
 	} else {
-		if (state.activeLogin) chrome.browserAction.setPopup({tabId: sender.tab.id, popup: 'influenced.html'});
+		if (state.activeLogin) __handlePopup(sender.tab.id);
 		sendResponse({ yourParent: 'Not from Optract' });
 	}
 });
