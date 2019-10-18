@@ -470,11 +470,23 @@ class MainView extends Reflux.Component {
         // this.setState({ view: "Content", currentBlog: article });
     }
 
+    goToArticleNow = (article) => {
+        let readAID = this.state.readAID;
+        readAID.push(article.myAID);
+        this.setState({ readAID, readCount: readAID.length });
+        //window.open(article.url, '_blank');
+	chrome.tabs.getCurrent((myTab) => {
+		chrome.tabs.create({url: article.url, active: true, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
+	});
+        // DlogsActions.fetchBlogContent(article);
+        // this.setState({ view: "Content", currentBlog: article });
+    }
+
     goToAidArticle = (aid) =>
     {
 	let article = this.state.articles[aid];
 	chrome.tabs.update(this.tabCache[aid], { active: true }, () => {
-		if (chrome.extension.lastError) this.goToArticle.apply(this, [article]);
+		if (chrome.extension.lastError) this.goToArticleNow.apply(this, [article]);
 	})
     }
 
