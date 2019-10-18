@@ -462,9 +462,20 @@ class MainView extends Reflux.Component {
         let readAID = this.state.readAID;
         readAID.push(article.myAID);
         this.setState({ readAID, readCount: readAID.length });
+
+	let active = false;
+	if (typeof(this.state.quoteCache[article.myAID]) === 'undefined') active = true;
+	if (this.state.voteAID.indexOf(article.myAID) !== -1) {
+		if (typeof(this.state.quoteCache[article.myAID]) === 'undefined') {
+			active = true;
+		} else {
+			active = false;
+			this.setState({showModal: article.myAID});
+		}
+	}
         //window.open(article.url, '_blank');
 	chrome.tabs.getCurrent((myTab) => {
-		chrome.tabs.create({url: article.url, active: false, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
+		chrome.tabs.create({url: article.url, active, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
 	});
         // DlogsActions.fetchBlogContent(article);
         // this.setState({ view: "Content", currentBlog: article });
@@ -655,7 +666,7 @@ class MainView extends Reflux.Component {
 				    })
 				  : ''
 				}
-				<hr/><div style={{cursor: 'pointer', textAlign: 'center', margin: '20px auto 10px auto', fontSize: '22px', border: '2px solid', maxWidth: '200px'}} onClick={this.goToAidArticle.bind(this, this.state.showModal)}>'open article'</div>
+				<hr/><div style={{cursor: 'pointer', textAlign: 'center', margin: '20px auto 10px auto', fontSize: '22px', border: '2px solid', maxWidth: '250px'}} onClick={this.goToAidArticle.bind(this, this.state.showModal)}>read full article</div>
                         </Modal.Body>
                     </Modal>
                 </div> : <LoginView updateState={this.updateState.bind(this)} signUpInfo={this.state.signUpInfo}/>);
