@@ -257,14 +257,19 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	       && typeof(sender.tab.openerTabId) !== 'undefined'
 	       && sender.tab.openerTabId === myTabId[sender.tab.windowId]
 	) {
-		if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined') {
-			lastKnownActives[sender.tab.windowId][sender.tab.id] === sender.url;
-			sendResponse({ yourParent: "chrome-extension://" + myid + "/index.html" });
-		} else if (typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
-		        && lastKnownActives[sender.tab.windowId][sender.tab.id] !== sender.url
+		if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
+		 && typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
+		 && lastKnownActives[sender.tab.windowId][sender.tab.id] !== sender.url
 		) {
 			if (state.activeLogin) __handlePopup(sender.tab.id);
 			sendResponse({ yourParent: 'orphanized' });
+		} else {
+			sendResponse({ yourParent: "chrome-extension://" + myid + "/index.html" });
+			if (typeof (lastKnownActives[sender.tab.windowId]) === 'undefined') {
+				lastKnownActives[sender.tab.windowId] = {[sender.tab.id]: sender.url};
+			} else {
+				lastKnownActives[sender.tab.windowId][sender.tab.id] = sender.url;
+			}
 		}
 	} else {
 		if (state.activeLogin) __handlePopup(sender.tab.id);
