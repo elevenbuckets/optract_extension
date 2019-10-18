@@ -459,7 +459,10 @@ class MainView extends Reflux.Component {
         let readAID = this.state.readAID;
         readAID.push(article.myAID);
         this.setState({ readAID, readCount: readAID.length });
-        window.open(article.url, '_blank');
+        //window.open(article.url, '_blank');
+	chrome.tabs.getCurrent((myTab) => {
+		chrome.tabs.create({url: article.url, active: false, openerTabId: myTab.id });
+	});
         // DlogsActions.fetchBlogContent(article);
         // this.setState({ view: "Content", currentBlog: article });
     }

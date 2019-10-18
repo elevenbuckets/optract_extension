@@ -229,7 +229,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 				}
 			})
 		} catch (err) {
-			console.trace(err);
+			console.trace(err); console.dir(active_tab);
 			chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
 			parentTabURL = undefined;
 		}
@@ -250,13 +250,19 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	} else if (message.myParent === "chrome-extension://" + myid + "/index.html") {
 		//console.dir(message);
 		//console.log(sender.url);
-	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
-		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
-		&& message.landing === true
+//	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
+//		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
+//		&& message.landing === true
+	} else if (typeof(myTabId[sender.tab.windowId]) !== 'undefined'
+	       && typeof(sender.tab.openerTabId) !== 'undefined'
+	       && sender.tab.openerTabId === myTabId[sender.tab.windowId]
 	) {
-		if (sender.tab.openerTabId === myTabId[sender.tab.windowId] && lastKnownActives[sender.tab.windowId][sender.tab.id] === sender.url) {
+		if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined') {
+			lastKnownActives[sender.tab.windowId][sender.tab.id] === sender.url;
 			sendResponse({ yourParent: "chrome-extension://" + myid + "/index.html" });
-		} else {
+		} else if (typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
+		        && lastKnownActives[sender.tab.windowId][sender.tab.id] !== sender.url
+		) {
 			if (state.activeLogin) __handlePopup(sender.tab.id);
 			sendResponse({ yourParent: 'orphanized' });
 		}
