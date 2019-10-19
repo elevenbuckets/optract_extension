@@ -460,8 +460,10 @@ class MainView extends Reflux.Component {
 
     goToArticle = (article) => {
         let readAID = this.state.readAID;
-        readAID.push(article.myAID);
-        this.setState({ readAID, readCount: readAID.length });
+	if (readAID.indexOf(article.myAID) === -1) {
+        	readAID.push(article.myAID);
+	        this.setState({ readAID, readCount: readAID.length });
+	}
 
 	let active = false;
 	if (typeof(this.state.quoteCache[article.myAID]) === 'undefined') active = true;
@@ -483,8 +485,10 @@ class MainView extends Reflux.Component {
 
     goToArticleNow = (article) => {
         let readAID = this.state.readAID;
-        readAID.push(article.myAID);
-        this.setState({ readAID, readCount: readAID.length });
+	if (readAID.indexOf(article.myAID) === -1) {
+	        readAID.push(article.myAID);
+        	this.setState({ readAID, readCount: readAID.length });
+	}
         //window.open(article.url, '_blank');
 	chrome.tabs.getCurrent((myTab) => {
 		chrome.tabs.create({url: article.url, active: true, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });

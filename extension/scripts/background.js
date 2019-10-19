@@ -203,9 +203,9 @@ const __handlePopup = (tabId) =>
 			chrome.browserAction.setPopup({tabId, popup: 'influenced.html'});
 			state.curate = true;
 		} else {
-			chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
+			chrome.browserAction.setPopup({tabId, popup: ''});
 		}
-	}).catch((err) => { console.trace(err); chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''}); })
+	}).catch((err) => { console.trace(err); chrome.browserAction.setPopup({tabId, popup: ''}); })
 }
 
 var parentTabURL;
