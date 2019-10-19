@@ -12,6 +12,7 @@ import subprocess
 import os.path as path
 import os
 import signal
+import ctypes
 
 
 # Read a message from stdin and decode it.
@@ -42,6 +43,14 @@ FNULL = open(os.devnull, 'w')
 ipfsP = None
 nodeP = None
 
+def _set_pdeathsig(sig=signal.SIGTERM):
+    """help function to ensure once parent process exits, its childrent processes will automatically die
+    """
+    def callable():
+        libc = ctypes.CDLL("libc.so.6")
+        return libc.prctl(1, signal.SIGTERM)
+    return callable
+
 def startServer():  
     send_message(encode_message('in starting server')) 
     lockFile = "Optract.LOCK"
@@ -57,7 +66,7 @@ def startServer():
         return startServer()
     else:
         send_message(encode_message('before starting ipfs')) 
-        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
+        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT,  preexec_fn=_set_pdeathsig(signal.SIGTERM))
         send_message(encode_message('after starting ipfs')) 
     send_message(encode_message(' finish ipfs processing')) 
     ipfsAPI  = path.join(ipfsRepoPath, "api")
@@ -68,7 +77,7 @@ def startServer():
     nodeCMD = path.join("bin", "node")
     daemonCMD =  path.join("lib", "daemon.js")
     send_message(encode_message(' starting node processing')) 
-    nodeP = subprocess.Popen([nodeCMD, daemonCMD], stdout=FNULL, stderr=subprocess.STDOUT)
+    nodeP = subprocess.Popen([nodeCMD, daemonCMD], stdout=FNULL, stderr=subprocess.STDOUT, preexec_fn=_set_pdeathsig(signal.SIGTERM))
     send_message(encode_message('finish starting server')) 
     send_message(encode_message(str(nodeP)))
     return ipfsP, nodeP
@@ -95,7 +104,6 @@ started = False
 #         send_message(encode_message('ping->pong')) 
 #         ipfsP, nodeP = startServer()
 #         send_message(encode_message('ping->pong more'))
-
 
 while True:
     message = get_message()
