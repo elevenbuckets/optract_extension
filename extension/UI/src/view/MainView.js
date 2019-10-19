@@ -43,6 +43,9 @@ class MainView extends Reflux.Component {
 	    signUpInfo: 'Please Finish Registration with'
         }
 
+
+    this.tabCache = {};
+
         this.store = DlogsStore;
 	this.loadTimer;
 	this.initTimer;
@@ -106,7 +109,7 @@ class MainView extends Reflux.Component {
 	if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts === 0) {
 		this.refs.ticketNote.style.display = 'none';
         } else if (typeof (this.refs.ticketNote) !== 'undefined' && this.state.ticketCounts > 0) {
-		if (this.cateOpsCounts > 0) {
+		if (this.cateOpsCounts > 0 && this.state.claimCounts < this.state.claimArticleCounts) {
 			this.refs.ticketNote.style.display = 'inline-block';
 		} else {
 			this.refs.ticketNote.style.display = 'none';
@@ -424,7 +427,7 @@ class MainView extends Reflux.Component {
             </div>
         });
 
-	if (this.state.ticketCounts === 0 || Object.keys(claimArticles).length === 0) {
+	if (this.state.ticketCounts === 0 || Object.keys(claimArticles).length === 0 || this.state.claimCounts >= this.state.claimArticleCounts) {
 		this.cateOpsCounts = 0;
 		return outputs;
 	} else {
@@ -457,11 +460,49 @@ class MainView extends Reflux.Component {
 
     goToArticle = (article) => {
         let readAID = this.state.readAID;
-        readAID.push(article.myAID);
-        this.setState({ readAID, readCount: readAID.length });
-        window.open(article.url, '_blank');
+        if (readAID.indexOf(article.myAID) === -1) {
+		readAID.push(article.myAID);
+        	this.setState({ readAID, readCount: readAID.length });
+	}
+
+	let active = false;
+	if (typeof(this.state.quoteCache[article.myAID]) === 'undefined') active = true;
+	if (this.state.voteAID.indexOf(article.myAID) !== -1) {
+		if (typeof(this.state.quoteCache[article.myAID]) === 'undefined') {
+			active = true;
+		} else {
+			active = false;
+			this.setState({showModal: article.myAID});
+		}
+	}
+        //window.open(article.url, '_blank');
+	chrome.tabs.getCurrent((myTab) => {
+		chrome.tabs.create({url: article.url, active, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
+	});
         // DlogsActions.fetchBlogContent(article);
         // this.setState({ view: "Content", currentBlog: article });
+    }
+
+    goToArticleNow = (article) => {
+        let readAID = this.state.readAID;
+        if (readAID.indexOf(article.myAID) === -1) {
+        	readAID.push(article.myAID);
+        	this.setState({ readAID, readCount: readAID.length });
+	}
+        //window.open(article.url, '_blank');
+	chrome.tabs.getCurrent((myTab) => {
+		chrome.tabs.create({url: article.url, active: true, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
+	});
+        // DlogsActions.fetchBlogContent(article);
+        // this.setState({ view: "Content", currentBlog: article });
+    }
+
+    goToAidArticle = (aid) =>
+    {
+	let article = this.state.articles[aid];
+	chrome.tabs.update(this.tabCache[aid], { active: true }, () => {
+		if (chrome.extension.lastError) this.goToArticleNow.apply(this, [article]);
+	})
     }
 
     goBackToList = () => {
@@ -619,7 +660,7 @@ class MainView extends Reflux.Component {
                         <Modal.Header closeButton>
                             <Modal.Title id="quote-modal-title" style={{fontSize:"3rem"}}>
                                 - Highlights from other Optract members
-                  </Modal.Title>
+                  	    </Modal.Title>
                         </Modal.Header>
                         <Modal.Body style={{fontSize:"2rem"}}>
 				{
@@ -629,6 +670,7 @@ class MainView extends Reflux.Component {
 				    })
 				  : ''
 				}
+				<hr/><div style={{cursor: 'pointer', textAlign: 'center', margin: '20px auto 10px auto', fontSize: '22px', border: '2px solid', maxWidth: '250px'}} onClick={this.goToAidArticle.bind(this, this.state.showModal)}>read full article</div>
                         </Modal.Body>
                     </Modal>
                 </div> : <LoginView updateState={this.updateState.bind(this)} signUpInfo={this.state.signUpInfo}/>);
