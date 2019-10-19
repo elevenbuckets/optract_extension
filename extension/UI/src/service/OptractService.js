@@ -377,7 +377,7 @@ class OptractService {
 				console.log(`DEBUG: new opround started, reset local states ...`);
 				this.opround = data.optract.opround;
 				this.articles = {};
-				DlogsActions.updateState({claimArticles: {}, claimArticleCounts: 0, claimTickets: [], ticketCounts: 0}); // reset
+				DlogsActions.updateState({voteAID: [], voteCounts: 0, claimArticles: {}, claimArticleCounts: 0, claimTickets: [], ticketCounts: 0}); // reset
 				this.getFinalList(data.optract.opround);
 			} else if (this.opround === 0) {
 				this.getFinalList(data.optract.opround);
