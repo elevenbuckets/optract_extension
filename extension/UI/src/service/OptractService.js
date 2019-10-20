@@ -5,7 +5,8 @@
 
 const ethUtils = require('ethereumjs-utils');
 import DlogsActions from "../action/DlogsActions";
-var port = chrome.runtime.connect();
+const port = chrome.runtime.connect();
+const myid = chrome.i18n.getMessage("@@extension_id");
 var stat = false;
 
 class OptractService {
@@ -36,6 +37,7 @@ class OptractService {
 					this.subscribeBlockData();
         				this.subscribeOpStats();
         				this.subscribeCacheData();
+					port.postMessage({login: true});
 				}
 				stat = true;
 				DlogsActions.updateState({wsrpc: true});
@@ -112,6 +114,7 @@ class OptractService {
 				//FIXME: address binded might still don't have password in bcup archive!
 
 				this.account = rc[1].OptractMedia;
+				port.postMessage({login: true});
 				DlogsActions.updateState({account: rc[1].OptractMedia});
 				return true;
 			})
@@ -144,6 +147,7 @@ class OptractService {
 						console.dir(rc);
 						let state = { account, wsrpc: stat };
 						this.account = account;
+						port.postMessage({login: true});
 						DlogsActions.updateState(state);
 						if (callback) callback();
 					})
@@ -164,8 +168,8 @@ class OptractService {
 		this.getBkRangeArticles = (startB, endB, arCap, parsing, callback) => {
 		    console.log(`DEBUG: getBkRangeArticle called`)
 		    return this.opt.call('getBkRangeArticles', [startB, endB, arCap, parsing]).then((data) => {
-			this.articles = data;
-			DlogsActions.updateState({articles: data, articleTotal: Object.keys(data).length});
+			this.articles = { ...this.articles, ...data};
+			DlogsActions.updateState({articles: this.articles, articleTotal: Object.keys(this.articles).length});
 			if (callback) callback()
 		    }).catch((err) => { console.trace(err); })
 		}
@@ -320,6 +324,7 @@ class OptractService {
 			    this.opt.call('getBlockArticles',[i, 10, true]).then((rc) => {
 				articles = {...articles, ...rc};
 				articleTotal = Object.keys(articles).length;
+				console.log(`DEBUG: getMultiBkArticles gets ${articleTotal} from  block ${i}...`)
 
 				if (articleTotal > _articleTotal && Object.keys(rc).length > 0) {
 					console.log(`DEBUG: in MultiBlockArticles: block = ${i}`)
@@ -336,12 +341,28 @@ class OptractService {
 
 	    this.refreshArticles = (callback = null) => {
 		return this.opt.call('reports').then((data) => {
+			        if (data.optract.opround > 1) {
+					return this.opt.call('getOproundInfo', [data.optract.opround - 1]).then((rc) => {
+						data['prevOpStart'] = rc[2];
+						return data;
+					}).catch((err) => { data['prevOpStart'] = data.opround.opStart; return data; }) // better than nothing
+				} else {
+					return data;
+				}
+		}).then((data) => {
+		    console.log(`DEBUG in refreshArticles: `);
+		    console.dir(data);
+
 		    if (typeof(this.account) !== 'undefined' && data.dbsync) {
 			let os = data.optract.synced;
-			if (data.optract.synced > 3) {
-				os = data.optract.synced - 3;
-				if (data.optract.opStart < os) os = data.optract.opStart;
+			
+			if (data.optract.opround <= 1) {
+				os = 0;
+			} else {
+				os = data.prevOpStart;
 			}
+
+			console.log(`INFO: refreshArticles: obtaining articles from block ${os} to ${data.optract.synced}`);
 
 /*
 			this.opt.call('getMyVault', [this.account]).then((rc) => {
@@ -355,15 +376,16 @@ class OptractService {
 			if (this.opround > 0 && this.opround !== data.optract.opround) {
 				console.log(`DEBUG: new opround started, reset local states ...`);
 				this.opround = data.optract.opround;
-				DlogsActions.updateState({claimArticles: {}, claimArticleCounts: 0, claimTickets: [], ticketCounts: 0}); // reset
+				this.articles = {};
+				DlogsActions.updateState({voteAID: [], voteCounts: 0, claimArticles: {}, claimArticleCounts: 0, claimTickets: [], ticketCounts: 0}); // reset
 				this.getFinalList(data.optract.opround);
 			} else if (this.opround === 0) {
 				this.getFinalList(data.optract.opround);
 				this.opround = data.optract.opround;
 			}
 
-			setTimeout(this.getMultiBkArticles, 0, os, data.optract.synced); 
-			//setTimeout(this.getBkRangeArticles, 0, os, data.optract.synced, 15, true);
+			//setTimeout(() => { this.getMultiBkArticles(os, data.optract.synced); }, 0); 
+			setTimeout(() => { this.getBkRangeArticles(os, data.optract.synced, 15, true, null) }, 0)
 
 			if (data.optract.lottery.drawed === true) {
 				setTimeout(this.getClaimArticles, 0, data.optract.opround, true); 
@@ -381,7 +403,7 @@ class OptractService {
 	    this.getClaimTickets = (addr) => {
 		return this.opt.call('getClaimTickets', [addr]).then((data) => {
 		    DlogsActions.ticketWon(data);
-		}).catch((err) => { console.trace(err); throw 'redo'; })
+		}).catch((err) => { console.trace(err); })
 	    }
 
 	    this.getClaimArticles = (op, parsing, callback) => {
@@ -390,13 +412,13 @@ class OptractService {
 		    DlogsActions.updateState({claimArticles: data, claimArticleCounts: Object.keys(data).length});
 		    if (callback) callback()
 		    return {claimArticles: data}
-		}).catch((err) => { console.trace(err); throw 'redo'; })
+		}).catch((err) => { console.trace(err); })
 
 	    }
     }
 
     getFinalList(op) {
-	let sop = op > 5 ? op - 5 : 1;
+	let sop = op > 20 ? op - 20 : 1;
         this.opt.call('getOpRangeFinalList', [sop, op, true]).then((data) => {
 	    let list = Object.values(data).reduce((o, i) => {
 		    if (Object.keys(i).length === 0) return o;
@@ -404,7 +426,7 @@ class OptractService {
 		    return o;
 	    }, {});
             DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
-        }).catch((err) => { console.trace(err); throw 'redo'; })
+        }).catch((err) => { console.trace(err); })
     }
 
     newVote(block, leaf, comment = '') {
@@ -425,7 +447,8 @@ const optractService = new OptractService();
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	console.log(`DEBUG: background message sent to OptractService!!!!!`)
-	if (!sender.tab || typeof(message.myParent) === 'undefined') return;
+	if (!sender.tab || message.myParent !== 'moz-extension://' + myid + '/index.html') return;
+
 	console.log(`Working on it .......`);
 	let url = message.voteRequest;
 	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
@@ -436,18 +459,31 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 	let aid = Object.keys(optractService.articles).filter((aid) => { 
 		optractService.articles[aid]['myAID'] = aid; 
-		return optractService.articles[aid].url === url 
+		if (optractService.articles[aid].url.length >= url) {
+			return optractService.articles[aid].url.includes(url); 
+		} else {
+			return url.includes(optractService.articles[aid].url); 
+		}
 	})[0];
 
 	if (typeof(aid) === 'undefined') { // backup plan
 		let domain = message.domain;
 		let title  = message.title;
 		aid = Object.values(optractService.articles).filter((artObj) => {
-			return artObj.page.domain === domain && artObj.page.title === title;
+			if (artObj.page.title.length >= title.length) {
+				return artObj.page.domain === domain && artObj.page.title.includes(title);
+			} else {
+				return artObj.page.domain === domain && title.includes(artObj.page.title);
+			}
 		})[0].myAID;
 	}
 
 	let article = optractService.articles[aid];
+
+	//FIXME: need to sendResponse back to content script if failed to find aid
+	//       this indicates we either have outdated cache or the article has changed
+	//       dramatically since Optract curation.
+
 	if (Object.keys(article).length > 0) { 
 		console.log(`Optract AID of URL found .......`);
 		console.dir(article);
