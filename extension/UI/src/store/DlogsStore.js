@@ -1,9 +1,6 @@
 import Reflux from "reflux";
 import DlogsActions from "../action/DlogsActions";
-import DLogsAPI from "../client/DLogsAPI"
-import FileService from "../service/FileService";
 import OptractService from "../service/OptractService";
-import Mercury from '@postlight/mercury-parser';
 import { toHexString } from "multihashes";
 const securePass = require('secure-random-password');
 
@@ -13,8 +10,6 @@ class DlogsStore extends Reflux.Store {
     constructor() {
         super();
         this.listenables = DlogsActions;
-        this.ipfs = FileService.ipfs;
-        this.ipfsClient = FileService.ipfsClient;
         this.opt = OptractService.opt;
         this.unlockRPC = OptractService.unlockRPC;
         this.connect = OptractService.connect;

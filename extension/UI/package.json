@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "distRelease": "npm run build && npm run mvUItoDist",
+    "distRelease": "npm run build && npm run mvUItoDist && cp -v public/index.html ../dist/chrome/",
     "distReleaseWin": "npm run build && npm run mvUItoDistWin",
     "serve": "live-server public/",
     "build": "webpack",
