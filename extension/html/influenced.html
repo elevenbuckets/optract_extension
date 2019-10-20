@@ -1,0 +1,28 @@
+<html>
+	<head><script src="influenced.js"></script></head>
+	<body style="font-size: 14px; min-width: 330px; background-color: aliceblue; display: grid; align-items: center; justify-content: center; border: 1px solid black">
+		<div id="title" style="text-align: center; padding: 5px 0px; font-size: 22px; background-color: black; width: 100%; color: white;">Optract Curation</div>
+		<div id="article" style="text-shadow: 2px 3px 5px slategray; text-align: center; font-style: oblique; color: #27224d; min-width: 330px; align-self: center; justify-self: center; display: grid; padding: 5px 10px; margin: none;"></div>
+		<div style="font-size: 14px; text-align: center; align-self: center; justify-self: center; display: grid; margin: none;">From</div>
+		<div id="content" style="text-align: center; font-style: oblique; color: slateblue; align-self: center; justify-self: center; display: grid; margin: none;"></div>
+		<div id="popform" style="text-align: center; height: fit-content; width: 100%; padding: 10px 0px; display: block"><br>
+		<select id="category"
+			style="background-color: white; padding: 2px 0px; font-size: 16px; width: 240px; border: 2px solid gray; display: inline-block;">
+			<option value="" selected>-- Please Select --</option>
+			<option value="tech" style="text-align: center;">Technology</option>
+			<option value="gadget" style="text-align: center;">Gadgets</option>
+			<option value="emergingTech" style="text-align: center;">Emerging</option>
+			<option value="review" style="text-align: center;">Reviews</option>
+			<option value="science" style="text-align: center;">Science</option>
+			<option value="blockchain" style="text-align: center;">Blockchain</option>
+			<option value="finance" style="text-align: center;">Finance</option>
+			<option value="investment" style="text-align: center;">Investment</option>
+		</select>
+		<style>
+		  #send:disabled {background-color: darkgray; color: #dddddd; text-shadow: 1px 0px black;} #send:enabled {background-color: goldenrod; color: black; cursor: pointer;}
+		</style>
+		<input id='send' type="button" value="Submit" disabled=true 
+		    style="display: inline-block; width: 90px; padding: 2px 0px; font-size: 17px; border: 2px solid gray;"/>
+		<br></div>
+	</body>
+</html>
