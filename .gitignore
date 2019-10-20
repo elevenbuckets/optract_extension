@@ -61,3 +61,4 @@ typings/
 .next
 
 extension/UI/public/bundle.js
+host/nativeApp.py
