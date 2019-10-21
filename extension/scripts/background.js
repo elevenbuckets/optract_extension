@@ -229,8 +229,12 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 				}
 			})
 		} catch (err) {
-			console.trace(err); console.dir(active_tab);
-			chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
+			//console.trace(err); console.dir(active_tab);
+			if (isNewTab(active_tab) || active_tab.url.includes('chrome-extension://') || active_tab.url.includes('chrome://')) {
+				chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
+			} else {
+				if (state.activeLogin) __handlePopup(activeInfo.tabId);
+			}
 			parentTabURL = undefined;
 		}
 	})
@@ -250,9 +254,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	} else if (message.myParent === "chrome-extension://" + myid + "/index.html") {
 		//console.dir(message);
 		//console.log(sender.url);
-//	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
-//		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
-//		&& message.landing === true
 	} else if (typeof(myTabId[sender.tab.windowId]) !== 'undefined'
 	       && typeof(sender.tab.openerTabId) !== 'undefined'
 	       && sender.tab.openerTabId === myTabId[sender.tab.windowId]
