@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "distRelease": "npm run build && npm run mvUItoDist && cp -v public/index.html ../dist/chrome/",
-    "distReleaseWin": "npm run build && npm run mvUItoDistWin",
+    "distReleaseWin": "npm run build && npm run mvUItoDistWin && cp -v public/index.html ../dist/chrome/",
     "serve": "live-server public/",
     "build": "webpack",
     "dev-server": "webpack-dev-server",
