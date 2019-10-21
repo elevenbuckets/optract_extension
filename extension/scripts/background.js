@@ -229,8 +229,12 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 			}
 		})
 	} catch (err) {
-		console.trace(err); console.dir(tab);
-		chrome.browserAction.setPopup({tabId, popup: ''});
+		//console.trace(err); console.dir(tab);
+		if (isNewTab(tab) || tab.url.includes('moz-extension://') || tab.url.match('^about:')) {
+			chrome.browserAction.setPopup({tabId, popup: ''});
+		} else {
+			if (state.activeLogin) __handlePopup(tabId);
+		}
 		parentTabURL = undefined;
 	}
 })
