@@ -538,10 +538,9 @@ body {
   min-width: calc(100vw - 160px);
   min-height: 77vh;
   border: 1px solid #dee2e6;
-  margin: 20px;
   text-align: center;
   font-size: 30px;
-  padding: 45px;
+  padding: 20px;
   background-color: aliceblue;
 }
 
@@ -754,7 +753,7 @@ body {
 }
 
 .modal-dialog{
-  max-width: 90vw !important;
+  max-width: 75vw !important;
 }
 
 .modal-content{
@@ -837,10 +836,9 @@ body {
 
 .AccountShow {
   font-size: 22px;
-  border: 1px solid white;
   display: inline-block;
-  margin: 0px 0px 25px;
-  padding: 0px 80px !Important;
+  margin: 0px 20px 25px;
+  padding: 0px 40px !Important;
 }
 
 .newAccount:hover {
@@ -848,6 +846,70 @@ body {
   color: black;
   cursor: pointer;
 }
+
+.SignUpShow {
+  background-color: rgba(0,0,0,0) !Important;
+  font-size: 22px;
+  display: grid;
+  grid-template-rows: 33px 100px;
+  grid-template-columns: 1fr 30px 1fr;
+  grid-template-areas: 
+    "suInfo suInfo suInfo"
+    "   eth suor twt   ";
+  padding: 0px !Important;
+}
+
+.registerOr {
+  background-color: rgba(0,0,0,0) !Important;
+  color: white;
+  grid-area: suor;
+}
+
+.registerInfo {
+  background-color: rgba(0,0,0,0) !Important;
+  grid-area: suInfo;
+  padding: 0px 10px !Important;
+  color: white !Important;
+}
+
+.registerEth {
+  background-color: goldenrod !Important;
+  color: black !Important;
+  font-size: 22px;
+  font-weight: bold;
+  justify-self: center;
+  display: inline-flex;
+  min-width: 250px;
+  grid-area: eth;
+  min-height: 45px;
+  padding: 0px 10px 0px 0px !Important;
+}
+
+.registerEth:hover {
+  text-shadow: 3px 3px 3px rgba(255,255,255,0.51);
+  cursor: pointer;
+  box-shadow: 3px 3px 4px;
+}
+
+.registerTwt:hover {
+  text-shadow: 3px 3px 3px rgba(255,255,255,0.51);
+  cursor: pointer;
+  box-shadow: 3px 3px 4px;
+}
+
+.registerTwt {
+  background-color: goldenrod !Important;
+  color: black !Important;
+  font-size: 22px;
+  font-weight: bold;
+  justify-self: center;
+  display: inline-flex;
+  min-width: 250px;
+  grid-area: twt;
+  min-height: 45px;
+  padding: 0px 10px 0px 0px !Important;
+}
+
 .react-toggle {
   touch-action: pan-x;
 
@@ -1020,4 +1082,45 @@ body {
 	100% {
 		opacity: 1;
 	}
+}
+
+.quoteTable {
+	display: grid;
+	grid-gap: 10px;
+	grid-template-rows: 1fr;
+  	grid-template-columns: 1fr 4fr;
+  	grid-template-areas: "avatarq quoteq";
+	margin: 10px;
+}
+
+.avatarq {
+	grid-area: avatarq;
+	padding: 5px;
+	height: fit-content;
+	display: grid;
+}
+
+.quoteq {
+	grid-area: quoteq;
+	height: fit-content;
+	width: fit-content;
+	border-radius: 25px;
+	padding: 5px;
+	border: 2px solid black;
+	align-self: end;
+	margin-bottom: 10px;
+	margin-right: 15%;
+	box-shadow: 3px 3px 5px gray;
+}
+
+#hoverClick:hover {
+	font-style: oblique;
+	font-weight: bold;
+	text-shadow: 2px 2px 5px goldenrod;
+}
+
+#quote-modal-title {
+	padding-left: 42px;
+	font-weight: bold;
+	font-style: oblique;
 }
