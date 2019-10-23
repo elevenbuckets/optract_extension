@@ -17,7 +17,6 @@ import DlogsStore from "../store/DlogsStore";
 import DlogsActions from "../action/DlogsActions";
 
 // Views
-import BlogView from "./BlogView";
 import LoginView from "./LoginView";
 
 // Misc 
@@ -630,11 +629,7 @@ class MainView extends Reflux.Component {
                             this.state.articleTotal === 0 ?
                                 <div className='item login' style={{ height: 'calc(100vh - 100px)' }}><div className='textloader' style={{height: 'fit-content', margin: '0px auto', alignSelf: 'end', backgroundColor: 'rgba(0,0,0,0)', fontSize: '72px'}}>{this.state.greeting}</div>
                                     <label className='loaderlabel'>{ this.loginLoad.apply(this, []) }</label></div> :
-                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true || this.state.aidlistSize === -1 ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> :
-                            this.state.view === "Content" ?
-                                <BlogView blog={this.state.currentBlog} goEdit={this.goToEditBlog} goBack={this.goBackToList} /> :
-                                <NewBlog saveNewBlog={this.saveNewBlog} currentBlog={this.state.currentBlog}
-                                    currentBlogContent={this.state.currentBlogContent} goBack={this.goBackToList} />}
+                                <div className="articles"> {this.getArticleList()} { this.state.activeTabKey === 'totalList' ? <div className="item" style={{cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh'}} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => {} }>{this.state.loading === true || this.state.aidlistSize === -1 ? <p style={{alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px'}}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : '' }</div> : '' }
                     </div>
                     <Toast show={this.state.showVoteToaster} style={{
                         position: 'fixed',

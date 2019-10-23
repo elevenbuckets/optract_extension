@@ -221,7 +221,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 			) {
 				console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
 				if (typeof (lastKnownActives[tab.windowId]) === 'undefined') lastKnownActives[tab.windowId] = {};
-				lastKnownActives[active_tab.windowId][tabId] = tab.url;
+				lastKnownActives[tab.windowId][tabId] = tab.url;
 				console.dir({ parentTabURL, windowId: tab.windowId, tabId, url: tab.url })
 			} else {
 				console.log(`set popup in tabs.get...`)
@@ -229,40 +229,15 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 			}
 		})
 	} catch (err) {
-		console.trace(err); console.dir(tab);
-		chrome.browserAction.setPopup({tabId, popup: ''});
+		//console.trace(err); console.dir(tab);
+		if (isNewTab(tab) || tab.url.includes('moz-extension://') || tab.url.match('^about:')) {
+			chrome.browserAction.setPopup({tabId, popup: ''});
+		} else {
+			if (state.activeLogin) __handlePopup(tabId);
+		}
 		parentTabURL = undefined;
 	}
 })
-
-/*
-chrome.tabs.onActivated.addListener(function (activeInfo) {
-	chrome.tabs.get(activeInfo.tabId, function (active_tab) {
-		if ( active_tab.url === 'about:blank' ) return;
-
-		try {
-			chrome.tabs.get(active_tab.openerTabId, function (parent_tab) {
-				parentTabURL = parent_tab.url;
-				if ( parent_tab.url === "moz-extension://" + myid + "/index.html"
-				  || parent_tab.url === "moz-extension://" + myid + "/index.html#opsLine"  // if opSurvey is enabled
-				) {
-					console.log(`DEBUG: (onActivated) Getting tab opened by Optract UI...`)
-					if (typeof (lastKnownActives[active_tab.windowId]) === 'undefined') lastKnownActives[active_tab.windowId] = {};
-					lastKnownActives[active_tab.windowId][activeInfo.tabId] = active_tab.url;
-					console.dir({ parentTabURL, windowId: active_tab.windowId, tabId: activeInfo.tabId, url: active_tab.url })
-				} else {
-					console.log(`set popup in tabs.get...`)
-					if (state.activeLogin) __handlePopup(activeInfo.tabId);
-				}
-			})
-		} catch (err) {
-			console.trace(err); console.dir(active_tab);
-			chrome.browserAction.setPopup({tabId: activeInfo.tabId, popup: ''});
-			parentTabURL = undefined;
-		}
-	})
-});
-*/
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	console.log(`got message from tab! DEBUG...`)
@@ -278,9 +253,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	} else if (message.myParent === "moz-extension://" + myid + "/index.html") {
 		//console.dir(message);
 		//console.log(sender.url);
-//	} else if (typeof (lastKnownActives[sender.tab.windowId]) !== 'undefined'
-//		&& typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
-//		&& message.landing === true
 	} else if (typeof(myTabId[sender.tab.windowId]) !== 'undefined'
 	       && typeof(sender.tab.openerTabId) !== 'undefined'
 	       && sender.tab.openerTabId === myTabId[sender.tab.windowId]

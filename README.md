@@ -1,23 +1,21 @@
 # optract_extension
-optract_extension
-## How to load unpacked extension 
+Extension related source code are under optract_extension/extension
 
-Load the extension from the extension/dist/chrome dir
+## Howto
+After downloading source code / github sync
 
-https://developer.chrome.com/extensions/getstarted
+- change into extension folder and run:
+``` npm install ```
+- change into extension/UI folder and run:
+``` npm install ```
+- back to extension folder and run:
+``` npm run release ```
 
-Note: You need to update the "content_scripts"."matches" in extension/dist/chrome/manifest.json based on your extension id.
+After that the extension distribution should be under dist/chrome
 
-## How to configure native app
+## Testing 
+(native host binary and browser integration setup required)
 
-update "path" and "allowed_origins" based on your file path and extension id in host/optract.json 
-
-copy host/optract.json to ~/.config/google-chrome/NativeMessagingHosts/
-
-
-## How to update the main ui
-
-Go to extension/UI, then `npm install`
-
-After you make changes run `npm run build` then run `npm run mvUItoDist`
-
+ For development, one can, after hooked up native host, change directory into dist/chrome
+ and then run
+ ../../node_modules/.bin/web-ext run

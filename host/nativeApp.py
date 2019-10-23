@@ -65,12 +65,17 @@ def startServer():
         subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
         return startServer()
     else:
-        send_message(encode_message('before starting ipfs')) 
+    	ipfsAPI  = path.join(ipfsRepoPath, "api")
+    	ipfsLock = path.join(ipfsRepoPath, "repo.lock")
+        send_message(encode_message('before starting ipfs'))
+	if (os.path.exists(ipfsAPI))
+		os.remove(ipfsAPI) 
+	if (os.path.exists(ipfsLock))
+		os.remove(ipfsLock) 
         ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT,  preexec_fn=_set_pdeathsig(signal.SIGTERM))
         send_message(encode_message('after starting ipfs')) 
     send_message(encode_message(' finish ipfs processing')) 
-    ipfsAPI  = path.join(ipfsRepoPath, "api")
-    ipfsLock = path.join(ipfsRepoPath, "repo.lock")
+
     while (not os.path.exists(ipfsAPI) or not os.path.exists(ipfsLock)):
         time.sleep(.01) 
 
