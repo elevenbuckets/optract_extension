@@ -33,6 +33,7 @@ if (window.location.href.match(/^about\:.*/g) !== null) {
 		            + 'text-align: center !Important; '
 		            + 'width: 300px !Important; '
 		            + 'margin: 3px 0px 3px 0px !Important; '
+		            + 'padding: 3px !Important; '
 		            + 'font-weight: bold !Important; '
 		            + 'align-self: center !Important; '
 		            + 'color: white !Important; '
