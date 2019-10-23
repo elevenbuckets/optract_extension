@@ -3,5 +3,5 @@
   "description": "Example host for native messaging on firefod",
   "path": "/Users/jasonlin/Projects/OptractClient/dist/nativeApp.py",
   "type": "stdio",
-  "allowed_extensions": [ "optract@11be.org" ]
+  "allowed_extensions": [ "{5b2b58c5-1a22-4893-ac58-9ca33f27cdd4}" ]
 }
