@@ -862,16 +862,16 @@ body {
 .registerInfo {
   grid-area: suInfo;
   padding: 0px 10px !important;
-  color: tomato !important;
-  font-size: 23px;
-  text-shadow: -2px 2px black;
+  color: turquoise !important;
+  font-size: 26px;
+  text-shadow: -2px -2px 6px black;
 }
 
 .infoWait {
   grid-area: infoWait;
   padding: 10px !important;
-  color: orange !important;
-  text-shadow: -2px 2px black;
+  color: oldlace !important;
+  text-shadow: -2px -2px 6px black;
   max-width: 33vw;
   max-height: 260px;
   min-height: 260px;
