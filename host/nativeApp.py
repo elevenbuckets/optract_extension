@@ -14,6 +14,9 @@ import os
 import signal
 import ctypes
 
+FNULL = open(os.devnull, 'w')
+ipfsP = None
+nodeP = None
 
 # Read a message from stdin and decode it.
 def get_message():
@@ -38,21 +41,7 @@ def send_message(encoded_message):
     sys.stdout.write(encoded_message['content'])
     sys.stdout.flush()
 
-FNULL = open(os.devnull, 'w')
-
-ipfsP = None
-nodeP = None
-
-def _set_pdeathsig(sig=signal.SIGTERM):
-    """help function to ensure once parent process exits, its childrent processes will automatically die
-    """
-    def callable():
-        libc = ctypes.CDLL("libc.so.6")
-        return libc.prctl(1, signal.SIGTERM)
-    return callable
-
 def startServer():  
-    send_message(encode_message('in starting server')) 
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
         return
@@ -61,68 +50,54 @@ def startServer():
     ipfsBinPath = path.join("bin", "ipfs")
     ipfsRepoPath = path.join(os.getcwd(), 'ipfs_repo')
     if not os.path.exists(ipfsConfigPath):
-        send_message(encode_message('before init ipfs')) 
         subprocess.check_call([ipfsBinPath, "init"], stdout=FNULL, stderr=subprocess.STDOUT)
         return startServer()
     else:
     	ipfsAPI  = path.join(ipfsRepoPath, "api")
     	ipfsLock = path.join(ipfsRepoPath, "repo.lock")
-        send_message(encode_message('before starting ipfs'))
-	if (os.path.exists(ipfsAPI))
+        if (os.path.exists(ipfsAPI)):
 		os.remove(ipfsAPI) 
-	if (os.path.exists(ipfsLock))
+        if (os.path.exists(ipfsLock)):
 		os.remove(ipfsLock) 
-        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT,  preexec_fn=_set_pdeathsig(signal.SIGTERM))
-        send_message(encode_message('after starting ipfs')) 
-    send_message(encode_message(' finish ipfs processing')) 
+        ipfsP = subprocess.Popen([ipfsBinPath, "daemon", "--routing=dhtclient"], env={'IPFS_PATH': ipfsRepoPath}, stdout=FNULL, stderr=subprocess.STDOUT)
 
     while (not os.path.exists(ipfsAPI) or not os.path.exists(ipfsLock)):
         time.sleep(.01) 
 
     nodeCMD = path.join("bin", "node")
     daemonCMD =  path.join("lib", "daemon.js")
-    send_message(encode_message(' starting node processing')) 
-    nodeP = subprocess.Popen([nodeCMD, daemonCMD], stdout=FNULL, stderr=subprocess.STDOUT, preexec_fn=_set_pdeathsig(signal.SIGTERM))
-    send_message(encode_message('finish starting server')) 
-    send_message(encode_message(str(nodeP)))
+    nodeP = subprocess.Popen([nodeCMD, daemonCMD], stdout=FNULL, stderr=subprocess.STDOUT)
     return ipfsP, nodeP
 
 def stopServer(ipfsP, nodeP):
-    send_message(encode_message('in stoping server')) 
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
        os.remove(lockFile) 
-       send_message(encode_message('LockFile removed')) 
-    nodeP.kill()
-    send_message(encode_message('nodeP killed')) 
+    os.kill(nodeP.pid, signal.SIGTERM)
     # This will not kill the ipfs by itself, but this is needed for the sys.exit() to kill it 
-    ipfsP.terminate()
-    # os.kill(ipfsP.pid, signal.SIGINT)
-    send_message(encode_message('ipfsP killed signal sent')) 
-    
-# startServer()
-started = False
+    os.kill(ipfsP.pid, signal.SIGINT)
 
-# while True:
-#     if started == False:
-#         started = True
-#         send_message(encode_message('ping->pong')) 
-#         ipfsP, nodeP = startServer()
-#         send_message(encode_message('ping->pong more'))
+# MAIN
+started = False;
 
-while True:
-    message = get_message()
-    if "ping" in message.values() and started == False:
-        started = True
-        send_message(encode_message('ping->pong')) 
-        ipfsP, nodeP = startServer()
-        send_message(encode_message('ping->pong more'))
-    #if message:
-    #    send_message(encode_message("pong")) 
-    if "pong" in message.values() and started == True:
-        started = False
-        send_message(encode_message('pong->ping')) 
-        stopServer(ipfsP, nodeP)
-        send_message(encode_message('pong->ping more'))
-        send_message(encode_message('close native app which will also shutdown the ipfs'))
-        sys.exit(0)
+if (len(sys.argv) > 1 and sys.argv[1] == 'launch'):
+        while True:
+            if started == False:
+                started = True
+                ipfsP, nodeP = startServer();
+            time.sleep(1);
+            pl = subprocess.Popen(['pgrep', '-lf', 'firefox'], stdout=subprocess.PIPE).communicate()[0]
+            pl = pl.split("\n")[0:-1]
+            if (len(pl) == 0):
+                stopServer(ipfsP, nodeP)
+                sys.exit(0);
+else:
+    while True:
+        message = get_message()
+        if "ping" in message.values() and started == False:
+	    started = True;
+	    time.sleep(1);
+            #os.execl(sys.executable, 'python', './nativeApp.py', 'launch');
+	    subprocess.Popen(["./nativeApp.py","launch"]);
+	    sys.exit(0);
+

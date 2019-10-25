@@ -172,19 +172,28 @@ class DlogsStore extends Reflux.Store {
 
     onNewAccount = () => 
     {
+	    if (this.state.buying) return;
 	    let password = securePass.randomPassword();
+
 	    OptractService.opt.call('newAccount', [password]).then((acc) => {
 		    this.setState({account: acc, generate: false});
 		    this.allAccounts();
 		    DlogsActions.serverCheck();
 		    OptractService.statProbe();
+
+	            this.setState({buying: true});
+		    // automatic signup process via streamr
+		    OptractService.opt.call('signMeUp').then((rc) => {
+		    	this.setState({buying: false, logining: true});
+		    })
+		    .catch((err) => { console.trace(err); this.setState({buying: false}); });
 	    })
     }
 
     onOpStateProbe = () => {
         OptractService.statProbe();
     }
-
+/*
     onBuyMembership = () => {
 	if (this.state.buying) return;
 	this.setState({buying: true});
@@ -195,7 +204,7 @@ class DlogsStore extends Reflux.Store {
 	})
 	.catch((err) => { console.trace(err); this.setState({buying: false}); });
     }
-
+*/
     onUpdateState = (state) =>{
         this.setState(state);
     }
@@ -244,7 +253,6 @@ class DlogsStore extends Reflux.Store {
     onCloseToast() {
         this.setState({showVoteToaster: false})
     }
-
 
 }
 

@@ -16,6 +16,7 @@ class LoginView extends Reflux.Component {
         super(props);
         this.store = DlogsStore;
 	this.accTimer = null;
+	this.linecount = 0;
     }
 
     componentDidMount() {
@@ -38,7 +39,10 @@ class LoginView extends Reflux.Component {
 		    console.log(`DEBUG: login view did update state probe hook called ...`)
 		     if (this.accTimer === null) {
 		    	     console.log(`DEBUG: login view did update state probe hook activated ...`)
-			     this.accTimer = setInterval(DlogsActions.opStateProbe, 30007);
+			     this.accTimer = setInterval(() => { 
+				 DlogsActions.opStateProbe(); 
+				 this.randomInfo.apply(this, []);
+			     }, 30007);
 		     }
 	    }
     }
@@ -87,64 +91,30 @@ class LoginView extends Reflux.Component {
 	 DlogsActions.newAccount();
     }
 
-    btnCursorHover = (e) =>
+    randomInfo = () =>
     {
-	    console.log(`DEBUG: btnCursorHover: ID = ${e.target.id}`)
-	    if(e.target.id === 'Eth') {
-		    if (Number(this.state.AccountBalance) === 0) {
-			    let signUpInfo = 'Ether Balance Needed (your balance: 0.00 Eth).';
-			    this.props.updateState({signUpInfo});
-		    } else {
-			    let signUpInfo = 'Membership fee: 0.01 Eth (in addition to gas fee).';
-			    this.props.updateState({signUpInfo});
-		    }
-	    } else if (e.target.id === 'Twt') {
-	            let signUpInfo = 'Promote Optract on Twitter to sign up!';
-		    this.props.updateState({signUpInfo});
-	    }
-	    e.stopPropagation();
-    }
+	let info = [
+	    "Optract is an unique aggregated content discovery and curation platform, while other services are trying to make their platforms smarter, we focuses on making YOU smarter by participating Optract collective intelligence.", "Our goal is to offer means for individuals to join forces on amplifying valuable online content while driving away biased influencers and materials.", "Optract is designed to be co-hosted network where NO ONE has more power over others, instead people can participate its operation under certain rules that we all abide by.", "While we do monetize on user data, you have the right to opt-out of it, or to opt-in by revealing more data instead and get a share of our revenue from it.", "We understand the importance of PRIVACY and want you to be connected while not giving away any personal information that you don't want to give.", "We hope you enjoy Optract and help us grow our community to drive the movement of taking back our Web!"
+	];
 
-    btnCursorLeave = (e) =>
-    {
-	    this.props.updateState({signUpInfo: 'Please Finish Registration with'});
-	    e.stopPropagation();
-    }
+	document.getElementsByClassName("infoWait")[0].style.alignContent = 'baseline';
+	this.linecount > info.length - 1 ? this.linecount = 0 : this.linecount;
 
-    ethBtnClick = () => {
-	    if (Number(this.state.AccountBalance) > 0 && this.state.buying === false) {
-		    DlogsActions.buyMembership();
-	    } else {
-		    console.log(`DEBUG: NOT buying membership ...`);
-	    }
-    }
-
-    twtBtnClick = () => {
-	    let twitterURL = 'https://twitter.com/intent/tweet?text=';
-	    let tweet = 'Super%20excited%20to%20sign%20up%20for%20%23Optract%2C%20my%20address%20is%20' + this.state.account + '%20on%20the%20%23Rinkeby%20%23Ethereum%20test%20network.';
-	    window.open(twitterURL + tweet);
-    }
+	this.props.updateState({signUpInfo: info[this.linecount]});
+	this.linecount++;
+    }    
 
     signUpPanel = () =>
     {
 	    return (<div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> 
-		      <label>Your Account Address:</label><div className="item AccountShow">{this.state.account}</div><br/>
 		      <div className="item SignUpShow">
-		        <label className="item registerInfo">{this.props.signUpInfo}</label> 
-		      { this.state.buying === false
-			? <div className="item registerEth" id="Eth" 
-		             onMouseEnter={this.btnCursorHover.bind(this)} onMouseLeave={this.btnCursorLeave.bind(this)} onClick={this.ethBtnClick.bind(this)}>
-		           <img style={{display: 'inline-block', height: '33px'}} src='assets/ethereum-line.png'/>Ethereum
-		        </div> 
-			: <div className="item registerEth" id="Eth" 
-		             onMouseEnter={this.btnCursorHover.bind(this)} onMouseLeave={this.btnCursorLeave.bind(this)} onClick={() => {}}>
-		           <p style={{ padding: '0px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p>
-		        </div> }
-		        <label className="item registerOr">Or</label>
-		        <div className="item registerTwt" id="Twt"
-		             onMouseEnter={this.btnCursorHover.bind(this)} onMouseLeave={this.btnCursorLeave.bind(this)} onClick={this.twtBtnClick.bind(this)}>
-		           <img style={{display: 'inline-block', paddingRight: '10px', height: '33px'}} src='assets/twitter-line.png'/>Twitter
-		        </div>
+		        <label className="item registerInfo">
+			   <p style={{ padding: '0px', margin: '0px' }}>
+			      Signing You Up, Please Wait
+			      <span className="dot dotOne">.</span><span className="dot dotTwo">.</span><span className="dot dotThree">.</span>
+			   </p>
+		        </label>
+			<div className="item infoWait">{this.props.signUpInfo}</div> 
 		      </div>
 		    </div>)
     }
@@ -158,11 +128,13 @@ class LoginView extends Reflux.Component {
 	    console.log(`DEBUG: accountBalance = ${this.state.AccountBalance}`);
 
 	    if (this.state.wsrpc === false || this.state.logining) {
-		    document.getElementById('app').background = 'url(assets/loginbg2.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
+		    document.getElementById('app').style.background = 'url(assets/loginbg2.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
 	    } else {
+		    document.getElementById('app').style.background = 'url(assets/loginbg2.png)';
 	    	    document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
-	    	    document.getElementById('app').style.background = 'url(assets/loginbg2.png)';
 	    }
+
+	    document.getElementById('app').style.backgroundAttachment = 'fixed';
 
             document.getElementById('app').style.backgroundBlendMode = 'multiply';
             document.getElementById('app').style.animation = '';
@@ -172,11 +144,11 @@ class LoginView extends Reflux.Component {
             document.getElementById('app').style.backgroundSize = 'cover';
 
         return (
-	    <div className="content">
-            <div className="item contentxt">
-                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{backgroundColor: 'rgba(0,0,0,0)'}}>Starting Node...</div></div> :
-		  this.state.logining ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{backgroundColor: 'rgba(0,0,0,0)'}}>Connecting...</div></div> : <div className="item login" style={{height: 'calc(100vh - 100px)'}}>
-			<div style={{display: 'inline-block', margin: '0px 30px 15px 30px', padding: '5px', alignSelf: 'end'}}>
+	    <div className="content" style={this.state.wsrpc === false || this.state.logining ? {background: 'unset'} : {background: "inherit"}}>
+            <div className="item contentxt" style={this.state.wsrpc === false || this.state.logining ? {background: "unset"} : {background: "inherit"}}>
+                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{color: 'goldenrod'}}>Starting Node...</div></div> :
+		  this.state.logining ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{ color: 'goldenrod'}}>Connecting...</div></div> : <div className="item login" style={{height: 'calc(100vh - 100px)', background: "inherit"}}>
+			<div className="glassTop">
 			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', minWidth: '30vw', margin: '24px', borderBottom: '1px solid white'}}>
 			     Welcome to Optract
 			</div>
@@ -191,12 +163,12 @@ class LoginView extends Reflux.Component {
 			  {this.listAccounts()}
 			</Dropdown> }
 			</div>
-			{ !this.state.validPass ? <div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+			{ !this.state.validPass ? <div className="glassLow">
 			<label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Password: </label>
 			<input autoFocus 
 			       style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', border: '0px'}} 
 			       type="password" ref="ps" onKeyUp={this.unlock} />
-			</div> : <div style={{display: 'inline-block', margin: '15px 30px 30px 30px', alignSelf: 'start'}}>
+			</div> : <div className="glassLow">
                         <label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Master Password Unlocked.</label></div>}
 		    </div>}
             </div></div>);

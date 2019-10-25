@@ -39,7 +39,7 @@ class MainView extends Reflux.Component {
 	    readAID: [],
 	    readCount: 0,
 	  // Login view state props
-	    signUpInfo: 'Please Finish Registration with'
+	    signUpInfo: 'Welcome and Thank you for Using Optract!'
         }
 
 
@@ -577,13 +577,14 @@ class MainView extends Reflux.Component {
 
     render() {
 	console.log(`DEBUG: quoteTotal: ${this.state.quoteTotal}`);
+
         if (this.state.articleTotal === 0) {
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg.png)'; // Optract theme
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg2.png)'; // ribbin theme
 	    //document.getElementById('app').style.background = 'linear-gradient(180deg,#52a9ff 0,#2eff43),url(assets/loadbg3.png)'; // contour theme
 	    if (this.state.login === false) {
 	        document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
-	    	document.getElementById('app').style.background = 'url(assets/loginbg2.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
+	    	document.getElementById('app').style.background = 'url(assets/loginbg2.png)';
 	    } else {
 	        document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
 	    	document.getElementById('app').style.background = 'url(assets/loginbg.png),linear-gradient(-10deg,lightgray 0, #000000aa)';
@@ -594,7 +595,7 @@ class MainView extends Reflux.Component {
             document.getElementById('app').style.backgroundRepeat = 'no-repeat';
             document.getElementById('app').style.backgroundPosition = 'center';
             document.getElementById('app').style.backgroundSize = 'cover';
-        } else {
+        } else if (this.state.MemberStatus !== 'not member') {
 	    document.getElementById('app').style.animation = 'fadeInOpacity 2s ease-in-out 1';
 	    console.log(`DEBUG: in Rander section M2`);
             document.getElementById('app').style.animation = '';
