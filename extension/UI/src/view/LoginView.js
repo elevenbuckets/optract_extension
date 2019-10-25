@@ -94,7 +94,7 @@ class LoginView extends Reflux.Component {
     randomInfo = () =>
     {
 	let info = [
-	    "Optract is an unique content discovery and curation platform that refines what you read online and gain deeper insights.", "Powered by collective intelligence, it becomes smarter when you are.", "Our goal is to offer means for individuals to join forces on amplifying truly valuable online content while driving away biased influencers and materials.", "Designed to be a co-hosted network, Optract wants to be a place where NO ONE has more power over others", "Anyone can participate the operation of Optract under certain rules that are enforced by software and protocols.", "While we do monetize on our user data, you have the right to say no, or you can support us by revealing data the way you see fit and get a share of our revenue from it.", "We understand the importance of PRIVACY and want you to be connected while not giving away any personal information that you don't want to give.", "Being hightly transparent on Optract services and data usage, we want to be the platform that empowers and not enslaves our users", "We hope you will enjoy Optract and help us keep growing our community in order to drive the movement of taking back our data and our Web!"
+	    "Optract is an unique content discovery and curation platform that refines what you read online and gain deeper insights. Powered by collective intelligence, it becomes smarter when you are.", "Our goal is to offer means for individuals to join forces on amplifying truly valuable online content while driving away biased influencers and materials.", "Designed to be a co-hosted network, Optract wants to be a place where NO ONE has more power over others", "Anyone can participate the operation of Optract under certain rules that are enforced by software and protocols.", "While we do monetize on user data, you have the right to say no, or you can support us by revealing data the way you see fit and get a share of our revenue from it.", "We understand the importance of PRIVACY and want you to be connected while not giving away any personal information that you don't want to give.", "Being hightly transparent on Optract services and data usage, we want to be the platform that empowers and not enslaves our users", "We hope you will enjoy Optract and help us keep growing our community in order to drive the movement of taking back our data and our Web!"
 	];
 
 	document.getElementsByClassName("infoWait")[0].style.alignContent = 'baseline';
@@ -106,7 +106,7 @@ class LoginView extends Reflux.Component {
 
     signUpPanel = () =>
     {
-	    return (<div className="item" style={{ backgroundColor: 'rgba(0,0,0,0)'}}> 
+	    return (<div className="item" style={{margin: '0px 24px', borderBottom: '1px solid white', backgroundColor: 'rgba(0,0,0,0)'}}> 
 		      <div className="item SignUpShow">
 		        <label className="item registerInfo">
 			   <p style={{ padding: '0px', margin: '0px' }}>
@@ -148,7 +148,7 @@ class LoginView extends Reflux.Component {
             <div className="item contentxt" style={this.state.wsrpc === false || this.state.logining ? {background: "unset"} : {background: "inherit"}}>
                 { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{color: 'goldenrod'}}>Starting Node...</div></div> :
 		  this.state.logining ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{ color: 'goldenrod'}}>Connecting...</div></div> : <div className="item login" style={{height: 'calc(100vh - 100px)', background: "inherit"}}>
-			<div className="glassTop">
+		     <div className="glassTop">
 			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', minWidth: '30vw', margin: '24px', borderBottom: '1px solid white'}}>
 			     Welcome to Optract
 			</div>
@@ -161,16 +161,16 @@ class LoginView extends Reflux.Component {
 				{typeof(this.state.account) === 'undefined' ? " Please select your login account... " : this.state.account}
 			  </Dropdown.Toggle>
 			  {this.listAccounts()}
-			</Dropdown> }
-			</div>
-			{ !this.state.validPass ? <div className="glassLow">
+			</Dropdown>} 
+			{!this.state.validPass ? <div>
 			<label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Password: </label>
 			<input autoFocus 
 			       style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', border: '0px'}} 
 			       type="password" ref="ps" onKeyUp={this.unlock} />
-			</div> : <div className="glassLow">
+			</div> : <div>
                         <label style={{ margin: '10px', alignSelf: "flex-end", fontSize: '24px'}}>Master Password Unlocked.</label></div>}
-		    </div>}
+		     </div>
+		     </div>}
             </div></div>);
     }
 

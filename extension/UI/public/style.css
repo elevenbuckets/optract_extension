@@ -850,7 +850,7 @@ body {
   background-color: rgba(0,0,0,0) !important;
   font-size: 22px;
   display: grid;
-  grid-row-gap: 6px;
+  grid-row-gap: 3px;
   grid-template-rows: 4fr 1fr;
   grid-template-columns: 1fr;
   grid-template-areas: 
@@ -862,16 +862,16 @@ body {
 .registerInfo {
   grid-area: suInfo;
   padding: 0px 10px !important;
-  color: turquoise !important;
-  font-size: 26px;
-  text-shadow: -2px -2px 6px black;
+  color: #00ffe5 !important;
+  font-size: 20px;
+  text-shadow: -1px -2px 6px black;
 }
 
 .infoWait {
   grid-area: infoWait;
   padding: 10px !important;
-  color: oldlace !important;
-  text-shadow: -2px -2px 6px black;
+  color: #ffffff !important;
+  text-shadow: -1px -2px 6px black;
   max-width: 33vw;
   max-height: 220px;
   min-height: 220px;
@@ -1115,7 +1115,7 @@ body {
         display: inline-block;
         margin: 0px 30px 15px 30px; 
         padding: 5px; 
-        align-self: end;
+        align-self: center;
 	border: 15px solid rgba(15,15,15,0.5);
 }
 
