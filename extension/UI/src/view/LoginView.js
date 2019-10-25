@@ -146,8 +146,8 @@ class LoginView extends Reflux.Component {
         return (
 	    <div className="content" style={this.state.wsrpc === false || this.state.logining ? {background: 'unset'} : {background: "inherit"}}>
             <div className="item contentxt" style={this.state.wsrpc === false || this.state.logining ? {background: "unset"} : {background: "inherit"}}>
-                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{color: 'goldenrod'}}>Starting Node...</div></div> :
-		  this.state.logining ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader" style={{ color: 'goldenrod'}}>Connecting...</div></div> : <div className="item login" style={{height: 'calc(100vh - 100px)', background: "inherit"}}>
+                { this.state.wsrpc === false ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader">Starting Node...</div></div> :
+		  this.state.logining ? <div className="item login" style={{height: 'calc(100vh - 100px)'}}><div className="textloader">Connecting...</div></div> : <div className="item login" style={{height: 'calc(100vh - 100px)', background: "inherit"}}>
 		     <div className="glassTop">
 			<div className="item" style={{backgroundColor: 'rgba(0,0,0,0)', minWidth: '30vw', margin: '24px', borderBottom: '1px solid white'}}>
 			     Welcome to Optract
