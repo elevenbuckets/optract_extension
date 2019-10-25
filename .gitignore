@@ -61,4 +61,6 @@ typings/
 .next
 
 extension/UI/public/bundle.js
-host/nativeApp.py
+extension/dist/chrome/*.js
+extension/dist/chrome/*.json
+extension/dist/chrome/*.html

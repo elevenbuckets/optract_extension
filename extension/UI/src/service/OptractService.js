@@ -132,7 +132,6 @@ class OptractService {
 
 			   console.log(`DEBUG: in Optract service unlockRPC:`)
 			   let args = account === null ? [pw] : [pw, account];
-			   console.dir(args)
 
 			   this.opt.call("password", args).then((rc) => {
 					if (rc === false) throw "wrong password"
