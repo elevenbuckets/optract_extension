@@ -54,7 +54,13 @@ class MainView extends Reflux.Component {
     }
 
     componentDidUpdate() {
-	if (this.state.login === false) return;
+	if (this.state.login === false) {
+		if (this.state.validPass && this.state.MemberStatus === 'active' && this.state.account !== null) {
+			this.setState({login: true});
+		} else {
+			return;
+		}
+	}
 
 	if (typeof(this.state.account) === 'undefined') {
 		if (this.state.accListSize === 0) {
