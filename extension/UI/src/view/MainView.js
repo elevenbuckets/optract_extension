@@ -39,7 +39,7 @@ class MainView extends Reflux.Component {
 	    readAID: [],
 	    readCount: 0,
 	  // Login view state props
-	    signUpInfo: 'Welcome and Thank you for Using Optract!'
+	    signUpInfo: 'Welcome and thank you for trying Optract!'
         }
 
 
