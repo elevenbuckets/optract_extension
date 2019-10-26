@@ -63,4 +63,5 @@ typings/
 extension/UI/public/bundle.js
 extension/dist/chrome/*.js
 extension/dist/chrome/*.json
+extension/dist/chrome/*.css
 extension/dist/chrome/*.html

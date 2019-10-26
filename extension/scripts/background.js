@@ -6,7 +6,8 @@ var state = {
 	rpcStarted: false,
 	optConnected: false,
 	activeLogin: false,
-	curate: false
+	curate: false,
+	missing: 0
 }
 var myid = chrome.i18n.getMessage("@@extension_id");
 var myTabId = {};
@@ -195,15 +196,17 @@ chrome.windows.onRemoved.addListener(function (windowId) {
 	})
 });
 
-const __handlePopup = (tabId) =>
+const __handlePopup = (tabId, windowId, url) =>
 {
 	if (state.curate === true) return chrome.browserAction.setPopup({tabId, popup: 'influenced.html'});
 	opt.call('addrTokenBalance', ['QOT']).then((rc) => {
 		if (rc >= 50000000000000) {
 			chrome.browserAction.setPopup({tabId, popup: 'influenced.html'});
 			state.curate = true;
-		} else {
-			chrome.browserAction.setPopup({tabId, popup: ''});
+		} else if (!url.match('^about:') && !url.match('^moz-extension://')) {
+			state.missing = 50 - (rc / 1000000000000);
+			chrome.browserAction.setPopup({tabId, popup: 'sorry.html'});
+			state.curate = false
 		}
 	}).catch((err) => { console.trace(err); chrome.browserAction.setPopup({tabId, popup: ''}); })
 }
@@ -225,7 +228,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 				console.dir({ parentTabURL, windowId: tab.windowId, tabId, url: tab.url })
 			} else {
 				console.log(`set popup in tabs.get...`)
-				if (state.activeLogin) __handlePopup(tabId);
+				if (state.activeLogin) __handlePopup(tabId, tab.windowId, tab.url);
 			}
 		})
 	} catch (err) {
@@ -233,7 +236,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 		if (isNewTab(tab) || tab.url.includes('moz-extension://') || tab.url.match('^about:')) {
 			chrome.browserAction.setPopup({tabId, popup: ''});
 		} else {
-			if (state.activeLogin) __handlePopup(tabId);
+			if (state.activeLogin) __handlePopup(tabId, tab.windowId, tab.url);
 		}
 		parentTabURL = undefined;
 	}
@@ -242,7 +245,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	console.log(`got message from tab! DEBUG...`)
 	console.dir(sender);
-	if (!sender.tab || message.influence) {
+	if (!sender.tab && message.influence) {
 		console.log(`DEBUG: got message sent from none tab component`)
 		console.log(message.influence);
 		console.log(message.category);
@@ -250,9 +253,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 			sendResponse({result: true});
 		})
 		chrome.browserAction.setPopup({tabId: message.tabId, popup: ''});
-	} else if (message.myParent === "moz-extension://" + myid + "/index.html") {
-		//console.dir(message);
-		//console.log(sender.url);
+	} else if (!sender.tab && message.tokenMissing === "QOT") {
+		console.log(`DEBUG: popup asking for token missing`);
+		sendResponse({missing: state.missing});
 	} else if (typeof(myTabId[sender.tab.windowId]) !== 'undefined'
 	       && typeof(sender.tab.openerTabId) !== 'undefined'
 	       && sender.tab.openerTabId === myTabId[sender.tab.windowId]
@@ -261,7 +264,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		 && typeof (lastKnownActives[sender.tab.windowId][sender.tab.id]) !== 'undefined'
 		 && lastKnownActives[sender.tab.windowId][sender.tab.id] !== sender.url
 		) {
-			if (state.activeLogin) __handlePopup(sender.tab.id);
+			if (state.activeLogin) __handlePopup(sender.tab.id, sender.tab.windowId, sender.tab.url);
 			sendResponse({ yourParent: 'orphanized' });
 		} else {
 			sendResponse({ yourParent: "moz-extension://" + myid + "/index.html" });
@@ -272,7 +275,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 			}
 		}
 	} else {
-		if (state.activeLogin) __handlePopup(sender.tab.id);
+		if (state.activeLogin) __handlePopup(sender.tab.id, sender.tab.windowId, sender.tab.url);
 		sendResponse({ yourParent: 'Not from Optract' });
 	}
 });
