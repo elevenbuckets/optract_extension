@@ -145,8 +145,8 @@ body {
 
 .login div {
    padding: 30px;
-   color: white;
-   background-color: rgba(0,0,0,0.34);
+   color: oldlace;
+   text-shadow: -2px 1px 1px black;
 }
 
 .login .dropdown-menu.show {
@@ -831,14 +831,14 @@ body {
   border: 1px solid white;
   display: inline-block;
   margin: 0px 0px 25px;
-  padding: 0px 80px !Important;
+  padding: 0px 80px !important;
 }
 
 .AccountShow {
   font-size: 22px;
   display: inline-block;
   margin: 0px 20px 25px;
-  padding: 0px 40px !Important;
+  padding: 0px 40px !important;
 }
 
 .newAccount:hover {
@@ -848,66 +848,36 @@ body {
 }
 
 .SignUpShow {
-  background-color: rgba(0,0,0,0) !Important;
+  background-color: rgba(0,0,0,0) !important;
   font-size: 22px;
   display: grid;
-  grid-template-rows: 33px 100px;
-  grid-template-columns: 1fr 30px 1fr;
+  grid-row-gap: 3px;
+  grid-template-rows: 4fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-areas: 
-    "suInfo suInfo suInfo"
-    "   eth suor twt   ";
-  padding: 0px !Important;
-}
-
-.registerOr {
-  background-color: rgba(0,0,0,0) !Important;
-  color: white;
-  grid-area: suor;
+    "infoWait"
+    "suInfo";
+  padding: 0px !important;
 }
 
 .registerInfo {
-  background-color: rgba(0,0,0,0) !Important;
   grid-area: suInfo;
-  padding: 0px 10px !Important;
-  color: white !Important;
+  padding: 0px 10px !important;
+  color: #00ffe5 !important;
+  font-size: 20px;
+  text-shadow: -1px -2px 6px black;
 }
 
-.registerEth {
-  background-color: goldenrod !Important;
-  color: black !Important;
-  font-size: 22px;
-  font-weight: bold;
-  justify-self: center;
-  display: inline-flex;
-  min-width: 250px;
-  grid-area: eth;
-  min-height: 45px;
-  padding: 0px 10px 0px 0px !Important;
-}
-
-.registerEth:hover {
-  text-shadow: 3px 3px 3px rgba(255,255,255,0.51);
-  cursor: pointer;
-  box-shadow: 3px 3px 4px;
-}
-
-.registerTwt:hover {
-  text-shadow: 3px 3px 3px rgba(255,255,255,0.51);
-  cursor: pointer;
-  box-shadow: 3px 3px 4px;
-}
-
-.registerTwt {
-  background-color: goldenrod !Important;
-  color: black !Important;
-  font-size: 22px;
-  font-weight: bold;
-  justify-self: center;
-  display: inline-flex;
-  min-width: 250px;
-  grid-area: twt;
-  min-height: 45px;
-  padding: 0px 10px 0px 0px !Important;
+.infoWait {
+  grid-area: infoWait;
+  padding: 10px !important;
+  color: #ffffff !important;
+  text-shadow: -1px -2px 6px black;
+  max-width: 33vw;
+  max-height: 220px;
+  min-height: 220px;
+  text-align: justify;
+  align-self: baseline;
 }
 
 .react-toggle {
@@ -1123,4 +1093,53 @@ body {
 	padding-left: 42px;
 	font-weight: bold;
 	font-style: oblique;
+}
+
+.glassTop:before {
+	content: "";
+	position: absolute;
+	background: inherit;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	box-shadow: inset 0 0 6000px rgba(0,0,0,.5);
+	filter: blur(10px);
+	margin: -20px;
+}
+
+.glassTop {
+	position: relative;
+	background: inherit; 
+        z-index: 1; 
+        display: inline-block;
+        margin: 0px 30px 15px 30px; 
+        padding: 5px; 
+        align-self: center;
+	border: 15px solid rgba(15,15,15,0.5);
+}
+
+.glassLow:before {
+	content: "";
+	position: absolute;
+	background: inherit;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	box-shadow: inset 0 0 2000px rgba(0,0,0,.5);
+	filter: blur(10px);
+	margin: -20px;
+}
+
+.glassLow {
+	position: relative;
+	background: inherit; 
+        z-index: 1; 
+	display: inline-block; 
+	margin: 15px 30px 30px 30px; 
+	align-self: start;
+	border: 15px solid rgba(15,15,15,0.5);
 }
