@@ -540,7 +540,7 @@ class MainView extends Reflux.Component {
         let v2blk = this.state.claimArticles[aid].blk[0];
         let v2txh = this.state.claimArticles[aid].txs[0];
         DlogsActions.claim(v2blk, v2txh, aid);
-	DlogsActions.opSurvey(surveyQuiz, surveyPick);
+	if (this.state.streamr === true) DlogsActions.opSurvey(surveyQuiz, surveyPick);
         e.stopPropagation();
     }
 
