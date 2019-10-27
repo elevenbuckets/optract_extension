@@ -252,7 +252,7 @@ class DlogsStore extends Reflux.Store {
     }
 
     onOpSurvey(surveyQuiz, surveyPick) {
-	    OptractService.opt..call('sendInfluence', {surveyQuiz, surveyPick});
+	    OptractService.opt.call('sendInfluence', {surveyQuiz, surveyPick});
     }
 
     onCloseToast() {
