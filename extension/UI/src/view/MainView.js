@@ -34,6 +34,7 @@ class MainView extends Reflux.Component {
 	    loading: false,
 	    opSurveyAID: '0x',
 	    surveyPick: null,
+	    surveyQuiz: null,
 	    greeting: 'Optract',
 	    thePosition: window.pageYOffset,
 	    readAID: [],
@@ -235,7 +236,9 @@ class MainView extends Reflux.Component {
 		"How much would you pay for 5G data plan on mobile?"	       : 
 		    {'The same price as my current plan': 0, 'No more than 15% more': 1, 'No more than 20% more': 2, 'Do not plan to switch': 3},
 		"Are you enjoying Optract so far? If so, how much would you pay for it monthly?":
-		    {'Yes, $1/mo.': 0, 'Yes, $2/mo.': 1, 'Yes, ad-supported freemium.': 2, 'No.': 3}
+		    {'Yes, $1/mo.': 0, 'Yes, $2/mo.': 1, 'Yes, ad-supported freemium.': 2, 'No.': 3},
+		"What other categories you would like to see on Optract?":
+		    {'Education': 0, 'Politics': 1, 'Health': 2, 'All of above': 3}
 	    };
 
 	    let i = Object.keys(Qs).length;
@@ -256,6 +259,7 @@ class MainView extends Reflux.Component {
 
         if (this.state.ticketCounts > 0) {
 	    let svy = this.opSurveyPoC.apply(this, [aid]);
+	    this.setState({serveyQuiz: svy.Q});
 
             return (<div className="item aidsvy" onClick={() => {}}>
 		<div className="item svyQ">{svy.Q}</div>
@@ -536,6 +540,7 @@ class MainView extends Reflux.Component {
         let v2blk = this.state.claimArticles[aid].blk[0];
         let v2txh = this.state.claimArticles[aid].txs[0];
         DlogsActions.claim(v2blk, v2txh, aid);
+	DlogsActions.opSurvey(surveyQuiz, surveyPick);
         e.stopPropagation();
     }
 
