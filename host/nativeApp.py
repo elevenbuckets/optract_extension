@@ -44,7 +44,7 @@ def send_message(encoded_message):
 def startServer():  
     lockFile = "Optract.LOCK"
     if os.path.exists(lockFile):
-        return
+        return sys.exit(0);
 
     ipfsConfigPath = path.join("ipfs_repo", "config")
     ipfsBinPath = path.join("bin", "ipfs")
