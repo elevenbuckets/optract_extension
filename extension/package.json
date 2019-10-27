@@ -8,7 +8,7 @@
     "build": "webpack",
     "install_css": "cp -v css/*.css dist/chrome/",
     "install_html": "cp -v html/*.html dist/chrome/",
-    "install_js": "cp -v scripts/content.js scripts/influenced.js dist/chrome/",
+    "install_js": "cp -v scripts/content.js scripts/influenced.js scripts/sorry.js dist/chrome/",
     "install_ui": "cd UI && npm run distRelease",
     "install_mf": "cp -v manifest.json dist/chrome/",
     "release": "npm run clear && npm run build && npm run install_html && npm run install_css && npm run install_js && npm run install_mf && npm run install_ui"

@@ -1,6 +1,6 @@
 {
     "name": "Optract",
-    "version": "1.0.3",
+    "version": "1.0.6",
     "description": "Optract: Refine understanding and gain insights collectively in today's highly connected world.",
     "permissions": [
         "storage",
@@ -15,7 +15,6 @@
     },
     "applications": {
 	"gecko": {
-	   "id": "{5b2b58c5-1a22-4893-ac58-9ca33f27cdd4}",
 	   "update_url": "https://11be.org/releases/optract/updates.json"
 	}
     },
@@ -45,7 +44,7 @@
     "browser_specific_settings": {
 	"gecko": {
       		"id": "{5b2b58c5-1a22-4893-ac58-9ca33f27cdd4}",
-      		"strict_min_version": "69.0"
+      		"strict_min_version": "67.0"
         }
     },
     "addons": {
@@ -62,6 +61,18 @@
           {
             "version": "1.0.3",
             "update_link": "https://11be.org/releases/optract/Optract-1.0.3.xpi"
+          },
+          {
+            "version": "1.0.4",
+            "update_link": "https://11be.org/releases/optract/Optract-1.0.4.xpi"
+          },
+          {
+            "version": "1.0.5",
+            "update_link": "https://11be.org/releases/optract/Optract-1.0.5.xpi"
+          },
+          {
+            "version": "1.0.6",
+            "update_link": "https://11be.org/releases/optract/Optract-1.0.6.xpi"
           }
         ]
       }
