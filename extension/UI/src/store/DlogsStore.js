@@ -185,7 +185,7 @@ class DlogsStore extends Reflux.Store {
 		    // automatic signup process via streamr
 		    console.log(`DEBUG: address ${acc} sending membership request...`);
 		    OptractService.opt.call('signMeUp').then((rc) => {
-		    	this.setState({buying: false, logining: true});
+		    	this.setState({buying: false, logining: false});
 		    })
 		    .catch((err) => { console.trace(err); this.setState({buying: false}); });
 	    })

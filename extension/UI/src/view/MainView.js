@@ -57,7 +57,7 @@ class MainView extends Reflux.Component {
     componentDidUpdate() {
 	if (this.state.login === false) {
 		if (this.state.validPass && this.state.MemberStatus === 'active' && this.state.account !== null) {
-			this.setState({login: true});
+			this.setState({login: true, logining: false});
 		} else {
 			return;
 		}
@@ -259,7 +259,7 @@ class MainView extends Reflux.Component {
 
         if (this.state.ticketCounts > 0) {
 	    let svy = this.opSurveyPoC.apply(this, [aid]);
-	    this.setState({serveyQuiz: svy.Q});
+	    if (this.state.serveyQuiz !== svy.Q) this.setState({serveyQuiz: svy.Q});
 
             return (<div className="item aidsvy" onClick={() => {}}>
 		<div className="item svyQ">{svy.Q}</div>
