@@ -18,7 +18,6 @@ module.exports = {
       ]
     }]
   }, 
-  devtool: 'eval',
   devServer: {
     contentBase: path.join(__dirname, 'public'),
     historyApiFallback : true
