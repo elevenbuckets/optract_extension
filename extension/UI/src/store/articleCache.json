@@ -1,0 +1,1295 @@
+{
+    "startBlk": 84,
+    "endBlk": 97,
+    "queries": {
+        "0xa4363210f221c841a24fdb6f17cff8dcc3605e795a32ac7a7b6d166ae01a3df0": {
+            "url": "https://www.theverge.com/2019/11/4/20948673/researchers-lasers-light-commands-smart-speakers-google-home-amazon-alexa-facebook-portal",
+            "txs": [
+                "0xf58f66fa22bfb0a0937d0f0367576ef61c35c040e8125dff736aebac42f2bb89"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xf58f66fa22bfb0a0937d0f0367576ef61c35c040e8125dff736aebac42f2bb89": "QmTjLULj8tRBHjzAd44SiGYeCvmxa6TAw5By8KpfGMbuwn"
+            },
+            "page": {
+                "title": "Your Amazon Echo or Google Home could be fooled by a laser ‘speaking’ words",
+                "author": "Jay Peters",
+                "date_published": "2019-11-05T01:55:46.000Z",
+                "lead_image_url": "https://cdn.vox-cdn.com/thumbor/Qce3rqy0MzP_DTFa10JW9EOwXW8=/0x292:2040x1360/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/7396325/vpavic_161101_1258_0154.0.jpg",
+                "dek": null,
+                "next_page_url": null,
+                "url": "https://www.theverge.com/2019/11/4/20948673/researchers-lasers-light-commands-smart-speakers-google-home-amazon-alexa-facebook-portal",
+                "domain": "www.theverge.com",
+                "excerpt": "Hey Google, Alexa, Siri: pew pew pew",
+                "word_count": 617,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "gadget"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x6c7830db4d1693a3a14b1a6f8eccda33c9ba62659e61d969e836b9c8b90b2c7b": {
+            "url": "https://www.marketwatch.com/story/blame-planes-and-beef-climate-crisis-accelerating-faster-than-expected-say-11000-scientists-2019-11-05",
+            "txs": [
+                "0xee88f1c1700b663e15875f1c868c562fec6291f02ad0403596d1b5c5263535b4"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xee88f1c1700b663e15875f1c868c562fec6291f02ad0403596d1b5c5263535b4": "QmbBLTXqZQ9iWxt8oi44suyXaxUgYtkET8TBfhUd4paF72"
+            },
+            "page": {
+                "title": "Blame planes and beef: climate crisis accelerating faster than expected, say 11,000 scientists",
+                "author": "Rachel Koning Beals",
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "http://s.marketwatch.com/public/resources/MWimages/MW-HU793_first__ZG_20191106163406.jpg",
+                "next_page_url": null,
+                "url": "https://www.marketwatch.com/story/blame-planes-and-beef-climate-crisis-accelerating-faster-than-expected-say-11000-scientists-2019-11-05",
+                "domain": "www.marketwatch.com",
+                "excerpt": "An alarming new warning from 11,000 scientists declares “clearly and unequivocally that planet Earth is facing a climate emergency,” especially when factors...",
+                "word_count": 351,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "investment"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xcd0123d4c544bdd25403502babd571c45857f6f4d3ee72ba5f0756e916c3e63c": {
+            "url": "https://www.cnet.com/reviews/nest-wifi-review/",
+            "txs": [
+                "0xdfda3edb479859f1f0b82d3461d968a17402c62106da1af10ea929d793447516"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xdfda3edb479859f1f0b82d3461d968a17402c62106da1af10ea929d793447516": "QmU6kRBYQfRhiQ7gmGjoEFBp6pAzP5zRv2eMfTw9RBkZdi"
+            },
+            "page": {
+                "title": "Nest Wifi review: The best mesh router we've tested, but not the best value",
+                "author": "Ry Crist",
+                "date_published": "2019-11-04T13:00:00.000Z",
+                "lead_image_url": "https://cnet1.cbsistatic.com/img/UOI4z2dkQcIrMy1XaPWsZMhVONY=/868x488/2019/11/02/02c81b26-a926-4d05-bebe-e32e8ed11fb2/google-nest-wifi-mesh-router-promo-3.jpg",
+                "dek": null,
+                "next_page_url": "https://www.cnet.com/reviews/nest-wifi-review/2",
+                "url": "https://www.cnet.com/reviews/nest-wifi-review/",
+                "domain": "www.cnet.com",
+                "excerpt": "Nest Wifi is as simple and speedy as mesh routers get, and it anchors Google's smart home ecosystem better than anything else. Is it worth the price?",
+                "word_count": 2259,
+                "direction": "ltr",
+                "total_pages": 2,
+                "pages_rendered": 2
+            },
+            "tags": {
+                "tags": [
+                    "gadget",
+                    "review"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x9314762bf0081a7ca26c2d7d3261caa197e683eb31384a0f175c1c7785dc13a3": {
+            "url": "https://www.reuters.com/article/us-column-miller-retirement-idUSKBN1XA1BO",
+            "txs": [
+                "0x29a1a96b51ec5cbb1f18f42bce0d9b4152f55b058c01a2625b5b775a8ac51325"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x29a1a96b51ec5cbb1f18f42bce0d9b4152f55b058c01a2625b5b775a8ac51325": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "page": {
+                "title": "Wealth gap among retired Americans worsens despite a growing economy",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://s3.reutersmedia.net/resources/r/?m=02&d=20191031&t=2&i=1446886280&w=1200&r=LYNXMPEF9U0SO",
+                "next_page_url": null,
+                "url": "https://www.reuters.com/article/us-column-miller-retirement-idUSKBN1XA1BO",
+                "domain": "www.reuters.com",
+                "excerpt": "The current record-high level of income inequality in the United States affects ...",
+                "word_count": 1145,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xfe0dbe47e96921c87ede02e612b1f99785a912a2c0ec9fed1f4c2ebc0497161c": {
+            "url": "https://dzone.com/articles/train-your-dragons-3-quick-tips-for-harnessing-ind",
+            "txs": [
+                "0x90b654e28d87e06bae6f1d9f372221919f394df5a97cc7c0e4342d1b3929e03f"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x90b654e28d87e06bae6f1d9f372221919f394df5a97cc7c0e4342d1b3929e03f": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "Train Your Dragons: 3 Quick Tips for Harnessing Industrial IoT Value",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://dz2cdn1.dzone.com/storage/article-thumb/12659108-thumb.jpg",
+                "next_page_url": null,
+                "url": "https://dzone.com/articles/train-your-dragons-3-quick-tips-for-harnessing-ind",
+                "domain": "dzone.com",
+                "excerpt": "Check out these top three tips for training your IIoT dragons, focusing on solutions, platforms, and security. Let's take a closer look!",
+                "word_count": 832,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x090bcfc24acef2c85258016519ffb3137df1f18859f11ccf042c94f8892c40ea": {
+            "url": "https://www.technologyreview.com/s/614646/inside-the-microsoft-team-tracking-the-worlds-most-dangerous-hackers/",
+            "txs": [
+                "0xe52a71c6c2a3920d35940494fb821a6e846440f5d3668f0eec3e8aaf78bd63e1"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xe52a71c6c2a3920d35940494fb821a6e846440f5d3668f0eec3e8aaf78bd63e1": "QmRPvtS5JfUgvGAeWjiAsH62GCMtMmFUTYSBjmjLNRaPsT"
+            },
+            "page": {
+                "title": "Inside the Microsoft team tracking the world’s most dangerous hackers",
+                "author": "AuthorPatrick Howell O'Neill",
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://cdn.technologyreview.com/i/images/jedi.jpg?cx=0&cy=189&cw=2995&ch=1685&sw1200",
+                "next_page_url": null,
+                "url": "https://www.technologyreview.com/s/614646/inside-the-microsoft-team-tracking-the-worlds-most-dangerous-hackers/",
+                "domain": "www.technologyreview.com",
+                "excerpt": "From Russian Olympic cyberattacks to billion-dollar North Korean malware, how one tech giant monitors nation-sponsored hackers everywhere on earth.",
+                "word_count": 1967,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "tech",
+                    "review"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x0b9f6523429757eba651da36d8eb15a2f7e82a34df45278c94a7bcad070dd9de": {
+            "url": "https://www.reuters.com/article/us-reuters-newsmaker-blackstone-idUSKBN1XG2UK",
+            "txs": [
+                "0xfb0c9894333718c3a260d90cc557a26f3951bf936c42d87647bbc443b9be25d0"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xfb0c9894333718c3a260d90cc557a26f3951bf936c42d87647bbc443b9be25d0": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "page": {
+                "title": "Blackstone CEO is optimistic U.S., China will agree trade deal",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://s4.reutersmedia.net/resources/r/?m=02&d=20191106&t=2&i=1449160616&w=1200&r=LYNXMPEFA5228",
+                "next_page_url": null,
+                "url": "https://www.reuters.com/article/us-reuters-newsmaker-blackstone-idUSKBN1XG2UK",
+                "domain": "www.reuters.com",
+                "excerpt": "Private equity firm Blackstone Group Inc Chief Executive Stephen Schwarzman said...",
+                "word_count": 443,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x14372a73ffb3115e7620e5564d4239497b57d6c166fae5f987043d46de33e632": {
+            "url": "https://www.theblockcrypto.com/linked/46074/hong-kong-and-china-partner-on-blockchain-project-for-trade-finance",
+            "txs": [
+                "0xd42a14be20ca28dec45b23ada40048f1f2899e23382a681cd14d41020e3be0aa"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xd42a14be20ca28dec45b23ada40048f1f2899e23382a681cd14d41020e3be0aa": "QmYBjnknFLU37PT4YhyPo8r5NknJshFv1ZcEkA1dV3ATqs"
+            },
+            "page": {
+                "title": "Hong Kong and mainland China partner on blockchain project for trade finance",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://www.tbstat.com/wp/uploads/2018/10/hong-kong-skyline.jpg",
+                "next_page_url": null,
+                "url": "https://www.theblockcrypto.com/linked/46074/hong-kong-and-china-partner-on-blockchain-project-for-trade-finance",
+                "domain": "www.theblockcrypto.com",
+                "excerpt": "Hong Kong and mainland China have partnered on a blockchain project to improve their trade finance operations. The Hong Kong Monetary Authority (HKMA), the city’s de facto central bank, announced the&hellip;",
+                "word_count": 1,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "blockchain",
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x1aa6c2822186f11a7ba8b91528ed0909cc90802235265eea9b02561ba6e74194": {
+            "url": "https://tech.slashdot.org/story/19/11/06/062218/xerox-considers-cash-and-stock-offer-for-hp",
+            "txs": [
+                "0x141363a7380fe3553f09cdca16379bc498f37e3603c79e8ec6512ab7e66d2c99"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x141363a7380fe3553f09cdca16379bc498f37e3603c79e8ec6512ab7e66d2c99": "QmTVLBNLRmgs2MPUPpioCUGTjwnUTCpFR2nUx7ZP4BuiaG"
+            },
+            "page": {
+                "title": "Xerox Considers Cash-and-Stock Offer For HP",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://a.fsdn.com/sd/topics/hp_64.png",
+                "next_page_url": null,
+                "url": "https://tech.slashdot.org/story/19/11/06/062218/xerox-considers-cash-and-stock-offer-for-hp",
+                "domain": "tech.slashdot.org",
+                "excerpt": "According to The Wall Street Journal, Xerox is considering making a cash-and-stock offer for HP (Source paywalled; alternative source), which has a market value of about $27 billion. From the report:&hellip;",
+                "word_count": 215,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "tech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x3f922ce8e19dc43ccbd8d7cd5a595800b2397f8086f83122e3c33856110f3adb": {
+            "url": "https://www.fastcompany.com/90426429/even-facebooks-libra-cant-escape-the-fintech-establishment",
+            "txs": [
+                "0x366bd5665d966ce73d73042cf6d00f82ee0cc9f2ed59e4d60102f25d2d9d25c4"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x366bd5665d966ce73d73042cf6d00f82ee0cc9f2ed59e4d60102f25d2d9d25c4": "Qmco6NSkE5zHaL4Gk93K7UGPKnsQKuwsqY2ENjCYP8Dqm7"
+            },
+            "page": {
+                "title": "Even Facebook’s Libra can’t escape the fintech establishment",
+                "author": null,
+                "date_published": "2019-11-06T16:00:31.000Z",
+                "dek": null,
+                "lead_image_url": "https://images.fastcompany.net/image/upload/w_1280,f_auto,q_auto,fl_lossy/wp-cms/uploads/2019/11/poster-libra-fintech.jpg",
+                "next_page_url": null,
+                "url": "https://www.fastcompany.com/90426429/even-facebooks-libra-cant-escape-the-fintech-establishment",
+                "domain": "www.fastcompany.com",
+                "excerpt": "Despite Facebook’s reach, IMD professor Howard Yu and research fellow Jialu Shan break down how its Libra digital currency is no match for legacy financial institutions.",
+                "word_count": 1169,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance",
+                    "blockchain"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x448d91017c4e93bdf8c1e138b0fb15ecc6df3a3fd2c46dcbd668d9b21772b397": {
+            "url": "https://www.businessinsider.com/transcript-of-bill-taylor-damning-testimony-trump-released-2019-11",
+            "txs": [
+                "0xb4cd5e0f05c2155d6ee428cd2d724528716fdabc0b135f35db97122c7c7287f0"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xb4cd5e0f05c2155d6ee428cd2d724528716fdabc0b135f35db97122c7c7287f0": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "page": {
+                "title": "Transcript of Bill Taylor's testimony underscores extreme lengths Trump went to in urging Ukraine to investigate Bidens",
+                "author": "John Haltiwanger",
+                "date_published": "2019-11-06T07:00:00.000Z",
+                "dek": null,
+                "lead_image_url": "https://image.businessinsider.com/5dc30a437eece5770243375b?width=1200&format=jpeg",
+                "next_page_url": null,
+                "url": "https://www.businessinsider.com/transcript-of-bill-taylor-damning-testimony-trump-released-2019-11",
+                "domain": "www.businessinsider.com",
+                "excerpt": "Taylor said his understanding was \"security assistance money would not come until the President [of Ukraine] committed to pursue the investigation.\"",
+                "word_count": 608,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x4b37e82bd2414cee13509a22c897e41b6d660f6e6af5e4a6a08679f1bcbae328": {
+            "url": "https://www.reuters.com/article/us-egypt-economy-transportation-idUSKBN1XG20M",
+            "txs": [
+                "0x03dc181e8ac76701e85cb8f92d9d3c9624ce3a65d6c380f409d887a8185df998"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x03dc181e8ac76701e85cb8f92d9d3c9624ce3a65d6c380f409d887a8185df998": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "page": {
+                "title": "Ride-hailing market revs up in Egypt",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://s4.reutersmedia.net/resources/r/?m=02&d=20191106&t=2&i=1449054305&w=1200&r=LYNXMPEFA51DT",
+                "next_page_url": null,
+                "url": "https://www.reuters.com/article/us-egypt-economy-transportation-idUSKBN1XG20M",
+                "domain": "www.reuters.com",
+                "excerpt": "Competition in Egypt's ride-hailing and tech-enabled transport market is he...",
+                "word_count": 729,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x4ed558111d3922446708cbad1b53307da958c93aceb0ad27c69f79bd1707f1f0": {
+            "url": "https://www.kiplinger.com/article/investing/T052-C000-S002-how-to-cash-in-when-firms-merge.html",
+            "txs": [
+                "0x41f8b010afb1533f8b776f3d57b87ee3e2293b758518242d63f3684aafe1beb6"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x41f8b010afb1533f8b776f3d57b87ee3e2293b758518242d63f3684aafe1beb6": "QmbBLTXqZQ9iWxt8oi44suyXaxUgYtkET8TBfhUd4paF72"
+            },
+            "page": {
+                "title": "How to Cash In When Firms Merge",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "http://www.kiplinger.com/kipimages/pages/21168.jpg",
+                "next_page_url": null,
+                "url": "https://www.kiplinger.com/article/investing/T052-C000-S002-how-to-cash-in-when-firms-merge.html",
+                "domain": "www.kiplinger.com",
+                "excerpt": "These funds let Main Street investors profit from Wall Street's deals.",
+                "word_count": 700,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "investment"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x62d921aa5c417bd3cffe2f6419a6a65fd11f306c961fd137d0c055f19ea08835": {
+            "url": "https://futurism.com/neoscope/uk-children-full-genome-sequence-birth",
+            "txs": [
+                "0x65beff833b271025080c1b623ef81356d76c0403739c141ccc82b6a2bf76f0b7"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x65beff833b271025080c1b623ef81356d76c0403739c141ccc82b6a2bf76f0b7": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "UK plans to give all children full genome sequence at birth",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://wp-assets.futurism.com/2019/11/uk-children-full-genome-sequence-birth-600x315.jpg",
+                "next_page_url": null,
+                "url": "https://futurism.com/neoscope/uk-children-full-genome-sequence-birth",
+                "domain": "futurism.com",
+                "excerpt": "\"Predictive, preventative, personalized healthcare — that is the future of the NHS — and whole genome sequencing and genomics is going to play a huge part in that.\"",
+                "word_count": 247,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x75abd0917ee78014bb3316e0fca14daee5896e43e578d8d47b5346e926e85e93": {
+            "url": "https://www.investmentnews.com/article/20191105/FREE/191109972/sec-proposes-allowing-advisers-to-use-testimonials-endorsements-in",
+            "txs": [
+                "0x08d8b9e9a9dcfd8184d6310986ab65d0912c2663a1a610885eac7d274b0ba76a"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x08d8b9e9a9dcfd8184d6310986ab65d0912c2663a1a610885eac7d274b0ba76a": "QmbBLTXqZQ9iWxt8oi44suyXaxUgYtkET8TBfhUd4paF72"
+            },
+            "page": {
+                "title": "SEC proposes allowing advisers to use testimonials, endorsements in ads",
+                "author": "Mark Schoeff Jr.",
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://www.investmentnews.com/storyimage/CI/20191105/FREE/191109972/AR/0/AR-191109972.jpg&cci_ts=20191105154514",
+                "next_page_url": null,
+                "url": "https://www.investmentnews.com/article/20191105/FREE/191109972/sec-proposes-allowing-advisers-to-use-testimonials-endorsements-in",
+                "domain": "www.investmentnews.com",
+                "excerpt": "Agency updating marketing rules for first time since 1961 to reflect new technology such as social media.",
+                "word_count": 87,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "investment"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x7b3dd5cc930382edc94a84463b15ff9cbd3a7413d1723ca49e5eb1684b6b9091": {
+            "url": "https://www.marketwatch.com/story/oil-futures-slip-as-api-report-shows-a-big-build-in-us-crude-supplies-2019-11-06",
+            "txs": [
+                "0x28eeb392ece5211bf562c31016eff53362ae5ac79c4c56d860bdeaa410ca85d4"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x28eeb392ece5211bf562c31016eff53362ae5ac79c4c56d860bdeaa410ca85d4": "QmbBLTXqZQ9iWxt8oi44suyXaxUgYtkET8TBfhUd4paF72"
+            },
+            "page": {
+                "title": "Oil prices finish lower as U.S. crude supplies post weekly rise of nearly 8 million barrels",
+                "author": "Myra P. Saefong and Mark DeCambre",
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "http://s.marketwatch.com/public/resources/MWimages/MW-HD527_crudeo_ZG_20190207102851.jpg",
+                "next_page_url": null,
+                "url": "https://www.marketwatch.com/story/oil-futures-slip-as-api-report-shows-a-big-build-in-us-crude-supplies-2019-11-06",
+                "domain": "www.marketwatch.com",
+                "excerpt": "Oil futures finish lower on Wednesday after U.S. government data revealed that domestic crude supplies rose for a second week in a row, by nearly 8 million...",
+                "word_count": 687,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "investment"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x7e791b4f1534682500d3377226159bd32f7c4b6cbcc2c8ccb34aa39062af1980": {
+            "url": "https://www.marketwatch.com/story/are-you-in-a-relationship-with-a-co-worker-read-this-first-2019-11-05",
+            "txs": [
+                "0xfe087f5300e03c45b6dc0baa00091c812a6fb8af179fb153aaa0b606b977af67"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xfe087f5300e03c45b6dc0baa00091c812a6fb8af179fb153aaa0b606b977af67": "QmbBLTXqZQ9iWxt8oi44suyXaxUgYtkET8TBfhUd4paF72"
+            },
+            "page": {
+                "title": "Are you considering a relationship with a co-worker? Read this before you make your move",
+                "author": "Andrew Keshner",
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "http://s.marketwatch.com/public/resources/MWimages/MW-HU627_easter_ZG_20191104154601.jpg",
+                "next_page_url": null,
+                "url": "https://www.marketwatch.com/story/are-you-in-a-relationship-with-a-co-worker-read-this-first-2019-11-05",
+                "domain": "www.marketwatch.com",
+                "excerpt": "Rules on workplace relationships are becoming increasingly common in the #MeToo era.",
+                "word_count": 987,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "investment"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xa94b884fde6d204fda78027e9c427f375e8e3cf4512efc3001036eb832b756b7": {
+            "url": "https://www.gsmarena.com/google_pixel_4_xl_bend_test_doesnt_have_a_happy_ending-news-39983.php",
+            "txs": [
+                "0x3a8a3b765d3f0d6be482fadb2fd9441d4616c2cd38e13674b6c6364a6a255826"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x3a8a3b765d3f0d6be482fadb2fd9441d4616c2cd38e13674b6c6364a6a255826": "QmTjLULj8tRBHjzAd44SiGYeCvmxa6TAw5By8KpfGMbuwn"
+            },
+            "page": {
+                "title": "Google Pixel 4 XL bend test doesn't have a happy ending",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://fdn.gsmarena.com/imgroot/news/19/11/pixel-4-xl-bending-test/-476x249w4/gsmarena_002.jpg",
+                "next_page_url": null,
+                "url": "https://www.gsmarena.com/google_pixel_4_xl_bend_test_doesnt_have_a_happy_ending-news-39983.php",
+                "domain": "www.gsmarena.com",
+                "excerpt": "The frame snaps in two places.",
+                "word_count": 125,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "gadget"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xdd9e8b1587a565da726dd03863be5d4cac3a096ac3f5f7b62e8654599a35e66b": {
+            "url": "https://www.technologyreview.com/f/614665/tiktok-china-national-security-china-censorship-data-privacy/",
+            "txs": [
+                "0x6242321dd38423a12321127e73b02d37ca24bf2554b491fdf39e9a7496aeebd4"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x6242321dd38423a12321127e73b02d37ca24bf2554b491fdf39e9a7496aeebd4": "QmRPvtS5JfUgvGAeWjiAsH62GCMtMmFUTYSBjmjLNRaPsT"
+            },
+            "page": {
+                "title": "The US thinks TikTok could be a national security threat—here’s why",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://cdn.technologyreview.com/i/images/ap19106239856366.jpg?sw=1200&cx=0&cy=0&cw=3000&ch=1688",
+                "next_page_url": null,
+                "url": "https://www.technologyreview.com/f/614665/tiktok-china-national-security-china-censorship-data-privacy/",
+                "domain": "www.technologyreview.com",
+                "excerpt": "The US government has launched a national security review of the Chinese-owned video platform TikTok, according to Reuters.",
+                "word_count": 386,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "tech",
+                    "review"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xdf0685dfc6d3310ef17ee628b08a7a862af6ef5773303fd83b8d5f0e6feb1a68": {
+            "url": "https://www.theinternetofthings.eu/meet-winners-wazihub-soil-moisture-prediction-challenge",
+            "txs": [
+                "0xd055b8150e0da1934d652fdc12e5a2b46224700f054f8aa3f01f32f203a1f41f"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xd055b8150e0da1934d652fdc12e5a2b46224700f054f8aa3f01f32f203a1f41f": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "Meet the winners of the Wazihub Soil Moisture Prediction Challenge",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://www.theinternetofthings.eu/meet-winners-wazihub-soil-moisture-prediction-challenge",
+                "domain": "www.theinternetofthings.eu",
+                "excerpt": "",
+                "word_count": 1,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xe663f88e114093a5aa399ef7b3c4d4fe3201ceabd2cefcb51a591e9c1910fe6b": {
+            "url": "https://www.sciencedaily.com/releases/2019/11/191104155706.htm",
+            "txs": [
+                "0xdf5b3a3203de3ae92f609b5b240273199da5756b18ea29a4b35b3593797ac063"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0xdf5b3a3203de3ae92f609b5b240273199da5756b18ea29a4b35b3593797ac063": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "Deep neural networks uncover what the brain likes to see",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://www.sciencedaily.com/releases/2019/11/191104155706.htm",
+                "domain": "www.sciencedaily.com",
+                "excerpt": "Researchers built deep artificial neural networks that can accurately predict the neural responses produced by a biological brain to arbitrary visual stimuli. These networks can be thought of as a&hellip;",
+                "word_count": 677,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xe9f067217aa920b6f64f7e557f98e64b32b7663899603d40108d73cf9195638d": {
+            "url": "https://www.sciencedaily.com/releases/2019/11/191106124044.htm",
+            "txs": [
+                "0x94f120c4ff2d76408193093b802984acaa06ff0017a688324bddccd46f9cb307"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x94f120c4ff2d76408193093b802984acaa06ff0017a688324bddccd46f9cb307": "QmUNS6Lt6uH4VKv4NZvsiKpq6CcycT1qnmv6tAmCsXbdvW"
+            },
+            "page": {
+                "title": "'I knew that was going to happen:' Déjà vu and the 'postdictive' bias",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://www.sciencedaily.com/releases/2019/11/191106124044.htm",
+                "domain": "www.sciencedaily.com",
+                "excerpt": "Memory researchers have a new theory on why déjà vu is accompanied not only by feelings of prediction, but also an 'I knew that was going to happen' feeling.",
+                "word_count": 885,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "science"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x473dc96823ea9e9b2173c7e33a55225402cbc89b5477290004bf72a1aae36c5b": {
+            "url": "https://www.theblockcrypto.com/post/45706/ledger-vault-is-transforming-cryptocurrency-custody-for-institutions",
+            "txs": [
+                "0x85dadd3ffe70d90565f77438a89adf4b1532374c431cdcc84006a2da6dc060f6"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x85dadd3ffe70d90565f77438a89adf4b1532374c431cdcc84006a2da6dc060f6": "QmNMpGPzmtSiipckKLUSE46EiuTs8dN4hVqu7mCU88Srdx"
+            },
+            "page": {
+                "title": "Ledger Vault is transforming cryptocurrency custody for institutions - The Block",
+                "author": null,
+                "date_published": "2019-11-06T05:00:59.000Z",
+                "dek": null,
+                "lead_image_url": "https://www.tbstat.com/wp/uploads/2019/12/rsz_vaultblogpost.png",
+                "next_page_url": null,
+                "url": "https://www.theblockcrypto.com/post/45706/ledger-vault-is-transforming-cryptocurrency-custody-for-institutions",
+                "domain": "www.theblockcrypto.com",
+                "excerpt": "Proper custody of digital assets isn’t as easy as locking up gold or paper currency in a bank vault. Since cryptocurrencies like bitcoin and ETH exist completely digitally on a blockchain, and are by&hellip;",
+                "word_count": 1,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "blockchain"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xf95295d6f8a116b152d2c173aa9de9cf5bc70ba1a3e031d540fd4e65a9e82564": {
+            "url": "https://www.theinternetofthings.eu/simon-chandler-how-internet-things-will-help-fight-climate-change",
+            "txs": [
+                "0x2c4491eaed0900521ce34bea5434b8d93ed4ac2b15d634cca6b952ac1a675d49"
+            ],
+            "blk": [
+                94
+            ],
+            "cmt": {
+                "0x2c4491eaed0900521ce34bea5434b8d93ed4ac2b15d634cca6b952ac1a675d49": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "Simon Chandler: How The Internet Of Things Will Help Fight Climate Change",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://www.theinternetofthings.eu/simon-chandler-how-internet-things-will-help-fight-climate-change",
+                "domain": "www.theinternetofthings.eu",
+                "excerpt": "",
+                "word_count": 1,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x033c158ec66040c355c46884d95bb1155b95c20e926b2986a68bb74ee419667e": {
+            "url": "https://www.newscientist.com/article/mg24432552-700-who-owns-life-the-world-is-about-to-decide-with-huge-ramifications/",
+            "txs": [
+                "0x800a6ae483ed0d6e5c2ecf65defc7bb54072385f2b217116dda8897c33aa0af0"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x800a6ae483ed0d6e5c2ecf65defc7bb54072385f2b217116dda8897c33aa0af0": "QmUNS6Lt6uH4VKv4NZvsiKpq6CcycT1qnmv6tAmCsXbdvW"
+            },
+            "page": {
+                "title": "Who owns life? The world is about to decide, with huge ramifications",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://images.newscientist.com/wp-content/uploads/2019/11/06113133/comment7nov.jpg",
+                "next_page_url": null,
+                "url": "https://www.newscientist.com/article/mg24432552-700-who-owns-life-the-world-is-about-to-decide-with-huge-ramifications/",
+                "domain": "www.newscientist.com",
+                "excerpt": "A debate between countries over who can access and exploit the planet’s genetic resources will have ramifications for all of us, says Laura Spinney",
+                "word_count": 132,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "science"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x395e3e84cba3735df547b12d23a63d2517dd988520a4737b279f0e7f6825fff3": {
+            "url": "https://hackernoon.com/blockchain-as-an-opportunity-for-small-enterprises-in-indonesia-jc1r3xhc",
+            "txs": [
+                "0x146bf7a56022f134540c702f48b75708019c54846dd5264a6bdfc5a55fe7aada"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x146bf7a56022f134540c702f48b75708019c54846dd5264a6bdfc5a55fe7aada": "QmNRrxgCodyCsr1Cf6tdLEvnEZtCz56uNns1UsQxjoxRvp"
+            },
+            "page": {
+                "title": "Is Blockchain a Viable Opportunity for Startups in Indonesia?",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://hackernoon.com/drafts/a2l13xrh.png",
+                "next_page_url": null,
+                "url": "https://hackernoon.com/blockchain-as-an-opportunity-for-small-enterprises-in-indonesia-jc1r3xhc",
+                "domain": "hackernoon.com",
+                "excerpt": "This article provides information on the problems faced by small businesses in emerging countries where banking, other financial technology (fintech) solutions, and identity management are not adopted&hellip;",
+                "word_count": 1783,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "tech",
+                    "blockchain"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x4bc0aa7ea5a06857c5598a3f97330122c06c93914c1b39f881c860257d1c8ab3": {
+            "url": "https://cointelegraph.com/news/how-will-china-pursue-xi-jinpings-blockchain-adoption-plan",
+            "txs": [
+                "0x21854ee2fdcdb54e96bb4dc56b0c29e86fe44071036ddd34fd4280ce4305a8b9"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x21854ee2fdcdb54e96bb4dc56b0c29e86fe44071036ddd34fd4280ce4305a8b9": "QmNMpGPzmtSiipckKLUSE46EiuTs8dN4hVqu7mCU88Srdx"
+            },
+            "page": {
+                "title": "How Will China Pursue Xi Jinping’s Blockchain Adoption Plan?",
+                "author": "Julia Magas",
+                "date_published": "2019-11-06T16:01:00.000Z",
+                "dek": null,
+                "lead_image_url": "https://images.cointelegraph.com/images/740_IGh0dHBzOi8vczMuY29pbnRlbGVncmFwaC5jb20vc3RvcmFnZS91cGxvYWRzL3ZpZXcvN2VkMzlkZTZiNzA2MTUwMjEyZTY4YmZmYmE1ZjYxYzAuanBn.jpg",
+                "next_page_url": null,
+                "url": "https://cointelegraph.com/news/how-will-china-pursue-xi-jinpings-blockchain-adoption-plan",
+                "domain": "cointelegraph.com",
+                "excerpt": "Following President Xi’s statement, China is now actively pursuing blockchain development through regulation, promotion and application.",
+                "word_count": 2298,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "blockchain"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x541d67bb225c1da9cfdf69b7143a54ee024e1ae8d4f8c42eba5925328f506a44": {
+            "url": "https://hbr.org/2019/11/as-jobs-are-automated-will-men-and-women-be-affected-equally",
+            "txs": [
+                "0x2170211d86795d61ff5d51539833285e07fcd3f3235e8853e2052a533d0f55a8"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x2170211d86795d61ff5d51539833285e07fcd3f3235e8853e2052a533d0f55a8": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "vpick": true,
+            "page": {
+                "title": "As Jobs Are Automated, Will Men and Women Be Affected Equally?",
+                "author": "Emma Martinho-Truswell",
+                "date_published": "2019-11-01T12:35:40.000Z",
+                "dek": null,
+                "lead_image_url": "https://hbr.org/resources/images/article_assets/2019/11/Nov19_01_636945021-3.jpg",
+                "next_page_url": null,
+                "url": "https://hbr.org/2019/11/as-jobs-are-automated-will-men-and-women-be-affected-equally",
+                "domain": "hbr.org",
+                "excerpt": "The outlook is mixed.",
+                "word_count": 1218,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x8d53058757645daa2df3517b77e8b72514b83dbb7130f2a2c53ea24f5a356f39": {
+            "url": "https://www.sciencedaily.com/releases/2019/11/191106130339.htm",
+            "txs": [
+                "0xc873a93e75aec2eb6c6143629ba714a8d87ab48dd30751707690dfab77544639"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0xc873a93e75aec2eb6c6143629ba714a8d87ab48dd30751707690dfab77544639": "QmUNS6Lt6uH4VKv4NZvsiKpq6CcycT1qnmv6tAmCsXbdvW"
+            },
+            "page": {
+                "title": "On the way to intelligent microrobots",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://www.sciencedaily.com/releases/2019/11/191106130339.htm",
+                "domain": "www.sciencedaily.com",
+                "excerpt": "Researchers have developed a micromachine that can perform different actions. First nanomagnets in the components of the microrobots are magnetically programmed and then the various movements are&hellip;",
+                "word_count": 556,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "science"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x9b3b0da2d3e2882eaf48bcbe0e6e14ec520321d424552cb1245d9497c3135b4c": {
+            "url": "https://futurism.com/the-byte/fbi-facebook-white-supremacist-bomber-fake-explosives",
+            "txs": [
+                "0x2531b5608d19bdd75859488a9d7ea08e3943448ff12914eff81783ea0d213f49"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x2531b5608d19bdd75859488a9d7ea08e3943448ff12914eff81783ea0d213f49": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "FBI meets would-be bomber on Facebook, gives him fake explosives",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://wp-assets.futurism.com/2019/11/fbi-facebook-white-supremacist-bomber-fake-explosives-1200x630.jpg",
+                "next_page_url": null,
+                "url": "https://futurism.com/the-byte/fbi-facebook-white-supremacist-bomber-fake-explosives",
+                "domain": "futurism.com",
+                "excerpt": "He's now in jail and facing up to 20 years in prison.",
+                "word_count": 295,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xb23b7fa4aae8feba7f7b3da4880b6ed5cad277a74ddff743ba6d18b727f71bce": {
+            "url": "https://www.sciencedaily.com/releases/2019/11/191104083224.htm",
+            "txs": [
+                "0x880bc99defd0ee18a69fc82dcfd25b4172131c5ed3928fe389190d54dd00d569"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x880bc99defd0ee18a69fc82dcfd25b4172131c5ed3928fe389190d54dd00d569": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "page": {
+                "title": "Worker robots that learn from mistakes",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://www.sciencedaily.com/releases/2019/11/191104083224.htm",
+                "domain": "www.sciencedaily.com",
+                "excerpt": "Practice makes perfect -- it is an adage that has helped humans become highly dexterous and now it is an approach that is being applied to robots.",
+                "word_count": 720,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xce6b0a1c5767780c144427b710e2b5b19a23ae0352bdcc8e19d16bf2c33073c0": {
+            "url": "https://futurism.com/spacex-launch-cost-less-nasa",
+            "txs": [
+                "0xf5ec7b11a0c91d859affdb539c27037690985a037275d8442fbf87783192d936",
+                "0xf5ec7b11a0c91d859affdb539c27037690985a037275d8442fbf87783192d936"
+            ],
+            "blk": [
+                95,
+                95
+            ],
+            "cmt": {
+                "0xf5ec7b11a0c91d859affdb539c27037690985a037275d8442fbf87783192d936": "QmNhsgac4SXHoANgKLr2vfaiCTFeq71pGtmoTQwytGUN6q"
+            },
+            "vpick": true,
+            "page": {
+                "title": "Elon Musk: SpaceX launches will cost 1% of current NASA launches",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://wp-assets.futurism.com/2019/11/starship-900000-fuel-per-launch-600x315.jpg",
+                "next_page_url": null,
+                "url": "https://futurism.com/spacex-launch-cost-less-nasa",
+                "domain": "futurism.com",
+                "excerpt": "Despite costs plummeting thanks to improving reusability, a launch of SpaceX's Falcon 9 currently costs $62 million.",
+                "word_count": 278,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "emergingTech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xf68a7933ea08397bb67cc92cf30086c884e207402a01f881f9c38e3bb4f71ba5": {
+            "url": "https://threatpost.com/presentation-template-build-your-2020-security-plan/149905/",
+            "txs": [
+                "0xbe0838f0251aecb391ddb393025cb84b098b88f8b0b191d28bec522e69942f19",
+                "0xbe0838f0251aecb391ddb393025cb84b098b88f8b0b191d28bec522e69942f19"
+            ],
+            "blk": [
+                95,
+                95
+            ],
+            "cmt": {
+                "0xbe0838f0251aecb391ddb393025cb84b098b88f8b0b191d28bec522e69942f19": "QmTVLBNLRmgs2MPUPpioCUGTjwnUTCpFR2nUx7ZP4BuiaG"
+            },
+            "page": {
+                "title": "Presentation Template: Build Your 2020 Security Plan",
+                "author": null,
+                "date_published": null,
+                "dek": null,
+                "lead_image_url": "https://media.threatpost.com/wp-content/uploads/sites/103/2019/11/05144232/Cynet-Nov-6-Article_feature_image.png",
+                "next_page_url": null,
+                "url": "https://threatpost.com/presentation-template-build-your-2020-security-plan/149905/",
+                "domain": "threatpost.com",
+                "excerpt": "The 2020 Security Plan PPT template helps security professionals engage their organization's decision-makers and gets their backing for critical security decisions.",
+                "word_count": 652,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "tech"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xfb3686d402193f31bdf72d99ed10d0fa349dc76f5d183ff12b2052f27b901d20": {
+            "url": "https://asia.nikkei.com/Business/Business-deals/Cashless-in-Vietnam-South-Korea-s-Alliex-partners-with-central-bank",
+            "txs": [
+                "0x544cc81cf9c12644c3ceb7ebeaf085143c60ad8921e398059bd7ba322e584ddd"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x544cc81cf9c12644c3ceb7ebeaf085143c60ad8921e398059bd7ba322e584ddd": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "page": {
+                "title": "Cashless in Vietnam: South Korea's Alliex partners with central bank",
+                "author": null,
+                "date_published": "2019-11-07T08:11:40.000Z",
+                "dek": null,
+                "lead_image_url": null,
+                "next_page_url": null,
+                "url": "https://asia.nikkei.com/Business/Business-deals/Cashless-in-Vietnam-South-Korea-s-Alliex-partners-with-central-bank",
+                "domain": "asia.nikkei.com",
+                "excerpt": "TOKYO -- South Korean payment servicer Alliex has partnered with Vietnam's central bank to develop a cashless payment network accessible to banks and retailers, helping the country's broader effort to&hellip;",
+                "word_count": 255,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xfda85bbb3af6770e1dd9f7d909cc0d49fde911a40aecf600002580c74c0a0253": {
+            "url": "https://www.which.co.uk/news/2019/11/hmrc-overcharges-500m-in-pension-tax-are-you-owed-a-refund/",
+            "txs": [
+                "0x262f310697929934ee21f4a64b32825e2afb967543b57eeb3d54ebc2ed1005f1"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0x262f310697929934ee21f4a64b32825e2afb967543b57eeb3d54ebc2ed1005f1": "QmdU6L6ZU35yZotX5SpsBPvmPrBvnVo2NCZzD8AULRt1er"
+            },
+            "page": {
+                "title": "Does HMRC owe you a pension tax refund? – Which? News",
+                "author": "Brean Horne",
+                "date_published": "2019-11-06T23:01:00.000Z",
+                "dek": null,
+                "lead_image_url": "https://dwkujuq9vpuly.cloudfront.net/news/wp-content/uploads/2019/09/Pension-4.jpg",
+                "next_page_url": null,
+                "url": "https://www.which.co.uk/news/2019/11/hmrc-overcharges-500m-in-pension-tax-are-you-owed-a-refund/",
+                "domain": "www.which.co.uk",
+                "excerpt": "Pensioners have been overcharged more than £500m in tax since the introduction of the pension freedoms in 2015, according to HM Revenue & Customs (HMRC).",
+                "word_count": 983,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "review"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0x41452e34412178f73d7a1aa0f7b4b23f149f25db2d2d96739a21c9b010129ad0": {
+            "url": "https://www.which.co.uk/news/2019/11/varifocal-glasses-the-best-and-worst-places-to-buy/",
+            "txs": [
+                "0xaa019afb272217072a1f02583788cfcd5295510d06ad11e0d5e96342445b4e96"
+            ],
+            "blk": [
+                95
+            ],
+            "cmt": {
+                "0xaa019afb272217072a1f02583788cfcd5295510d06ad11e0d5e96342445b4e96": "QmdU6L6ZU35yZotX5SpsBPvmPrBvnVo2NCZzD8AULRt1er"
+            },
+            "page": {
+                "title": "Varifocal glasses: the best and worst places to buy – Which? News",
+                "author": "Anna Studman",
+                "date_published": "2019-11-03T23:01:00.000Z",
+                "dek": null,
+                "lead_image_url": "https://dwkujuq9vpuly.cloudfront.net/news/wp-content/uploads/2019/09/glasses-on-laptop.jpg",
+                "next_page_url": null,
+                "url": "https://www.which.co.uk/news/2019/11/varifocal-glasses-the-best-and-worst-places-to-buy/",
+                "domain": "www.which.co.uk",
+                "excerpt": "Find out where the best places to buy varifocals are, and how much you really need to pay.",
+                "word_count": 621,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "review"
+                ],
+                "comment": "send by 11be bot"
+            }
+        },
+        "0xa5579d7ee30bb556df314f01721d5d70144ec5ee47b405aa6b242a6afe52168c": {
+            "url": "https://hbr.org/2019/11/we-need-a-global-standard-for-reporting-cyber-attacks",
+            "txs": [
+                "0x8412809f0ed38bd482bbabc8e6f1fab7b02dfc2c5fac60632ffdd0f7c4ec79e3"
+            ],
+            "blk": [
+                92
+            ],
+            "cmt": {
+                "0x8412809f0ed38bd482bbabc8e6f1fab7b02dfc2c5fac60632ffdd0f7c4ec79e3": "QmfHdSESYPD8XyydWsNVf5QSBuog4PuBj7cf4xFM6XTXfw"
+            },
+            "vpick": true,
+            "page": {
+                "title": "We Need a Global Standard for Reporting Cyber Attacks",
+                "author": "Marc BarrachinAlgirde Pipikaite",
+                "date_published": "2019-11-06T13:35:48.000Z",
+                "dek": null,
+                "lead_image_url": "https://hbr.org/resources/images/article_assets/2019/11/Nov19_06_591196787.jpg",
+                "next_page_url": null,
+                "url": "https://hbr.org/2019/11/we-need-a-global-standard-for-reporting-cyber-attacks",
+                "domain": "hbr.org",
+                "excerpt": "Regulators should be collecting a standardized data set, so we can measure the threat.",
+                "word_count": 956,
+                "direction": "ltr",
+                "total_pages": 1,
+                "rendered_pages": 1
+            },
+            "tags": {
+                "tags": [
+                    "finance"
+                ],
+                "comment": "send by 11be bot"
+            }
+        }
+    },
+    "aidlist": [
+        "0xa4363210f221c841a24fdb6f17cff8dcc3605e795a32ac7a7b6d166ae01a3df0",
+        "0x6c7830db4d1693a3a14b1a6f8eccda33c9ba62659e61d969e836b9c8b90b2c7b",
+        "0xcd0123d4c544bdd25403502babd571c45857f6f4d3ee72ba5f0756e916c3e63c",
+        "0x9314762bf0081a7ca26c2d7d3261caa197e683eb31384a0f175c1c7785dc13a3",
+        "0xfe0dbe47e96921c87ede02e612b1f99785a912a2c0ec9fed1f4c2ebc0497161c",
+        "0x090bcfc24acef2c85258016519ffb3137df1f18859f11ccf042c94f8892c40ea",
+        "0x0b9f6523429757eba651da36d8eb15a2f7e82a34df45278c94a7bcad070dd9de",
+        "0x14372a73ffb3115e7620e5564d4239497b57d6c166fae5f987043d46de33e632",
+        "0x1aa6c2822186f11a7ba8b91528ed0909cc90802235265eea9b02561ba6e74194",
+        "0x3f922ce8e19dc43ccbd8d7cd5a595800b2397f8086f83122e3c33856110f3adb",
+        "0x448d91017c4e93bdf8c1e138b0fb15ecc6df3a3fd2c46dcbd668d9b21772b397",
+        "0x4b37e82bd2414cee13509a22c897e41b6d660f6e6af5e4a6a08679f1bcbae328",
+        "0x4ed558111d3922446708cbad1b53307da958c93aceb0ad27c69f79bd1707f1f0",
+        "0x62d921aa5c417bd3cffe2f6419a6a65fd11f306c961fd137d0c055f19ea08835",
+        "0x75abd0917ee78014bb3316e0fca14daee5896e43e578d8d47b5346e926e85e93",
+        "0x7b3dd5cc930382edc94a84463b15ff9cbd3a7413d1723ca49e5eb1684b6b9091",
+        "0x7e791b4f1534682500d3377226159bd32f7c4b6cbcc2c8ccb34aa39062af1980",
+        "0xa94b884fde6d204fda78027e9c427f375e8e3cf4512efc3001036eb832b756b7",
+        "0xdd9e8b1587a565da726dd03863be5d4cac3a096ac3f5f7b62e8654599a35e66b",
+        "0xdf0685dfc6d3310ef17ee628b08a7a862af6ef5773303fd83b8d5f0e6feb1a68",
+        "0xe663f88e114093a5aa399ef7b3c4d4fe3201ceabd2cefcb51a591e9c1910fe6b",
+        "0xe9f067217aa920b6f64f7e557f98e64b32b7663899603d40108d73cf9195638d",
+        "0x473dc96823ea9e9b2173c7e33a55225402cbc89b5477290004bf72a1aae36c5b",
+        "0xf95295d6f8a116b152d2c173aa9de9cf5bc70ba1a3e031d540fd4e65a9e82564",
+        "0x033c158ec66040c355c46884d95bb1155b95c20e926b2986a68bb74ee419667e",
+        "0x395e3e84cba3735df547b12d23a63d2517dd988520a4737b279f0e7f6825fff3",
+        "0x4bc0aa7ea5a06857c5598a3f97330122c06c93914c1b39f881c860257d1c8ab3",
+        "0x541d67bb225c1da9cfdf69b7143a54ee024e1ae8d4f8c42eba5925328f506a44",
+        "0x8d53058757645daa2df3517b77e8b72514b83dbb7130f2a2c53ea24f5a356f39",
+        "0x9b3b0da2d3e2882eaf48bcbe0e6e14ec520321d424552cb1245d9497c3135b4c",
+        "0xb23b7fa4aae8feba7f7b3da4880b6ed5cad277a74ddff743ba6d18b727f71bce",
+        "0xce6b0a1c5767780c144427b710e2b5b19a23ae0352bdcc8e19d16bf2c33073c0",
+        "0xf68a7933ea08397bb67cc92cf30086c884e207402a01f881f9c38e3bb4f71ba5",
+        "0xfb3686d402193f31bdf72d99ed10d0fa349dc76f5d183ff12b2052f27b901d20",
+        "0xfda85bbb3af6770e1dd9f7d909cc0d49fde911a40aecf600002580c74c0a0253",
+        "0x41452e34412178f73d7a1aa0f7b4b23f149f25db2d2d96739a21c9b010129ad0",
+        "0xa5579d7ee30bb556df314f01721d5d70144ec5ee47b405aa6b242a6afe52168c"
+    ],
+    "quoteCache": {
+        "0x541d67bb225c1da9cfdf69b7143a54ee024e1ae8d4f8c42eba5925328f506a44": {
+            "total": 1,
+            "cmtlist": {
+                "0x3c553163bd5feb8770eac6b6963a51eb2c505440": "Looking ahead, one happy possibility from the rise of AI is that people’s ability to understand one another and work together may become more valued as technological tools overtake us in other areas."
+            },
+            "failed": []
+        },
+        "0xa5579d7ee30bb556df314f01721d5d70144ec5ee47b405aa6b242a6afe52168c": {
+            "total": 1,
+            "cmtlist": {
+                "0x3c553163bd5feb8770eac6b6963a51eb2c505440": "To do this, we must agree on a standard taxonomy of cyber events so that we can track and understand the consequences of any attack. This taxonomy should include:\n\n    dates relevant to the incident (when it occurred, when it was initially detected, when it was reported)\n    type of incident (breach, malware, distributed denial of service [DDoS], etc.)\n    size of impact on financial results or ability to conduct business\n    type of impact (data breach, financial loss, operational, legal, reputational, intellectual property, etc.)\n    method used to access the network or data (phishing, ransomware, virus, zero days exploitation, etc.)\n    how the incident was resolved (patch, update firewall configuration or software, etc.) and cost of the resolution"
+            },
+            "failed": []
+        }
+    }
+}
