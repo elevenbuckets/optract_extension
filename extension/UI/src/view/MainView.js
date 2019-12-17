@@ -193,7 +193,11 @@ class MainView extends Reflux.Component {
                     ? <p style={{ padding: '0px', margin: '0px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p>
                     : 'Vote'}
             </div>
-            {this.state.quoteTotal > 0 && typeof (this.state.quoteCache[aid]) !== 'undefined' && this.state.quoteCache[aid].total > 0 ? <div className="button" id="hoverClick" onClick={this.setShowModal.bind(this, aid)} style={{ textAlign: 'center', cursor: 'pointer', display: 'grid', alignContent: 'center', backgroundImage: 'url(assets/quote.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', border: 'none', width: '88px', height: '42px', fontSize: '18px', color: 'black' }}>{this.state.quoteCache[aid].total > 50 ? '50+' : this.state.quoteCache[aid].total}</div> : ''}
+            {this.state.quoteTotal > 0 && typeof (this.state.quoteCache[aid]) !== 'undefined' && this.state.quoteCache[aid].total > 0 ?
+                <div className="button" id="hoverClick" onClick={this.setShowModal.bind(this, aid)}
+                    style={{ textAlign: 'center', cursor: 'pointer', display: 'grid', alignContent: 'center', backgroundImage: 'url(assets/quote.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', border: 'none', width: '88px', height: '42px', fontSize: '18px', color: 'black' }}>
+                    {this.state.quoteCache[aid].total > 50 ? '50+' : this.state.quoteCache[aid].total}
+                </div> : ''}
         </div>)
     }
 
@@ -428,7 +432,10 @@ class MainView extends Reflux.Component {
                 {
                     this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
                         ? this.handleShowButton.apply(this, [article])
-                        : <div className="item aidclk" style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }} onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
+                        : <div className="item aidclk"
+                            style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }}
+                            onClick={this.goToArticle.bind(this, article)}> You can vote this with optract extension.
+                        </div>
                 }
             </div>
         });
@@ -454,7 +461,10 @@ class MainView extends Reflux.Component {
                     {
                         this.state.readCount > 0 && this.state.readAID.indexOf(aid) !== -1
                             ? this.handleShowButton.apply(this, [article])
-                            : <div className="item aidclk" style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }} onClick={this.goToArticle.bind(this, article)}>Vote will be enabled after reading.</div>
+                            : <div className="item aidclk"
+                                style={{ minHeight: '94px', color: 'darkgreen', backgroundColor: '#dee2e6', fontSize: '20px', textAlign: 'center', gridTemplateColumns: '1fr', borderTop: "1px solid #dee2e6" }}
+                                onClick={this.goToArticle.bind(this, article)}> You can vote this with optract extension.
+                            </div>
                     }
                 </div>
             })];
@@ -612,8 +622,16 @@ class MainView extends Reflux.Component {
         return (
 
             <div className="content">
-                <button onClick={this.scrollToTop.bind(this)} id="TopBtn" style={this.state.thePosition >= 0.2 ? { display: 'block' } : { display: 'none' }} title="Go to top">Top</button>
-                <div className="ticketNote" ref='ticketNote' style={{ display: 'none' }}><a href='#opsLine'>You have {this.state.ticketCounts} tickets!</a></div>
+                <button onClick={this.scrollToTop.bind(this)}
+                    id="TopBtn"
+                    style={this.state.thePosition >= 0.2 ? { display: 'block' } : { display: 'none' }}
+                    title="Go to top">Top
+                   </button>
+                <div className="ticketNote"
+                    ref='ticketNote'
+                    style={{ display: 'none' }}>
+                    <a href='#opsLine'>You have {this.state.ticketCounts} tickets!</a>
+                </div>
                 <div className="item contentxt">
                     {
                         this.state.articleTotal > 0 ?
@@ -632,9 +650,14 @@ class MainView extends Reflux.Component {
                             </Tabs> : ''}
                     {this.state.view === "List" ?
                         this.state.articleTotal === 0 ?
-                            <div className='item login' style={{ height: 'calc(100vh - 100px)' }}><div className='textloader' style={{ height: 'fit-content', margin: '0px auto', alignSelf: 'end', backgroundColor: 'rgba(0,0,0,0)', fontSize: '72px' }}>{this.state.greeting}</div>
-                                <label className='loaderlabel'>{this.loginLoad.apply(this, [])}</label></div> :
-                            <div className="articles"> {this.getArticleList()} {this.state.activeTabKey === 'totalList' ? <div className="item" style={{ cursor: 'pointer', border: '1px solid', gridColumnStart: '1', gridColumnEnd: '-1', gridTemplateRows: '1fr', marginTop: '5vh' }} onClick={this.state.aidlistSize > 0 ? this.moreArticles.bind(this) : () => { }}>{this.state.loading === true || this.state.aidlistSize === -1 ? <p style={{ alignSelf: 'center', textAlign: 'center', fontSize: '33px', maxHeight: '47px', minWidth: '100px', lineHeight: '40px' }}><span className="dot dotOne">-</span><span className="dot dotTwo">-</span><span className="dot dotThree">-</span></p> : this.state.aidlistSize > 0 ? <p className="item">{this.state.aidlistSize} more articles</p> : <p className="item">"No More New Articles."</p>}</div> : ''}</div> : ''}
+                            <div className='item login' style={{ height: 'calc(100vh - 100px)' }}>
+                                <div className='textloader'
+                                    style={{ height: 'fit-content', margin: '0px auto', alignSelf: 'end', backgroundColor: 'rgba(0,0,0,0)', fontSize: '72px' }}>
+                                    {this.state.greeting}
+                                </div>
+                                <label className='loaderlabel'>{this.loginLoad.apply(this, [])}</label>
+                            </div> :
+                            <div className="articles"> {this.getArticleList()}</div> : ''}
                 </div>
                 <Modal
                     show={this.state.showModal !== false}
@@ -651,11 +674,22 @@ class MainView extends Reflux.Component {
                         {
                             this.state.showModal !== false && typeof (this.state.quoteCache[this.state.showModal]) !== 'undefined'
                                 ? Object.keys(this.state.quoteCache[this.state.showModal].cmtlist).map((acc, i) => {
-                                    return (<div className="quoteTable"><div className="avatarq" title={'Optract Member: ' + acc}><canvas ref={'canvas_' + acc} style={{ boxShadow: '0px 1px 10px -1px', border: '4px solid #dee2e6', justifySelf: 'right', alignSelf: 'end', borderRadius: '5em' }} /></div><div className="quoteq" style={i % 2 === 0 ? { backgroundColor: 'cornsilk' } : { backgroundColor: 'white' }}><p style={{ alignSelf: 'center', justifySelf: 'center', fontSize: '28px', margin: '10px' }}>{this.state.quoteCache[this.state.showModal].cmtlist[acc]}</p></div></div>)
+                                    return (<div className="quoteTable">
+                                        <div className="avatarq" title={'Optract Member: ' + acc}><canvas ref={'canvas_' + acc}
+                                            style={{ boxShadow: '0px 1px 10px -1px', border: '4px solid #dee2e6', justifySelf: 'right', alignSelf: 'end', borderRadius: '5em' }} />
+                                        </div>
+                                        <div className="quoteq" style={i % 2 === 0 ? { backgroundColor: 'cornsilk' } : { backgroundColor: 'white' }}>
+                                            <p style={{ alignSelf: 'center', justifySelf: 'center', fontSize: '28px', margin: '10px' }}>
+                                                {this.state.quoteCache[this.state.showModal].cmtlist[acc]}</p>
+                                        </div>
+                                    </div>)
                                 })
                                 : ''
                         }
-                        <hr /><div style={{ cursor: 'pointer', textAlign: 'center', margin: '20px auto 10px auto', fontSize: '22px', border: '2px solid', maxWidth: '250px' }} onClick={this.goToAidArticle.bind(this, this.state.showModal)}>read full article</div>
+                        <hr /><div
+                            style={{ cursor: 'pointer', textAlign: 'center', margin: '20px auto 10px auto', fontSize: '22px', border: '2px solid', maxWidth: '250px' }}
+                            onClick={this.goToAidArticle.bind(this, this.state.showModal)}>read full article
+                            </div>
                     </Modal.Body>
                 </Modal>
             </div>);
