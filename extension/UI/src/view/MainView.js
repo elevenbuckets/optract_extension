@@ -55,6 +55,9 @@ class MainView extends Reflux.Component {
     }
 
     componentDidUpdate() {
+        if (typeof (this.refs.canvas) !== 'undefined') {
+            createCanvasWithAddress(this.refs.canvas, this.state.account);
+        }
         if (this.state.login === false) {
             if (this.state.validPass && this.state.MemberStatus === 'active' && this.state.account !== null) {
                 this.setState({ login: true, logining: false });
@@ -491,10 +494,10 @@ class MainView extends Reflux.Component {
                 this.setState({ showModal: article.myAID });
             }
         }
-        //window.open(article.url, '_blank');
-        chrome.tabs.getCurrent((myTab) => {
-            chrome.tabs.create({ url: article.url, active, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
-        });
+        window.open(article.url, '_blank');
+        // chrome.tabs.getCurrent((myTab) => {
+        //     chrome.tabs.create({ url: article.url, active, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
+        // });
         // DlogsActions.fetchBlogContent(article);
         // this.setState({ view: "Content", currentBlog: article });
     }
@@ -505,10 +508,10 @@ class MainView extends Reflux.Component {
             readAID.push(article.myAID);
             this.setState({ readAID, readCount: readAID.length });
         }
-        //window.open(article.url, '_blank');
-        chrome.tabs.getCurrent((myTab) => {
-            chrome.tabs.create({ url: article.url, active: true, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
-        });
+        window.open(article.url, '_blank');
+        // chrome.tabs.getCurrent((myTab) => {
+        //     chrome.tabs.create({ url: article.url, active: true, openerTabId: myTab.id }, (tab) => { this.tabCache[article.myAID] = tab.id; });
+        // });
         // DlogsActions.fetchBlogContent(article);
         // this.setState({ view: "Content", currentBlog: article });
     }

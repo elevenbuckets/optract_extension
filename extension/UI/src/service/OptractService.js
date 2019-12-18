@@ -5,8 +5,8 @@
 
 const ethUtils = require('ethereumjs-utils');
 import DlogsActions from "../action/DlogsActions";
-const port = chrome.runtime.connect();
-const myid = chrome.i18n.getMessage("@@extension_id");
+// const port = chrome.runtime.connect();
+// const myid = chrome.i18n.getMessage("@@extension_id");
 var stat = false;
 
 class OptractService {
@@ -416,84 +416,84 @@ class OptractService {
 	    }
     }
 
-    getFinalList(op) {
-	let sop = op > 20 ? op - 20 : 1;
-        this.opt.call('getOpRangeFinalList', [sop, op, true]).then((data) => {
-	    let list = Object.values(data).reduce((o, i) => {
-		    if (Object.keys(i).length === 0) return o;
-		    o = { ...o, ...i };
-		    return o;
-	    }, {});
-            DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
-        }).catch((err) => { console.trace(err); })
-    }
+    // getFinalList(op) {
+	// let sop = op > 20 ? op - 20 : 1;
+    //     this.opt.call('getOpRangeFinalList', [sop, op, true]).then((data) => {
+	//     let list = Object.values(data).reduce((o, i) => {
+	// 	    if (Object.keys(i).length === 0) return o;
+	// 	    o = { ...o, ...i };
+	// 	    return o;
+	//     }, {});
+    //         DlogsActions.updateState({ finalList: list, finalListCounts: Object.keys(list).length});
+    //     }).catch((err) => { console.trace(err); })
+    // }
 
-    newVote(block, leaf, comment = '') {
-        console.log(`Now vote with args: ${block} ${leaf}`);
-        return this.opt.call('newVote', { args: [block, leaf, comment] });
-    }
+    // newVote(block, leaf, comment = '') {
+    //     console.log(`Now vote with args: ${block} ${leaf}`);
+    //     return this.opt.call('newVote', { args: [block, leaf, comment] });
+    // }
 
-    newClaim(v1block, v1leaf, v2block, v2leaf, comment) {
-	console.log(`DEBUG: newClaim called:`)
-	console.dir({v1block, v1leaf, v2block, v2leaf, comment});
-        return this.opt.call('newClaim', {args: [v1block, v1leaf, v2block, v2leaf]});
-    }
+    // newClaim(v1block, v1leaf, v2block, v2leaf, comment) {
+	// console.log(`DEBUG: newClaim called:`)
+	// console.dir({v1block, v1leaf, v2block, v2leaf, comment});
+    //     return this.opt.call('newClaim', {args: [v1block, v1leaf, v2block, v2leaf]});
+    // }
 
 
 }
 
 const optractService = new OptractService();
 
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-	console.log(`DEBUG: background message sent to OptractService!!!!!`)
-	if (!sender.tab || message.myParent !== 'moz-extension://' + myid + '/index.html') return;
+// chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+// 	console.log(`DEBUG: background message sent to OptractService!!!!!`)
+// 	if (!sender.tab || message.myParent !== 'moz-extension://' + myid + '/index.html') return;
 
-	console.log(`Working on it .......`);
-	let url = message.voteRequest;
-	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
-	if (comment) {
-		console.log(`DEBUG: vote with quote ..`)
-		console.log(comment);
-	}
+// 	console.log(`Working on it .......`);
+// 	let url = message.voteRequest;
+// 	let comment = typeof(message.highlight) === 'undefined' ? '' : String(message.highlight);
+// 	if (comment) {
+// 		console.log(`DEBUG: vote with quote ..`)
+// 		console.log(comment);
+// 	}
 
-	let aid = Object.keys(optractService.articles).filter((aid) => { 
-		optractService.articles[aid]['myAID'] = aid; 
-		if (optractService.articles[aid].url.length >= url) {
-			return optractService.articles[aid].url.includes(url); 
-		} else {
-			return url.includes(optractService.articles[aid].url); 
-		}
-	})[0];
+// 	let aid = Object.keys(optractService.articles).filter((aid) => { 
+// 		optractService.articles[aid]['myAID'] = aid; 
+// 		if (optractService.articles[aid].url.length >= url) {
+// 			return optractService.articles[aid].url.includes(url); 
+// 		} else {
+// 			return url.includes(optractService.articles[aid].url); 
+// 		}
+// 	})[0];
 
-	if (typeof(aid) === 'undefined') { // backup plan
-		let domain = message.domain;
-		let title  = message.title;
-		aid = Object.values(optractService.articles).filter((artObj) => {
-			if (artObj.page.title.length >= title.length) {
-				return artObj.page.domain === domain && artObj.page.title.includes(title);
-			} else {
-				return artObj.page.domain === domain && title.includes(artObj.page.title);
-			}
-		})[0].myAID;
-	}
+// 	if (typeof(aid) === 'undefined') { // backup plan
+// 		let domain = message.domain;
+// 		let title  = message.title;
+// 		aid = Object.values(optractService.articles).filter((artObj) => {
+// 			if (artObj.page.title.length >= title.length) {
+// 				return artObj.page.domain === domain && artObj.page.title.includes(title);
+// 			} else {
+// 				return artObj.page.domain === domain && title.includes(artObj.page.title);
+// 			}
+// 		})[0].myAID;
+// 	}
 
-	let article = optractService.articles[aid];
+// 	let article = optractService.articles[aid];
 
-	//FIXME: need to sendResponse back to content script if failed to find aid
-	//       this indicates we either have outdated cache or the article has changed
-	//       dramatically since Optract curation.
+// 	//FIXME: need to sendResponse back to content script if failed to find aid
+// 	//       this indicates we either have outdated cache or the article has changed
+// 	//       dramatically since Optract curation.
 
-	if (Object.keys(article).length > 0) { 
-		console.log(`Optract AID of URL found .......`);
-		console.dir(article);
-	}
+// 	if (Object.keys(article).length > 0) { 
+// 		console.log(`Optract AID of URL found .......`);
+// 		console.dir(article);
+// 	}
 
-	let l = article.txs.length;
-        let i = Math.floor(Math.random() * l);
-	DlogsActions.updateState({voted: aid});
-	DlogsActions.vote(article.blk[i], article.txs[i], aid, comment);
+// 	let l = article.txs.length;
+//         let i = Math.floor(Math.random() * l);
+// 	DlogsActions.updateState({voted: aid});
+// 	DlogsActions.vote(article.blk[i], article.txs[i], aid, comment);
 
-	return sendResponse({results: article})
-})
+// 	return sendResponse({results: article})
+// })
 
 export default optractService;
