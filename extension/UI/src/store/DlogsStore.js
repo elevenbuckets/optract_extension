@@ -1,6 +1,7 @@
 import Reflux from "reflux";
 import DlogsActions from "../action/DlogsActions";
 import OptractService from "../service/OptractService";
+import OptractRest from "../service/OptractRest";
 import { toHexString } from "multihashes";
 const securePass = require('secure-random-password');
 
@@ -78,6 +79,11 @@ class DlogsStore extends Reflux.Store {
 		this.state.articleCache = require('/home/liang/Liang_Learn/git_hub/optract_extension/extension/UI/src/store/articleCache.json');
 		console.dir(this.state.articleCache.startBlk);
 		this.state.articles = this.state.articleCache.queries;
+		OptractRest.get("http://localhost:8080/articles").then((data) =>{
+			this.state.articles = data;
+		}
+			
+		)
 	}
 
 	// onFetchBlogContent = (article) => {
