@@ -75,12 +75,13 @@ class DlogsStore extends Reflux.Store {
 		}
 
 		this.probeTout;
+		
 
 		this.state.articleCache = require('/home/liang/Liang_Learn/git_hub/optract_extension/extension/UI/src/store/articleCache.json');
 		console.dir(this.state.articleCache.startBlk);
 		this.state.articles = this.state.articleCache.queries;
-		OptractRest.get("http://localhost:8080/articles").then((data) =>{
-			this.state.articles = data;
+		OptractRest.get("articles/cache").then((data) =>{
+			this.setState({ articles: data });
 		}
 			
 		)

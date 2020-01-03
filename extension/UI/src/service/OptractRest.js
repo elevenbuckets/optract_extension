@@ -3,8 +3,9 @@ import DlogsActions from "../action/DlogsActions";
 
 class OptractRest {
     constructor() {
-		this.get = url =>{
-			return fetch(url).then(resp =>{
+		this.optract_base_url = "http://localhost:8080/";
+		this.get = path =>{
+			return fetch(this.optract_base_url + path).then(resp =>{
 				return resp.json();
 			})
 		}
