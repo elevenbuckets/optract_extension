@@ -38,7 +38,7 @@ class DlogsStore extends Reflux.Store {
 			generate: false,
 			allAccounts: [],
 			accListSize: -1,
-			account:  "0xe8ae1c10267221e7f54f98175dba7b999cd55f2a",
+			account: "0xe8ae1c10267221e7f54f98175dba7b999cd55f2a",
 			activeTabKey: "totalList",
 			showVoteToaster: false,
 			wsrpc: false,
@@ -75,15 +75,14 @@ class DlogsStore extends Reflux.Store {
 		}
 
 		this.probeTout;
-		
 
-		this.state.articleCache = require('/home/liang/Liang_Learn/git_hub/optract_extension/extension/UI/src/store/articleCache.json');
+
+		this.state.articleCache = require('./articleCache.json');
 		console.dir(this.state.articleCache.startBlk);
 		this.state.articles = this.state.articleCache.queries;
-		OptractRest.get("articles/cache").then((data) =>{
+		OptractRest.get("articles/cache").then((data) => {
 			this.setState({ articles: data });
 		}
-			
 		)
 	}
 
