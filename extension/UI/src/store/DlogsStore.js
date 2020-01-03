@@ -1,6 +1,6 @@
 import Reflux from "reflux";
 import DlogsActions from "../action/DlogsActions";
-import OptractService from "../service/OptractService";
+//import OptractService from "../service/OptractService";
 import OptractRest from "../service/OptractRest";
 import { toHexString } from "multihashes";
 const securePass = require('secure-random-password');
@@ -11,11 +11,11 @@ class DlogsStore extends Reflux.Store {
 	constructor() {
 		super();
 		this.listenables = DlogsActions;
-		this.opt = OptractService.opt;
-		this.unlockRPC = OptractService.unlockRPC;
-		this.connect = OptractService.connect;
-		this.shutdown = OptractService.shutdown;
-		this.allAccounts = OptractService.allAccounts;
+		//this.opt = OptractService.opt;
+		//this.unlockRPC = OptractService.unlockRPC;
+		//this.connect = OptractService.connect;
+		//this.shutdown = OptractService.shutdown;
+		//this.allAccounts = OptractService.allAccounts;
 
 		this.state = {
 			originalHashes: ["QmfNaysDYn5ZCGcCSiGRDL4qxSHNWz5AXL7jw3MBj4e3qB"],
@@ -77,13 +77,12 @@ class DlogsStore extends Reflux.Store {
 		this.probeTout;
 
 
-		this.state.articleCache = require('./articleCache.json');
-		console.dir(this.state.articleCache.startBlk);
-		this.state.articles = this.state.articleCache.queries;
+		//this.state.articleCache = require('./articleCache.json');
+		//console.dir(this.state.articleCache.startBlk);
+		//this.state.articles = this.state.articleCache.queries;
 		OptractRest.get("articles/cache").then((data) => {
 			this.setState({ articles: data });
-		}
-		)
+		})
 	}
 
 	// onFetchBlogContent = (article) => {
